@@ -1,0 +1,6 @@
+/backend/node_modules
+/mobile-app/node_modules
+/mobile-app/.expo
+backend/node_modules/
+mobile-app/node_modules/
+mobile-app/.expo/
