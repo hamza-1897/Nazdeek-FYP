@@ -1,3 +1,4 @@
 /backend/node_modules
 
 /mobile-app/node_modules
+backend/src/.env
