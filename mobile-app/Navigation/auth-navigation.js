@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from '../screens/LoginScreen'; // Apni file ka sahi path dein
-import SignupScreen from '../screens/SignupScreen';
+import LoginScreen from '../screens/loginScreen'; 
+import SignupScreen from '../screens/signupScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -9,10 +9,10 @@ const AuthNavigation = () => {
   return (
     <Stack.Navigator 
       initialRouteName="Login"
-      screenOptions={{ headerShown: false }} // Header hide karne ke liye
+      screenOptions={{ headerShown: false }} 
     >
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Signup" component={SignupScreen} />
+      <Stack.Screen name="Login" component={loginScreen} />
+      <Stack.Screen name="Signup" component={signupScreen} />
     </Stack.Navigator>
   );
 };
