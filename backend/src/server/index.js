@@ -1,11 +1,14 @@
 const express = require('express');
-const dotenv = require('dotenv');
 const cors = require('cors');
+const cookies = require('cookie-parser');
 
 const app = express();
 app.use(express.json());
-dotenv.config();
 app.use(cors());
+app.use(cookies());
+
+const config = require('../config/envConfig');
+
 
 
 app.get('/', (req, res) => {
@@ -13,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 
-const PORT = process.env.PORT;
+const PORT = config.PORT;
 
 app.listen(PORT, () => {
     console.log(`server is running on port: ${PORT}`);
