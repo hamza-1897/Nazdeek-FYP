@@ -1,27 +1,34 @@
-import React, { useState } from 'react'; // React aur Hook import kiya
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Eye icon ke liye
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { styled } from 'nativewind'; // Nativewind classes handle karne ke liye
 
 const LoginScreen = ({ navigation }) => {
-  // 1. Hooks (State Management)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        {/* Logo Section */}
-        <Text style={styles.logoText}>Nazdeek</Text>
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="px-6 pt-12">
         
-        <Text style={styles.welcomeText}>Welcome back!</Text>
-        <Text style={styles.subText}>Log in to your account to continue</Text>
+       
+        <Text className="text-4xl font-bold text-[#006666] text-center italic mb-10">
+          Nazdeek
+        </Text>
+        
+        <Text className="text-3xl font-bold text-center text-gray-800">
+          Welcome back!
+        </Text>
+        <Text className="text-base text-center text-gray-500 mb-8">
+          Log in to your account to continue
+        </Text>
 
-        {/* Email Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
+        
+        <View className="mb-5">
+          <Text className="text-sm font-bold mb-2 text-gray-800">Email</Text>
           <TextInput
-            style={styles.input}
+            className="border border-gray-300 rounded-lg p-3 text-base"
             placeholder="Enter your email"
             value={email}
             onChangeText={(text) => setEmail(text)}
@@ -29,68 +36,55 @@ const LoginScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Password Input */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <View style={styles.passwordWrapper}>
+      
+        <View className="mb-5">
+          <Text className="text-sm font-bold mb-2 text-gray-800">Password</Text>
+          <View className="flex-row items-center border border-gray-300 rounded-lg pr-4">
             <TextInput
-              style={[styles.input, { flex: 1, borderBottomWidth: 0 }]}
+              className="flex-1 p-3 text-base"
               placeholder="Enter password"
               value={password}
               onChangeText={(text) => setPassword(text)}
               secureTextEntry={!isPasswordVisible}
             />
             <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-              <Ionicons name={isPasswordVisible ? "eye-outline" : "eye-off-outline"} size={20} color="gray" />
+              <Ionicons 
+                name={isPasswordVisible ? "eye-outline" : "eye-off-outline"} 
+                size={20} 
+                color="gray" 
+              />
             </TouchableOpacity>
           </View>
         </View>
 
-        <TouchableOpacity style={styles.forgotBtn}>
-          <Text style={styles.forgotText}>Forgot Password?</Text>
+       
+        <TouchableOpacity className="self-end mb-8">
+          <Text className="text-[#006666] underline">Forgot Password?</Text>
         </TouchableOpacity>
 
-        {/* Buttons */}
-        <TouchableOpacity style={styles.loginBtn}>
-          <Text style={styles.loginBtnText}>Login</Text>
+       
+        <TouchableOpacity 
+          className="bg-[#006666] p-4 rounded-lg items-center mb-4"
+          onPress={() => navigation.navigate('Home')}
+        >
+          <Text className="text-white text-lg font-bold">Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.guestBtn}>
-          <Text style={styles.guestBtnText}>Continue as Guest</Text>
+        <TouchableOpacity className="border-2 border-[#006666] p-4 rounded-lg items-center">
+          <Text className="text-[#006666] text-lg font-bold">Continue as Guest</Text>
         </TouchableOpacity>
 
-        {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
+       
+        <View className="flex-row justify-center mt-24">
+          <Text className="text-gray-500">Don't have an account? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-            <Text style={styles.signUpText}>Sign up</Text>
+            <Text className="text-[#006666] font-bold">Sign up</Text>
           </TouchableOpacity>
         </View>
+
       </View>
     </SafeAreaView>
   );
 };
-
-// Styles Section
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  content: { paddingHorizontal: 25, paddingTop: 50 },
-  logoText: { fontSize: 32, fontWeight: 'bold', color: '#006666', textAlign: 'center', fontStyle: 'italic', marginBottom: 40 },
-  welcomeText: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', color: '#333' },
-  subText: { fontSize: 16, textAlign: 'center', color: 'gray', marginBottom: 30 },
-  inputContainer: { marginBottom: 20 },
-  label: { fontSize: 14, fontWeight: 'bold', marginBottom: 8, color: '#333' },
-  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 12, fontSize: 16 },
-  passwordWrapper: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: '#ccc', borderRadius: 8, paddingRight: 15 },
-  forgotBtn: { alignSelf: 'flex-end', marginBottom: 30 },
-  forgotText: { color: '#006666', textDecorationLine: 'underline' },
-  loginBtn: { backgroundColor: '#006666', padding: 15, borderRadius: 8, alignItems: 'center', marginBottom: 15 },
-  loginBtnText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
-  guestBtn: { borderWidth: 2, borderColor: '#006666', padding: 15, borderRadius: 8, alignItems: 'center' },
-  guestBtnText: { color: '#006666', fontSize: 18, fontWeight: 'bold' },
-  footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 100 },
-  footerText: { color: 'gray' },
-  signUpText: { color: '#006666', fontWeight: 'bold' }
-});
 
 export default LoginScreen;
