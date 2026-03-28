@@ -1,5 +1,7 @@
 const adminModel = require('../models/adminModel')
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../config/envConfig');
 const {generateToken, generateNewAccessToken} = require('../lib/generateToken');
 const checkPassword = require('../lib/checkPass');
 
@@ -41,9 +43,23 @@ if(!admin || !(await checkPassword(password, admin.password))){
 
 }
 
+const refreshAccessToken = async (req,res) => {
+
+    const refreshToken = req.cookies.jwt;
+    console.log("refresh token: ", refreshToken);
+    if(!refreshToken){
+        return res.status(401).json({message : "no refresh token provided"})
+    }
+    const decoded = jwt.verify(refreshToken, config.JWT_SECRET);
+    const userId = decoded.userId;
+    const newAccessToken = generateNewAccessToken(userId);
+    res.status(200).json({ accessToken: newAccessToken });
+
+}
 
 
 module.exports = {
     adminLogin ,
-    registerAdmin
+    registerAdmin ,
+    refreshAccessToken  
 }
