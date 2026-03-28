@@ -12,14 +12,15 @@ app.use(cookies());
 
 const config = require('../config/envConfig');
 const connectDB = require('../Config/dbConnection');
+const adminRoutes = require('../routes/adminRoutes');
 connectDB();
 
 app.get('/', (req, res) => {
     res.send('Nazdeek server is Running...');
 });
 
-app.use('/api/users', require('../routes/usersRoute'));
-app.use('/api/admin', require('../routes/adminRoute'));
+app.use('/api/admin', adminRoutes);
+
 
 const PORT = config.PORT;
 

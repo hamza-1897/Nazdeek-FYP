@@ -15,6 +15,13 @@ const generateToken = (userId, res) => {
     })
 
         return accessToken;
-} 
 
-module.exports = generateToken;
+}
+
+const generateNewAccessToken = (userId) => {
+    return jwt.sign({ userId }, config.JWT_SECRET, { expiresIn: '15m' });
+
+
+}
+
+module.exports = { generateToken, generateNewAccessToken };

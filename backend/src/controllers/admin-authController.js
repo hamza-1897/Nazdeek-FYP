@@ -1,6 +1,6 @@
 const adminModel = require('../models/adminModel')
-const bycrypt = require('bcrypt');
-const generateToken = require('../lib/generateToken');
+const bcrypt = require('bcrypt');
+const {generateToken, generateNewAccessToken} = require('../lib/generateToken');
 const checkPassword = require('../lib/checkPass');
 
 
@@ -14,8 +14,8 @@ const registerAdmin = async (req,res) => {
         res.status(400).json({message : "admin already exists"})
     } else {
 
-          const salt = await bycrypt.genSalt(10)
-    const hashPassword = await bycrypt.hash(password,salt)
+          const salt = await bcrypt.genSalt(10)
+    const hashPassword = await bcrypt.hash(password,salt)
 
 
         const newAdmin = new adminModel({name , email , password: hashPassword});
@@ -34,12 +34,16 @@ const admin = await adminModel.findOne({email})
 if(!admin || !(await checkPassword(password, admin.password))){
     res.status(400).json({message : "invalid credentials"})
 } else {
-    const accessToken = generateToken(admin._id, res);
-    res.status(200).json({_id: admin._id, name: admin.name, lastLogin: admin.lastLogin, message : "admin logged in successfully", accessToken})
-}
+
+        const accessToken = generateToken(admin._id, res);
+        res.status(200).json({_id: admin._id, name: admin.name, lastLogin: admin.lastLogin, message : "admin logged in successfully", accessToken})
+    }
 
 }
 
-exports.modules = {
-    adminLogin 
+
+
+module.exports = {
+    adminLogin ,
+    registerAdmin
 }
