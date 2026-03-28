@@ -43,6 +43,11 @@ if(!admin || !(await checkPassword(password, admin.password))){
 
 }
 
+const adminLogout = async (req,res) => {
+    res.clearCookie('jwt', { httpOnly: true, secure: false, sameSite: 'strict',path: "/" });
+    res.status(200).json({message : "admin logged out successfully"})
+}
+
 const refreshAccessToken = async (req,res) => {
 
     const refreshToken = req.cookies.jwt;
@@ -61,5 +66,6 @@ const refreshAccessToken = async (req,res) => {
 module.exports = {
     adminLogin ,
     registerAdmin ,
-    refreshAccessToken  
+    refreshAccessToken  ,
+    adminLogout
 }
