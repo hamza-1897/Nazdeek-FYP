@@ -15,6 +15,8 @@ app.get('/', (req, res) => {
     res.send('Nazdeek server is Running...');
 });
 
+app.use('/api/users', require('../routes/usersRoute'));
+app.use('/api/admin', require('../routes/adminRoute'));
 
 const PORT = config.PORT;
 
