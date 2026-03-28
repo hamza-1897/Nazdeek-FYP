@@ -8,8 +8,8 @@ app.use(cors());
 app.use(cookies());
 
 const config = require('../config/envConfig');
-
-
+const connectDB = require('../Config/dbConnection');
+connectDB();
 
 app.get('/', (req, res) => {
     res.send('Nazdeek server is Running...');
