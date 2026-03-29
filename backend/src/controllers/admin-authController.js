@@ -37,7 +37,7 @@ if(!admin || !(await checkPassword(password, admin.password))){
     res.status(400).json({message : "invalid credentials"})
 } else {
 
-        const accessToken = generateToken(admin._id, res);
+        const accessToken = generateToken(admin._id, admin.role, res);
         res.status(200).json({_id: admin._id, name: admin.name, lastLogin: admin.lastLogin, message : "admin logged in successfully", accessToken})
     }
 
