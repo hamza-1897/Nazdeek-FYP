@@ -13,6 +13,8 @@ app.use(cookies());
 const config = require('../config/envConfig');
 const connectDB = require('../Config/dbConnection');
 const adminRoutes = require('../routes/adminRoutes');
+const userRoutes = require('../routes/usersRoute');
+
 connectDB();
 
 app.get('/', (req, res) => {
@@ -20,6 +22,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/admin', adminRoutes);
+app.use('/api/user', userRoutes);
 
 
 const PORT = config.PORT;
