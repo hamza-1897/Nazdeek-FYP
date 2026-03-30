@@ -22,21 +22,22 @@ const VerifyOTP = ({ navigation }) => {
       
       <Text className="text-3xl font-bold text-center mb-3">Verification</Text>
       <Text className="text-gray-500 text-center px-6 mb-10">
-        Please enter the 4-digit code sent to your email.
+        Please enter the 6-digit code sent to your email.
       </Text>
 
      
       <View className="flex-row justify-between px-4 mb-12">
-        {[1, 2, 3, 4].map((index) => (
-          <View key={index} className="w-16 h-16 bg-[#F3F4F6] border border-gray-200 rounded-2xl items-center justify-center">
+        
+          <View className=" flex w-[290px] h-16 bg-[#F3F4F6] border border-gray-200 rounded-2xl items-center justify-center">
             <TextInput 
-              maxLength={1} 
+            
+              maxLength={6}
               keyboardType="number-pad" 
-              className="text-2xl font-bold text-center w-full"
-              placeholder="-"
+              className="text-2xl font-bold items-center justify-center text-center w-full"
+              placeholder="_ _ _ _ _ _"
             />
           </View>
-        ))}
+        
       </View>
 
       
