@@ -2,3 +2,5 @@
 
 /mobile-app/node_modules
 backend/.env
+admin-panel/node_modules
+admin-panel/.env
