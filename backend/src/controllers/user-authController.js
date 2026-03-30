@@ -1,29 +1,49 @@
 const userModel = require('../models/usersModel');
+const otpModel = require('../models/otpModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config/envConfig');
 const {generateToken, generateNewAccessToken} = require('../lib/generateToken');
 const checkPassword = require('../lib/checkPass');
+const signUpOTP = require('../lib/generateOTP');
 
 
 const registerUser = async (req,res) => {
-    const {name , email , password} = req.body;
+    const {email } = req.body;
+
     const user = await userModel.findOne({email})
 
     if(user){
         res.status(400).json({message : "user already exists"})
     } else {
 
-          const salt = await bcrypt.genSalt(10)
-    const hashPassword = await bcrypt.hash(password,salt)
-
-
-        const newUser = new userModel({name , email , password: hashPassword});
-        await newUser.save();
-        res.status(201).json({message : "user registered successfully"})
-    }
+         await signUpOTP(req, res)       
+  }
 
 }
+
+
+const verifyOTP = async (req,res) => {
+    const {email , otp} = req.body;
+
+    const otpEntry = await otpModel.findOne({email, otp});
+
+    if(!otpEntry){
+        res.status(400).json({message : "invalid OTP"})
+    } else {
+        const user = new userModel({
+            name: otpEntry.name,
+            email: otpEntry.email,
+            password: otpEntry.password
+        });
+        await user.save();
+        await otpModel.deleteOne({email, otp});
+        res.status(200).json({message : "user registered successfully"})    
+    }
+
+    
+}
+
 
 
 const userLogin = async (req,res) => {
@@ -59,4 +79,4 @@ const refreshAccessToken = async (req,res) => {
     }
 }
 
-module.exports = {registerUser, userLogin, userLogout, refreshAccessToken};
+module.exports = {registerUser,verifyOTP ,userLogin, userLogout, refreshAccessToken};

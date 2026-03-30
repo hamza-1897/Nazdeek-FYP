@@ -17,6 +17,7 @@ const userRoutes = require('../routes/usersRoute');
 
 connectDB();
 
+
 app.get('/', (req, res) => {
     res.send('Nazdeek server is Running...');
 });
