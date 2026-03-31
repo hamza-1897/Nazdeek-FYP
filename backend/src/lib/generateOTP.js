@@ -30,7 +30,7 @@ const signUpOTP = async (req, res) => {
         await sendEmail({
             email: email,
             subject: 'Nazdeek App - OTP Verification',
-            message: `Hello ${name}, Your verification code is: ${otp}. This code will expire in 2 minutes.`
+            message: `Hello ${name}, Your SignUp verification code is: ${otp}. This code will expire in 2 minutes.`
         });
 
         
@@ -42,4 +42,35 @@ const signUpOTP = async (req, res) => {
 
 };
 
-module.exports = signUpOTP;
+const forgotPasswordOTP = async (email, res) => {
+    
+
+    const otp = crypto.randomInt(100000, 999999).toString();
+    console.log(`Generated OTP for ${email}: ${otp}`);
+     const otpEntry = new otpModel({
+        email,
+        otp
+    });
+    await otpEntry.save();
+
+     try {
+        await sendEmail({
+            email: email,
+            subject: 'Nazdeek App - OTP Verification',
+            message: `Hello ${name}, Your verification code For Password Reset is: ${otp}. This code will expire in 2 minutes.`
+        });
+
+        
+        res.status(200).json({ message: "Email sent successfully!" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Email sending failed" });
+    }
+
+}
+     
+
+module.exports = {
+    signUpOTP,
+    forgotPasswordOTP
+};
