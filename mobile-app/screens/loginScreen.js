@@ -11,12 +11,12 @@ const LoginScreen = ({ navigation }) => {
     <SafeAreaView className="flex-1 bg-white">
       <View className="px-6 pt-12">
         
-        {/* Logo Section */}
+       
         <Text className="text-4xl font-bold text-[#006666] text-center italic mb-10">
           Nazdeek
         </Text>
         
-        {/* Welcome Text */}
+       
         <Text className="text-3xl font-bold text-center text-gray-800">
           Welcome back!
         </Text>
@@ -24,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
           Log in to your account to continue
         </Text>
 
-        {/* Email Input */}
+       
         <View className="mb-5">
           <Text className="text-sm font-bold mb-2 text-gray-800">Email</Text>
           <TextInput
@@ -36,7 +36,7 @@ const LoginScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Password Input */}
+       
         <View className="mb-5">
           <Text className="text-sm font-bold mb-2 text-gray-800">Password</Text>
           <View className="flex-row items-center border border-gray-300 rounded-lg pr-4">
@@ -57,7 +57,7 @@ const LoginScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Forgot Password Link - LINKED HERE */}
+        
         <TouchableOpacity 
           className="self-end mb-8"
           onPress={() => navigation.navigate('ForgotPassword')}
@@ -65,7 +65,7 @@ const LoginScreen = ({ navigation }) => {
           <Text className="text-[#006666] underline font-bold">Forgot Password?</Text>
         </TouchableOpacity>
 
-        {/* Login Button */}
+       
         <TouchableOpacity 
           className="bg-[#006666] p-4 rounded-lg items-center mb-4"
           onPress={() => {
@@ -76,12 +76,12 @@ const LoginScreen = ({ navigation }) => {
           <Text className="text-white text-lg font-bold">Login</Text>
         </TouchableOpacity>
 
-        {/* Guest Button */}
+       
         <TouchableOpacity className="border-2 border-[#006666] p-4 rounded-lg items-center">
           <Text className="text-[#006666] text-lg font-bold">Continue as Guest</Text>
         </TouchableOpacity>
 
-        {/* Sign Up Link - LINKED HERE (Make sure name matches AuthNavigation) */}
+       
         <View className="flex-row justify-center mt-24">
           <Text className="text-gray-500">Don't have an account? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
