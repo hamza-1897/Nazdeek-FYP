@@ -11,6 +11,7 @@ const SignupScreen = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       
+      
       <View className="px-6 pt-4 flex-row items-center">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={24} color="black" />
@@ -35,7 +36,7 @@ const SignupScreen = ({ navigation }) => {
           />
         </View>
 
-        
+       
         <View className="mb-5">
           <Text className="text-sm font-bold mb-2 text-gray-800">Email</Text>
           <TextInput
@@ -72,13 +73,14 @@ const SignupScreen = ({ navigation }) => {
         <TouchableOpacity 
           className="bg-[#006666] py-4 rounded-xl items-center shadow-sm"
           onPress={() => {
-            console.log("Signing up...");
-                     }}
+            console.log("Signing up and moving to OTP...");
+            navigation.navigate('VerifyOTP'); // Ye line add ki hai
+          }}
         >
           <Text className="text-white text-lg font-bold">Sign Up</Text>
         </TouchableOpacity>
 
-      
+        
         <View className="flex-row justify-center mt-12">
           <Text className="text-gray-500 text-base">Already have an account? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
