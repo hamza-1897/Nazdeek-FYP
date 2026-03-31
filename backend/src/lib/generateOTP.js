@@ -53,19 +53,14 @@ const forgotPasswordOTP = async (email, res) => {
     });
     await otpEntry.save();
 
-     try {
+    
         await sendEmail({
             email: email,
             subject: 'Nazdeek App - OTP Verification',
-            message: `Hello ${name}, Your verification code For Password Reset is: ${otp}. This code will expire in 2 minutes.`
+            message: `Your verification code For Password Reset is: ${otp}. This code will expire in 2 minutes.`
         });
 
-        
-        res.status(200).json({ message: "Email sent successfully!" });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ message: "Email sending failed" });
-    }
+      
 
 }
      
