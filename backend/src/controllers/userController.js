@@ -13,6 +13,38 @@ const getUserProfile = async (req,res) => {
     }
 }
 
+// Update User Profile
+const updateUserProfile = async (req,res) => {
+    try {
+        const userId = req.params.id;
+        const { name } = req.body;
+
+        const user = await userModel.findById(userId);
+        if (!user) {return res.status(404).json({ message: "User not found" });
+    } else {
+        
+        if (name) {
+            user.name = name;
+            
+        }
+
+       
+        if (req.file) {
+            
+            user.profileImage = req.file.path;
+            
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Profile updated!", user });
+    }
+
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
 module.exports = {
-    getUserProfile
+    getUserProfile,
+    updateUserProfile
 }
