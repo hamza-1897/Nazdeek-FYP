@@ -43,7 +43,7 @@ const ResetPassword = ({ navigation }) => {
 
           <TouchableOpacity 
             className="bg-[#006666] py-4 rounded-2xl items-center shadow-md mt-12"
-            onPress={() => navigation.navigate('PasswordUpdated')}
+            onPress={() => navigation.replace('PasswordUpdated')}
           >
             <Text className="text-white text-lg font-bold">Reset Password</Text>
           </TouchableOpacity>
