@@ -54,9 +54,14 @@ const user = await userModel.findOne({email})
 if(!user || !(await checkPassword(password, user.password))){
     res.status(400).json({message : "invalid credentials"})
 } else {
+    const isActive = user.isActive;
+    if(!isActive){
+        res.status(403).json({message : "user account is deactivated"})
+    } else {
         const accessToken = generateToken(user._id, user.role, res);
         res.status(200).json({_id: user._id, name: user.name, lastLogin: user.lastLogin, message : "user logged in successfully", accessToken})
     }
+}
 }
 
 // User Logout

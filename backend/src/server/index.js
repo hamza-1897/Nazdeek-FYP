@@ -13,8 +13,9 @@ app.use(cookies());
 const config = require('../config/envConfig');
 const connectDB = require('../Config/dbConnection');
 const adminRoutes = require('../routes/adminRoutes');
-const userRoutes = require('../routes/usersRoute');
 const providerRoutes = require('../routes/providerRouts');
+const userAuthRoutes = require('../routes/users-AuthRoutes');
+const userRoutes = require('../routes/userRoutes');
 
 connectDB();
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/admin', adminRoutes);
+app.use('/api/user-auth', userAuthRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/provider', providerRoutes);   
 
