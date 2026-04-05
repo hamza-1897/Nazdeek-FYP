@@ -14,6 +14,7 @@ const config = require('../config/envConfig');
 const connectDB = require('../Config/dbConnection');
 const adminRoutes = require('../routes/adminRoutes');
 const userRoutes = require('../routes/usersRoute');
+const providerRoutes = require('../routes/providerRouts');
 
 connectDB();
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/provider', providerRoutes);   
 
 
 const PORT = config.PORT;

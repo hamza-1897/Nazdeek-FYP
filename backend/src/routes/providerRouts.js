@@ -3,7 +3,7 @@ const router = express.Router();
 const { registerProvider } = require('../controllers/providerController');
 
 
-router.post('/register-provider',
+router.post('/register',
     upload.fields([
     { name: 'cnicImages', maxCount: 2 },    
     { name: 'providerImage', maxCount: 10 } 
