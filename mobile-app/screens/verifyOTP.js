@@ -14,8 +14,8 @@ const VerifyOTP = ({ navigation }) => {
 
       
       <View className="items-center mb-8">
-        <View className="bg-[#E0F2F1] p-6 rounded-2xl">
-          <Ionicons name="shield-checkmark-outline" size={50} color="#006064" />
+        <View className="bg-[#e8f0f7] p-6 rounded-2xl">
+          <Ionicons name="shield-checkmark-outline" size={50} color="#1a5ea1" />
         </View>
       </View>
 
@@ -41,7 +41,7 @@ const VerifyOTP = ({ navigation }) => {
       </View>
 
       
-      <TouchableOpacity className="bg-[#006064] py-4 rounded-3xl shadow-lg flex-row justify-center items-center">
+      <TouchableOpacity className="bg-[#1a5ea1] py-4 rounded-3xl shadow-lg flex-row justify-center items-center">
         <Text className="text-white font-bold text-lg mr-2">Verify</Text>
         <Ionicons name="checkmark-circle-outline" size={20} color="white" />
       </TouchableOpacity>
@@ -50,7 +50,7 @@ const VerifyOTP = ({ navigation }) => {
       <View className="mt-8 flex-row justify-center">
         <Text className="text-gray-500">Didn't receive code? </Text>
         <TouchableOpacity>
-          <Text className="text-[#006064] font-bold">Resend</Text>
+          <Text className="text-[#1a5ea1] font-bold">Resend</Text>
         </TouchableOpacity>
       </View>
     </View>

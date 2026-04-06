@@ -72,7 +72,7 @@ const SignupScreen = ({ navigation }) => {
 
         
         <TouchableOpacity 
-          className="bg-[#006666] py-4 rounded-xl items-center shadow-sm"
+          className="bg-[#1a5ea1] py-4 rounded-xl items-center shadow-sm"
           onPress={() => {
             console.log("Signing up and moving to OTP...");
             navigation.navigate('VerifyOTP'); // Ye line add ki hai
@@ -85,7 +85,7 @@ const SignupScreen = ({ navigation }) => {
         <View className="flex-row justify-center mt-12">
           <Text className="text-gray-500 text-base">Already have an account? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text className="text-[#006666] font-bold text-base">Login</Text>
+            <Text className="text-[#1a5ea1] font-bold text-base">Login</Text>
           </TouchableOpacity>
         </View>
       </View>

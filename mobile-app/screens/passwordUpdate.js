@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 const PasswordUpdated = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 bg-white items-center justify-center px-8">
-      <View className="bg-[#52ab98] p-6 rounded-full mb-8 shadow-lg">
+      <View className="bg-[#1a5ea1] p-6 rounded-full mb-8 shadow-lg">
         <Ionicons name="checkmark" size={60} color="white" />
       </View>
 
@@ -16,7 +16,7 @@ const PasswordUpdated = ({ navigation }) => {
       </Text>
 
       <TouchableOpacity 
-        className="bg-[#006666] w-full py-4 rounded-2xl flex-row justify-center items-center"
+        className="bg-[#1a5ea1] w-full py-4 rounded-2xl flex-row justify-center items-center"
         onPress={() => navigation.replace('Login')}
       >
         <Text className="text-white text-lg font-bold mr-2">Back to Login</Text>
