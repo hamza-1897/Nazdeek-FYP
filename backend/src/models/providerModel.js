@@ -44,7 +44,7 @@ const providerSchema = new mongoose.Schema({
   
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: 'category',
     required: true
   },
   
