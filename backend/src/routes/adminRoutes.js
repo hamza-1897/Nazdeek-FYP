@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const {addCategory,getAllCategories} = require('../controllers/admin/categoryController');
+
 
 // category routes
+const {addCategory,getAllCategories} = require('../controllers/admin/categoryController');
 router.get('/getallcategories', getAllCategories);
 router.post('/add-category', addCategory);
 
+// provider routes
+const {getAllProviders} = require('../controllers/admin/admin-providerController');
+router.get('/getAllProviders', getAllProviders);
 
 module.exports = router;
