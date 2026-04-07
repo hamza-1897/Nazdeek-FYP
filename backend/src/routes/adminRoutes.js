@@ -8,7 +8,11 @@ router.get('/getallcategories', getAllCategories);
 router.post('/add-category', addCategory);
 
 // provider routes
-const {getAllProviders} = require('../controllers/admin/admin-providerController');
+const {getAllProviders ,getProviderById, updateProvider } = require('../controllers/admin/admin-providerController');
 router.get('/getAllProviders', getAllProviders);
+router.get('/getProviderById/:id', getProviderById);
+router.put('/updateProvider/:id', updateProvider);
+
+
 
 module.exports = router;
