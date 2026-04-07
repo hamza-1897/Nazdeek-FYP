@@ -1,5 +1,5 @@
-const providerModel = require('../models/providerModel'); 
-const userModel = require('../models/usersModel');     
+const providerModel = require('../../models/providerModel'); 
+const userModel = require('../../models/usersModel');     
 
 const registerProvider = async (req, res) => {
   try {

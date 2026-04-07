@@ -1,9 +1,9 @@
-const adminModel = require('../models/adminModel')
+const adminModel = require('../../models/adminModel')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('../config/envConfig');
-const {generateToken, generateNewAccessToken} = require('../lib/generateToken');
-const checkPassword = require('../lib/checkPass');
+const config = require('../../config/envConfig');
+const {generateToken, generateNewAccessToken} = require('../../lib/generateToken');
+const checkPassword = require('../../lib/checkPass');
 
 
 

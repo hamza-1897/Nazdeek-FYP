@@ -1,6 +1,21 @@
-const categoryModel = require('../models/categoryModel');
+const categoryModel = require('../../models/categoryModel');
+
+// get All Categories
+const getAllCategories = async (req, res) => {
+    try {
+        const categories = await categoryModel.find();
+        res.status(200).json({
+            success: true,
+            data: categories
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
 
 
+// Add New Category
 const addCategory = async (req, res) => {
     try {
         const { name, icon } = req.body; 
@@ -26,4 +41,4 @@ const addCategory = async (req, res) => {
     }
 };
 
-module.exports = { addCategory };
+module.exports = { addCategory, getAllCategories };
