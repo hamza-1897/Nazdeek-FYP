@@ -7,8 +7,8 @@ const ForgotPassword = ({ navigation }) => {
     <View className="flex-1 bg-white px-6 justify-center">
       
       <View className="items-center mb-8">
-        <View className="bg-[#E0F2F1] p-6 rounded-full">
-          <Ionicons name="lock-open-outline" size={50} color="#006064" />
+        <View className="bg-[#e8f0f7] p-6 rounded-full">
+          <Ionicons name="lock-open-outline" size={50} color="#1a5ea1" />
         </View>
       </View>
 
@@ -31,7 +31,7 @@ const ForgotPassword = ({ navigation }) => {
 
      
       <TouchableOpacity 
-        className="bg-[#006064] py-4 rounded-3xl shadow-lg items-center"
+        className="bg-[#1a5ea1] py-4 rounded-3xl shadow-lg items-center"
         onPress={() => navigation.navigate('VerifyOTP')}
       >
         <Text className="text-white font-bold text-lg">Get OTP</Text>
@@ -39,8 +39,8 @@ const ForgotPassword = ({ navigation }) => {
 
      
       <TouchableOpacity className="mt-10 flex-row justify-center items-center" onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={18} color="#006064" />
-        <Text className="text-[#006064] font-bold ml-2">Back to Login</Text>
+        <Ionicons name="arrow-back" size={18} color="#1a5ea1" />
+        <Text className="text-[#1a5ea1] font-bold ml-2">Back to Login</Text>
       </TouchableOpacity>
     </View>
   );

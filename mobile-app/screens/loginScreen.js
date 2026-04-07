@@ -13,7 +13,7 @@ const LoginScreen = ({ navigation }) => {
       <View className="px-6 pt-12">
         
        
-        <Text className="text-4xl font-bold text-[#006666] text-center italic mb-10">
+        <Text className="text-4xl font-bold text-[#1a5ea1] text-center italic mb-10">
           Nazdeek
         </Text>
         
@@ -63,12 +63,12 @@ const LoginScreen = ({ navigation }) => {
           className="self-end mb-8"
           onPress={() => navigation.navigate('ForgotPassword')}
         >
-          <Text className="text-[#006666] underline font-bold">Forgot Password?</Text>
+          <Text className="text-[#1a5ea1] underline font-bold">Forgot Password?</Text>
         </TouchableOpacity>
 
        
         <TouchableOpacity 
-          className="bg-[#006666] p-4 rounded-lg items-center mb-4"
+          className="bg-[#1a5ea1] p-4 rounded-lg items-center mb-4"
           onPress={() => {
             // Yahan bad mein hum backend logic lagayenge
             alert("Login logic will be here!");
@@ -78,15 +78,15 @@ const LoginScreen = ({ navigation }) => {
         </TouchableOpacity>
 
        
-        <TouchableOpacity className="border-2 border-[#006666] p-4 rounded-lg items-center">
-          <Text className="text-[#006666] text-lg font-bold">Continue as Guest</Text>
+        <TouchableOpacity className="border-2 border-[#1a5ea1] p-4 rounded-lg items-center">
+          <Text className="text-[#1a5ea1] text-lg font-bold">Continue as Guest</Text>
         </TouchableOpacity>
 
        
         <View className="flex-row justify-center mt-24">
           <Text className="text-gray-500">Don't have an account? </Text>
           <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-            <Text className="text-[#006666] font-bold">Sign up</Text>
+            <Text className="text-[#1a5ea1] font-bold">Sign up</Text>
           </TouchableOpacity>
         </View>
 
