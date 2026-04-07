@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../config/cloudinary');
 const { registerProvider } = require('../controllers/providerController');
 
 

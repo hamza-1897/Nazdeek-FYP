@@ -12,10 +12,11 @@ app.use(cookies());
 
 const config = require('../config/envConfig');
 const connectDB = require('../Config/dbConnection');
-const adminRoutes = require('../routes/adminRoutes');
-const providerRoutes = require('../routes/providerRouts');
+const adminAuthRoutes = require('../routes/admin-AuthRoutes');
+const providerRoutes = require('../routes/providerRoutes');
 const userAuthRoutes = require('../routes/users-AuthRoutes');
 const userRoutes = require('../routes/userRoutes');
+const adminRoutes = require('../routes/adminRoutes');
 
 connectDB();
 
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
     res.send('Nazdeek server is Running...');
 });
 
+app.use('/api/admin-auth', adminAuthRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/user-auth', userAuthRoutes);
 app.use('/api/user', userRoutes);

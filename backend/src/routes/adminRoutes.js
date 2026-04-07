@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {adminLogin , registerAdmin, adminLogout, refreshAccessToken} = require('../controllers/admin-authController');
+const {addCategory} = require('../controllers/adminController');
 
-router.post('/register', registerAdmin);
-router.post('/login', adminLogin);
-router.post('/refresh-token', refreshAccessToken);
-router.post('/logout', adminLogout);
+router.post('/add-category', addCategory);
 
 
 module.exports = router;

@@ -9,9 +9,10 @@ const registerProvider = async (req, res) => {
       bio, 
       cnicNumber, 
       address, 
-      categoryName, 
+      categoryId, 
       experience 
     } = req.body;
+
 
    
     const cnicImages = req.files['cnicImages'] ? req.files['cnicImages'].map(f => f.path) : [];
@@ -26,9 +27,9 @@ const registerProvider = async (req, res) => {
       cnicImages,
       providerImage,
       address,
-      categoryName,
+      categoryId,
       experience,
-      verificationStatus: 'pending'
+      
     });
 
     await newProvider.save();
