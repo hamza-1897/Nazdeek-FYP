@@ -1,5 +1,4 @@
-const userModel = require('../models/usersModel');
-const { param } = require('../routes/adminRoutes');
+const userModel = require('../../models/usersModel');
 
 
 // Get User Profile

@@ -1,11 +1,11 @@
-const userModel = require('../models/usersModel');
-const otpModel = require('../models/otpModel');
+const userModel = require('../../models/usersModel');
+const otpModel = require('../../models/otpModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('../config/envConfig');
-const {generateToken, generateNewAccessToken} = require('../lib/generateToken');
-const checkPassword = require('../lib/checkPass');
-const {signUpOTP, forgotPasswordOTP} = require('../lib/generateOTP');
+const config = require('../../config/envConfig');
+const {generateToken, generateNewAccessToken} = require('../../lib/generateToken');
+const checkPassword = require('../../lib/checkPass');
+const {signUpOTP, forgotPasswordOTP} = require('../../lib/generateOTP');
 
 // User Registration 
 const registerUser = async (req,res) => {

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { registerProvider } = require('../controllers/providerController');
+const upload = require('../config/cloudinary');
+const { registerProvider } = require('../controllers/provider/providerController');
 
 
 router.post('/register',

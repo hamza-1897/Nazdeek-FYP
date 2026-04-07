@@ -42,7 +42,7 @@ const providerSchema = new mongoose.Schema({
   },
   
   
-  categoryName: {
+  categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
     required: true
