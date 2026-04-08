@@ -1,5 +1,6 @@
 import React from 'react'
 import nazdeekLogo from "../assets/Nazdeek.logo.jpeg";
+import { Link } from 'react-router-dom';
 function Login() {
   return (
     <div>
@@ -51,7 +52,7 @@ function Login() {
                   
                   
                 </label>
-                <a href="#" className="text-[#0D4D47] text-sm font-bold hover:underline">Forgot Password?</a>
+                <Link to="/forgot-password" className="text-[#0D4D47] text-sm font-bold hover:underline">Forgot Password?</Link>
               </div>
 
               <button 

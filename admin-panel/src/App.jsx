@@ -5,12 +5,16 @@ import Forgotpassword from './pages/Forgotpassword';
 
 function App() {
   return (
-    <BrowserRouter>
+  
+  <BrowserRouter>
       <Routes>
+      
         <Route path="/" element={<Login />} />
-        
+
+        <Route path="/forgot-password" element={<Forgotpassword />} />
       </Routes>
     </BrowserRouter>
+
   );
 }
 
