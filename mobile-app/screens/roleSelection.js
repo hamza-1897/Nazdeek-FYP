@@ -7,10 +7,10 @@ const RoleSelection = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 bg-white justify-center px-6">
       <Text className="text-2xl font-bold text-gray-800 mb-2">
-        How will you use ServeLink?
+        How will you use Nazdeek?
       </Text>
       <Text className="text-gray-500 mb-10">
-        You can always switch later
+        
       </Text>
 
      
@@ -23,7 +23,7 @@ const RoleSelection = ({ navigation }) => {
         </View>
         <View>
           <Text className="text-lg font-bold text-blue-900">I'm a customer</Text>
-          <Text className="text-blue-700/60 text-sm">Book services & post jobs</Text>
+          <Text className="text-blue-700/60 text-sm">Book services </Text>
         </View>
       </TouchableOpacity>
 
@@ -37,7 +37,7 @@ const RoleSelection = ({ navigation }) => {
         </View>
         <View>
           <Text className="text-lg font-bold text-green-900">I'm a service provider</Text>
-          <Text className="text-green-700/60 text-sm">Offer services & find jobs</Text>
+          <Text className="text-green-700/60 text-sm">Offer services </Text>
         </View>
       </TouchableOpacity>
     </SafeAreaView>
