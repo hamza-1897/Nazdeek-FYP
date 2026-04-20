@@ -13,6 +13,8 @@ const Tab = createBottomTabNavigator();
 const AppTabs = () => {
   return (
     <Tab.Navigator
+    initialRouteName="Home"
+
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: '#1a5ea1',
