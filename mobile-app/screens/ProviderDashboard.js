@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const ProviderDashboard = () => {
+const providerDashboard = () => {
   const stats = [
     { label: 'Active bookings', value: '8', bg: 'bg-blue-50' },
     { label: 'This month', value: 'Rs 22k', bg: 'bg-green-50' },
@@ -32,4 +32,4 @@ const ProviderDashboard = () => {
   );
 };
 
-export default ProviderDashboard;
+export default providerDashboard;

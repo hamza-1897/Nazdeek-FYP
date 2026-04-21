@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TextInput, TouchableOpacity} from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const CustomerDashboard = () => {
+const customerDashboard = () => {
   const categories = ['All', 'Cleaning', 'Plumbing', 'Beauty'];
 
   return (
@@ -59,4 +59,4 @@ const CustomerDashboard = () => {
   );
 };
 
-export default CustomerDashboard;
+export default customerDashboard;
