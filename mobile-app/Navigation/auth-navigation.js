@@ -7,8 +7,8 @@ import VerifyOTP from '../screens/verifyOTP';
 import ResetPassword from '../screens/resetPassword';
 import PasswordUpdated from '../screens/passwordUpdate';
 import RoleSelection from '../screens/roleSelection';
-import CustomerDashboard from '../screens/CustomerDashboard';
-import ProviderDashboard from '../screens/ProviderDashboard';
+import CustomerDashboard from '../screens/customerDashboard';
+import ProviderDashboard from '../screens/providerDashboard';
 import AppTabs from '../Components/AppTabs';
 
 const Stack = createNativeStackNavigator();
@@ -16,7 +16,7 @@ const Stack = createNativeStackNavigator();
 const AuthNavigation = () => {
   return (
     <Stack.Navigator 
-      initialRouteName="Login"
+      initialRouteName="RoleSelection"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen name="Login" component={LoginScreen} />
