@@ -25,17 +25,24 @@ const providerSchema = new mongoose.Schema({
     required: true,
     unique: true,
  },
-  
-  cnicImages: {
-    type: [String],
-    required: true
+
+ providerImage: {
+    type: String,
+    required: true,
   },
   
-  providerImage: {
-    type: [String],
-    default: []
-  },
+  cnicImages: [
+    {
+      type: String,
+    },
+  ],
   
+  workImages: [
+    {
+      type: String,
+    },
+
+  ],
   address: {
     type: String,
     required: true
@@ -52,7 +59,10 @@ const providerSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  
+  isPremium: {
+    type: Boolean,
+    default: false
+  },
   
   verificationStatus: {
     type: String,
