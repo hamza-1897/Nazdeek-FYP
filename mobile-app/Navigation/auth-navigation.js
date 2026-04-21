@@ -7,9 +7,9 @@ import VerifyOTP from '../screens/verifyOTP';
 import ResetPassword from '../screens/resetPassword';
 import PasswordUpdated from '../screens/passwordUpdate';
 import RoleSelection from '../screens/roleSelection';
-import CustomerDashboard from '../screens/customerDashboard';
-import ProviderDashboard from '../screens/providerDashboard';
+
 import AppTabs from '../Components/AppTabs';
+import NotificationScreen from '../screens/NotificationScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,8 +26,8 @@ const AuthNavigation = () => {
        <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="PasswordUpdated" component={PasswordUpdated} />
         <Stack.Screen name="RoleSelection" component={RoleSelection} />
-        <Stack.Screen name="CustomerDashboard" component={CustomerDashboard} />
-        <Stack.Screen name="ProviderDashboard" component={ProviderDashboard} />
+       
+        <Stack.Screen name='Notification' component={NotificationScreen} />
         <Stack.Screen name="AppTabs" component={AppTabs} />
     </Stack.Navigator>
   );

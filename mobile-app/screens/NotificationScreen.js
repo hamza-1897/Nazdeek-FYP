@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const ProviderDashboard = () => {
+const NotificationScreen = () => {
   return (
     <View>
-      <Text>ProviderDashboard</Text>
+      <Text>NotificationScreen</Text>
     </View>
   )
 }
 
-export default ProviderDashboard
+export default NotificationScreen
