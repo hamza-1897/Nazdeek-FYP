@@ -1,12 +1,29 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, ScrollView, StatusBar, Text } from 'react-native';
+import HeaderCard from '../Cards/HeaderCard';
 
-const HomeScreen = () => (
-  <SafeAreaView className="flex-1 bg-white">
-    <View className="flex-1 justify-center items-center pb-32">
-      <Text className="text-xl font-bold text-blue-600">Home Screen</Text>
+const HomeScreen = () => {
+  return (
+    <View className="flex-1 bg-white">
+     
+      <StatusBar barStyle="light-content" backgroundColor="#1a5ea1" />
+      
+      
+      <HeaderCard userName="Malaika" />
+
+      
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
+        <View className="px-6 pt-6">
+          <Text className="text-gray-800 text-2xl font-bold mb-4">Categories</Text>
+          
+        </View>
+      </ScrollView>
     </View>
-  </SafeAreaView>
-);
+  );
+};
+
 export default HomeScreen;
