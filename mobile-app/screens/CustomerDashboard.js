@@ -9,10 +9,10 @@ const customerDashboard = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       
-      <View className="bg-[#1a5ea1] px-6 pt-12 pb-8 rounded-b-[35px]">
+      <View className="bg-[#1a5ea1]  rounded-b-[35px]">
         <View className="flex-row justify-between items-center mb-6">
           <View>
-            <Text className="text-blue-100 text-base">Good morning,</Text>
+            <Text className="text-blue-100 text-base">Good morning!!!</Text>
             <Text className="text-white text-3xl font-bold"></Text>
           </View>
           <TouchableOpacity className="bg-white/30 w-12 h-12 rounded-full items-center justify-center border border-white/40">
