@@ -7,7 +7,7 @@ const { registerProvider } = require('../controllers/provider/providerController
 router.post('/register',
     upload.fields([
     { name: 'cnicImages', maxCount: 2 },    
-    { name: 'providerImage', maxCount: 10 } 
+    { name: 'providerImage', maxCount: 1 } 
   ]),
     registerProvider);
 
