@@ -38,4 +38,19 @@ const createService = async (req, res) => {
   }
 };
 
-module.exports = { createService };
+const getServicesByProvider = async (req, res) => {
+  try {
+    const { providerId } = req.params;
+    const services = await serviceModel.find({ providerId });
+    res.status(200).json({ 
+      success: true, 
+      message: "Services retrieved successfully.",
+      data: services 
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};
+
+module.exports = { createService, getServicesByProvider };
