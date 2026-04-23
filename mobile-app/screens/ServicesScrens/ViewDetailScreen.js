@@ -52,7 +52,7 @@ const ViewDetailScreen = ({ navigation }) => {
               <Text className="text-[#1a5ea1] font-bold text-xs uppercase">{service.category}</Text>
             </View>
 
-            <Text className="text-gray-900 text-3xl font-extrabold mb-8 leading-tight">
+            <Text className="text-gray-900 text-xl font-extrabold mb-8 leading-tight">
               {service.title}
             </Text>
 
@@ -111,12 +111,12 @@ const ViewDetailScreen = ({ navigation }) => {
       <View className="absolute bottom-0 left-0 right-0 bg-white px-7 pt-5 pb-10 border-t border-gray-100 flex-row justify-between items-center shadow-2xl">
         <View>
           <Text className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Total Price</Text>
-          <Text className="text-[#1a5ea1] text-2xl font-extrabold">${service.price.toFixed(2)}</Text>
+          <Text className="text-[#1a5ea1] text-xl font-extrabold">Rs. {service.price}</Text>
         </View>
         
         <TouchableOpacity 
           onPress={() => navigation.navigate('BookService')} 
-          className="bg-[#1a5ea1] px-12 py-4 rounded-3xl shadow-lg shadow-blue-200"
+          className="bg-[#1a5ea1] px-8 py-2 rounded-3xl shadow-lg shadow-blue-200"
         >
           <Text className="text-white text-lg font-bold">Book Now</Text>
         </TouchableOpacity>
