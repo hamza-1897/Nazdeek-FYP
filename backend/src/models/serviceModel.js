@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const serviceSchema = new mongoose.Schema({
-    name: {
+    serviceName: {
         type: String,
         required: true,
     },
@@ -13,13 +13,14 @@ const serviceSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    provider: {
+    providerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'provider',
         required: true,
     },
-    category: {
-        type: String,
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'category',
         required: true,
     },
     serviceImages: [
