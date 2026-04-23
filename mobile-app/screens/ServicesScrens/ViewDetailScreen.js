@@ -11,7 +11,7 @@ const ViewDetailScreen = ({ navigation }) => {
     category: 'Home Cleaning',
     rating: 4.5,
     reviews: 365,
-    price: 180.00,
+    price: 1500,
     mainImage: 'https://images.pexels.com/photos/4099467/pexels-photo-4099467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 
   };
 
@@ -111,7 +111,7 @@ const ViewDetailScreen = ({ navigation }) => {
       <View className="absolute bottom-0 left-0 right-0 bg-white px-7 pt-5 pb-10 border-t border-gray-100 flex-row justify-between items-center shadow-2xl">
         <View>
           <Text className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Total Price</Text>
-          <Text className="text-[#1a5ea1] text-2xl font-extrabold">${service.price.toFixed(2)}</Text>
+          <Text className="text-[#1a5ea1] text-2xl font-extrabold">Rs.{service.price}</Text>
         </View>
         
         <TouchableOpacity 
