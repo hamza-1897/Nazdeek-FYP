@@ -11,6 +11,10 @@ const createService = async (req, res) => {
       serviceImages, 
     } = req.body;
 
+
+    const serviceImages = req.files['serviceImages'] ? req.files['serviceImages'].map(f => f.path) 
+ : [];
+
     const newService = new serviceModel({
         providerId,
         serviceName,
