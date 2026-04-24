@@ -19,8 +19,8 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['customer', 'provider'], 
-    default: 'customer'
+    enum: ['not assigned','customer', 'provider'], 
+    default: 'not assigned'
   },
   fcmToken: {
     type: String,

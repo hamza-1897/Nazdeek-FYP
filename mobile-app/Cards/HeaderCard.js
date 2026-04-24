@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput , TouchableOpacity } from 'react-native';
+import { SafeAreaFrameContext } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -7,11 +8,12 @@ const HeaderCard = ({ userName }) => {
   const navigation = useNavigation()
   return (
     
-    <View className="bg-[#1a5ea1] p-4 rounded-b-[40px] shadow-2xl">
+          <View className="bg-[#1a5ea1] p-4 rounded-b-[40px] shadow-2xl">
+
       
       <View className="flex-row justify-between items-center mb-8">
         <View>
-          <Text className="text-blue-100 text-lg font-medium">Good morning!!!</Text>
+          <Text className="text-blue-100 text-lg font-medium">Good morning !!!</Text>
           <Text className="text-white text-xl font-bold tracking-tight">
             {userName || 'Malaika'}
           </Text>
@@ -33,6 +35,8 @@ const HeaderCard = ({ userName }) => {
         />
       </View>
     </View>
+    
+        
   );
 };
 

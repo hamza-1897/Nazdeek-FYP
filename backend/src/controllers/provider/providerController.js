@@ -16,8 +16,9 @@ const registerProvider = async (req, res) => {
 
    
     const cnicImages = req.files['cnicImages'] ? req.files['cnicImages'].map(f => f.path) : [];
-    const providerImage = req.files['providerImage'] ? req.files['providerImage'].map(f => f.path) : [];
-
+const providerImage = req.files['providerImage'] 
+            ? req.files['providerImage'][0].path 
+            : null;
     
     const newProvider = new providerModel({
       userId,

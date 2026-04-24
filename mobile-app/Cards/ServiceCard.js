@@ -36,17 +36,19 @@ const ServiceCard = ({ serviceName, providerName, rating, price, imageUri, onPre
           </View>
         </View>
 
-        <View className="flex-row justify-between items-end">
+        
+    <View className="flex-row justify-between items-end">
           <View>
-            <Text className="text-[#1a5ea1] text-sm font-extrabold">Rs. {price}</Text>
+          
+            <Text className="text-[#1a5ea1] text-lg font-extrabold">Rs.{price}</Text>
           </View>
           
-          
-          <View className="bg-[#1a5ea1] px-3 py-1.5 rounded-full">
-            <Text className="text-white font-bold text-[10px]">View Detail</Text>
-          </View>
-        </View>
+          <View className="bg-[#1a5ea1] px-4 py-2 rounded-xl">
+            <Text className="text-white font-bold text-xs">View Detail</Text>
+          </View>     
+        
       </View>
+   </View>
     </TouchableOpacity>
   );
 };
