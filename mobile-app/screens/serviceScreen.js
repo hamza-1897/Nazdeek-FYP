@@ -37,7 +37,7 @@ const ServicesScreen = ({ navigation }) => {
     serviceName="Deep House Cleaning"
     providerName="Wade Warren"
     rating="4.8"
-    price="120.00"
+    price="1500"
     imageUri="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=800"
     onPress={() => navigation.navigate('ViewDetail')} 
   />
@@ -46,7 +46,7 @@ const ServicesScreen = ({ navigation }) => {
     serviceName="Kitchen Cleaning"
     providerName="Jenny Wilson"
     rating="5.0"
-    price="80.00"
+    price="1000"
     imageUri="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800"
     onPress={() => navigation.navigate('ViewDetail')}
   />

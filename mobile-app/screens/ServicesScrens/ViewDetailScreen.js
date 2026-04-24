@@ -11,7 +11,7 @@ const ViewDetailScreen = ({ navigation }) => {
     category: 'Home Cleaning',
     rating: 4.5,
     reviews: 365,
-    price: 180.00,
+    price: 1500,
     mainImage: 'https://images.pexels.com/photos/4099467/pexels-photo-4099467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 
   };
 

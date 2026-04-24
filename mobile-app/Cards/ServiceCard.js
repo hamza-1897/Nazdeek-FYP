@@ -6,26 +6,33 @@ const ServiceCard = ({ serviceName, providerName, rating, price, imageUri, onPre
   return (
     <TouchableOpacity 
       onPress={onPress}
-      className="bg-white rounded-[30px] p-4 mb-5 border border-gray-100 shadow-sm flex-row"
+      
+      className="bg-white rounded-[25px] p-3 mb-3 border border-gray-100 shadow-sm flex-row"
     >
+      
       <Image 
         source={{ uri: imageUri || 'https://images.unsplash.com/photo-1581578731522-30d8d067469a?q=80&w=500' }} 
-        className="w-28 h-28 rounded-2xl"
+        className="w-20 h-20 rounded-2xl"
+        resizeMode="cover"
       />
 
-      <View className="flex-1 ml-4 justify-between py-1">
+      <View className="flex-1 ml-3 justify-between py-0.5">
         <View>
-          <View className="flex-row justify-between items-start">
-            <Text className="text-gray-900 text-lg font-bold flex-1" numberOfLines={1}>{serviceName}</Text>
-            <View className="flex-row items-center bg-yellow-50 px-2 py-0.5 rounded-lg">
-              <Ionicons name="star" size={12} color="#fbbf24" />
-              <Text className="text-yellow-700 text-[10px] font-bold ml-1">{rating}</Text>
+          <View className="flex-row justify-between items-center">
+            
+            <Text className="text-gray-900 text-base font-bold flex-1" numberOfLines={1}>
+              {serviceName}
+            </Text>
+            
+            <View className="flex-row items-center bg-yellow-50 px-1.5 py-0.5 rounded-lg">
+              <Ionicons name="star" size={10} color="#fbbf24" />
+              <Text className="text-yellow-700 text-[9px] font-bold ml-1">{rating}</Text>
             </View>
           </View>
           
-          <View className="flex-row items-center mt-1">
-            <Ionicons name="person-circle-outline" size={16} color="#1a5ea1" />
-            <Text className="text-gray-500 text-xs ml-1 font-medium">{providerName}</Text>
+          <View className="flex-row items-center mt-0.5">
+            <Ionicons name="person-circle-outline" size={14} color="#1a5ea1" />
+            <Text className="text-gray-500 text-[11px] ml-1 font-medium">{providerName}</Text>
           </View>
         </View>
 

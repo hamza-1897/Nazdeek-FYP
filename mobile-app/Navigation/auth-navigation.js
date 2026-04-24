@@ -11,9 +11,11 @@ import ViewDetailScreen from '../screens/ServicesScrens/ViewDetailScreen';
 import BookServiceScreen from '../screens/ServicesScrens/BookServiceScreen';
 import BookingSuccessScreen from '../screens/ServicesScrens/BookingSuccessScreen';
 import BookingScreen from '../screens/bookingScreen';
+import CancelBookingScreen from '../screens/Bookings related/CancelBookingScreen';
 
 import AppTabs from '../Components/AppTabs';
 import NotificationScreen from '../screens/NotificationScreen';
+import BookingCancelSuccess from '../screens/Bookings related/BookingCancelSuccess';
 
 
 const Stack = createNativeStackNavigator();
@@ -31,14 +33,16 @@ const AuthNavigation = () => {
        <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="PasswordUpdated" component={PasswordUpdated} />
         <Stack.Screen name="RoleSelection" component={RoleSelection} />
-       
-        <Stack.Screen name='Notification' component={NotificationScreen} />
-        <Stack.Screen name="AppTabs" component={AppTabs} />
+        
         <Stack.Screen name="ViewDetail" component={ViewDetailScreen} />
         <Stack.Screen name="BookService" component={BookServiceScreen} />
         <Stack.Screen name="BookingSuccess" component={BookingSuccessScreen} />   
-        
+         
+         <Stack.Screen name="CancelBooking" component={CancelBookingScreen} /> 
+      <Stack.Screen name="BookingCancelSuccess" component={BookingCancelSuccess} />
 
+      <Stack.Screen name="AppTabs" component={AppTabs} />
+       <Stack.Screen name='Notification' component={NotificationScreen} />
     </Stack.Navigator>
   );
 };
