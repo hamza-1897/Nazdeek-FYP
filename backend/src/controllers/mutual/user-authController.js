@@ -59,7 +59,7 @@ if(!user || !(await checkPassword(password, user.password))){
         res.status(403).json({message : "user account is deactivated"})
     } else {
         const accessToken = generateToken(user._id, user.role, res);
-        res.status(200).json({_id: user._id, name: user.name, lastLogin: user.lastLogin, message : "user logged in successfully", accessToken})
+        res.status(200).json({_id: user._id, name: user.name, role: user.role, message : "user logged in successfully", accessToken})
     }
 }
 }
@@ -113,6 +113,21 @@ const resetPassword = async (req,res) => {
     }
 }
 
+// Update role
+const updateRole = async (req,res) => {
+    const userId = req.params.id;
+    const {role} = req.body;
+    const user = await userModel.findById(userId);
+    if(!user){
+        res.status(404).json({message : "user not found"})
+    } else {
+        user.role = role;
+        await user.save();
+        res.status(200).json({message : "user role updated successfully"})
+    }
+}
+
+
 
 // Refresh Access Token
 const refreshAccessToken = async (req,res) => {
@@ -130,4 +145,4 @@ const refreshAccessToken = async (req,res) => {
     }
 }
 
-module.exports = {registerUser,verifySignUPOTP ,userLogin, userLogout, forgotOTP,verifyForgotOTP, resetPassword,refreshAccessToken};
+module.exports = {registerUser,verifySignUPOTP ,userLogin, userLogout, forgotOTP,verifyForgotOTP, updateRole, resetPassword,refreshAccessToken};
