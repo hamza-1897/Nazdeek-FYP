@@ -17,6 +17,7 @@ import AppTabs from '../Components/AppTabs';
 import NotificationScreen from '../screens/NotificationScreen';
 import BookingCancelSuccess from '../screens/Bookings related/BookingCancelSuccess';
 
+import EditProfileScreen from '../screens/CustProfile section/EditProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ const AuthNavigation = () => {
          
          <Stack.Screen name="CancelBooking" component={CancelBookingScreen} /> 
       <Stack.Screen name="BookingCancelSuccess" component={BookingCancelSuccess} />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} />
 
       <Stack.Screen name="AppTabs" component={AppTabs} />
        <Stack.Screen name='Notification' component={NotificationScreen} />
