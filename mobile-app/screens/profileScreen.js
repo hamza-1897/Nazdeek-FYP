@@ -22,17 +22,9 @@ const ProfileScreen = ({ navigation }) => {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       
-      
-      <View className="px-6 py-4 flex-row items-center relative">
-        <TouchableOpacity 
-          onPress={() => navigation.goBack()}
-          className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center bg-white shadow-sm"
-        >
-          <Ionicons name="arrow-back" size={22} color="#1a5ea1" />
-        </TouchableOpacity>
-        <View className="flex-1 items-center">
-          <Text className="text-xl font-bold text-gray-800">Profile</Text>
-        </View>
+     
+      <View className="px-6 py-4 flex-row items-center justify-center relative">
+        <Text className="text-xl font-bold text-gray-800">Profile</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="px-6">
@@ -44,7 +36,6 @@ const ProfileScreen = ({ navigation }) => {
               source={{ uri: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400' }} 
               className="w-28 h-28 rounded-full"
             />
-            {/* Yahan jo TouchableOpacity thi wo ab nikal di hai */}
           </View>
           <Text className="text-xl font-bold text-gray-900 mt-4">Shamir Ali</Text>
         </View>
@@ -55,28 +46,27 @@ const ProfileScreen = ({ navigation }) => {
             title="Your profile" 
             onPress={() => navigation.navigate('EditProfile')} 
           />
+          
           <MenuItem 
             icon="location-outline" 
             title="Manage Address" 
             onPress={() => {}} 
           />
           
-          <MenuItem 
-            icon="calendar-outline" 
-            title="My Bookings" 
-            onPress={() => navigation.navigate('AppTabs', { screen: 'Bookings' })} 
-          />
+          
           
           <MenuItem 
             icon="help-circle-outline" 
             title="Help Center" 
             onPress={() => {}} 
           />
+          
           <MenuItem 
             icon="shield-checkmark-outline" 
             title="Privacy Policy" 
             onPress={() => {}} 
           />
+          
           
           <TouchableOpacity className="flex-row items-center py-4 mt-4">
             <Ionicons name="log-out-outline" size={22} color="#ef4444" />
