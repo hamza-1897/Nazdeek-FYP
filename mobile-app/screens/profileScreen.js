@@ -22,14 +22,14 @@ const ProfileScreen = ({ navigation }) => {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       
-     
+      
       <View className="px-6 py-4 flex-row items-center justify-center relative">
         <Text className="text-xl font-bold text-gray-800">Profile</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="px-6">
         
-        
+       
         <View className="items-center mt-6 mb-8">
           <View className="relative">
             <Image 
@@ -41,29 +41,17 @@ const ProfileScreen = ({ navigation }) => {
         </View>
 
         <View className="mt-2">
+        
           <MenuItem 
             icon="person-outline" 
             title="Your profile" 
             onPress={() => navigation.navigate('EditProfile')} 
           />
           
-          <MenuItem 
-            icon="location-outline" 
-            title="Manage Address" 
-            onPress={() => {}} 
-          />
-          
-          
-          
+         
           <MenuItem 
             icon="help-circle-outline" 
             title="Help Center" 
-            onPress={() => {}} 
-          />
-          
-          <MenuItem 
-            icon="shield-checkmark-outline" 
-            title="Privacy Policy" 
             onPress={() => {}} 
           />
           
