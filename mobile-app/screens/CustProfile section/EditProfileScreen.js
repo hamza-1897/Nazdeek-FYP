@@ -8,8 +8,9 @@ import { Dropdown } from 'react-native-element-dropdown';
 const EditProfileScreen = ({ navigation }) => {
   const [name, setName] = useState('Shamir Ali');
   const [phone, setPhone] = useState('0300 1234567');
-  const [email, setEmail] = useState('shamir.ali@example.com');
+  const [email] = useState('shamir.ali@example.com');
   const [gender, setGender] = useState('Male');
+  const [address, setAddress] = useState('House #123, Street 5, Mandi Bahauddin'); // New Address State
   const [profileImage, setProfileImage] = useState('https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400');
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const phoneInputRef = useRef(null);
@@ -60,13 +61,13 @@ const EditProfileScreen = ({ navigation }) => {
         </View>
 
         <View className="gap-y-5">
-         
+          
           <View>
             <Text className="text-gray-700 font-semibold mb-2 ml-1">Name</Text>
             <TextInput value={name} onChangeText={setName} className="bg-white border border-gray-200 p-4 rounded-2xl text-gray-800 text-base" />
           </View>
 
-         
+          
           <View>
             <Text className="text-gray-700 font-semibold mb-2 ml-1">Phone Number</Text>
             <View className={`bg-white border ${isEditingPhone ? 'border-[#1a5ea1]' : 'border-gray-200'} flex-row items-center pr-4 rounded-2xl`}>
@@ -77,18 +78,16 @@ const EditProfileScreen = ({ navigation }) => {
             </View>
           </View>
 
-         
+          
           <View>
             <Text className="text-gray-700 font-semibold mb-2 ml-1">Email</Text>
-            <TextInput 
-              value={email} 
-              onChangeText={setEmail} 
-              keyboardType="email-address"
-              className="bg-white border border-gray-200 p-4 rounded-2xl text-gray-800 text-base" 
-            />
+            <View className="bg-gray-50 border border-gray-100 p-4 rounded-2xl">
+              <Text className="text-gray-400 text-base">{email}</Text>
+            </View>
+            <Text className="text-[10px] text-gray-400 mt-1 ml-1">* Email cannot be changed</Text>
           </View>
 
-      
+         
           <View>
             <Text className="text-gray-700 font-semibold mb-2 ml-1">Gender</Text>
             <Dropdown
@@ -105,6 +104,19 @@ const EditProfileScreen = ({ navigation }) => {
               renderRightIcon={() => (
                 <Ionicons name="chevron-down" size={20} color="#cbd5e1" />
               )}
+            />
+          </View>
+
+         
+          <View>
+            <Text className="text-gray-700 font-semibold mb-2 ml-1">Manage Address</Text>
+            <TextInput 
+              value={address} 
+              onChangeText={setAddress} 
+              multiline={true}
+              numberOfLines={2}
+              textAlignVertical="top"
+              className="bg-white border border-gray-200 p-4 rounded-2xl text-gray-800 text-base min-h-[80px]" 
             />
           </View>
         </View>
