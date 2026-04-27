@@ -55,7 +55,6 @@ const BookingScreen = ({ navigation }) => {
     }
   ];
 
-  
   const cancelledBookings = [
     {
       id: '1',
@@ -81,21 +80,9 @@ const BookingScreen = ({ navigation }) => {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
       
-      <View className="px-6 py-4 flex-row justify-between items-center bg-white">
-        <TouchableOpacity 
-          onPress={() => navigation.goBack()}
-          className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center bg-white shadow-sm"
-        >
-          <Ionicons name="arrow-back" size={22} color="#1a5ea1" />
-        </TouchableOpacity>
-        
+      
+      <View className="px-6 py-4 flex-row justify-center items-center bg-white">
         <Text className="text-xl font-bold text-gray-800">My Bookings</Text>
-        
-        <TouchableOpacity 
-          className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center bg-white shadow-sm"
-        >
-          <Ionicons name="search" size={22} color="#1a5ea1" />
-        </TouchableOpacity>
       </View>
 
       <View className="flex-row px-6 border-b border-gray-50 mb-4">
@@ -138,7 +125,6 @@ const BookingScreen = ({ navigation }) => {
           ))
         )}
 
-        
         {activeTab === 'Cancelled' && (
           cancelledBookings.length > 0 ? (
             cancelledBookings.map((item) => (
