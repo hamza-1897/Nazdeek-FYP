@@ -102,4 +102,4 @@ const deleteService = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
-module.exports = { createService, editService, getServicesByProvider };
+module.exports = { createService, editService,deleteService, getServicesByProvider };

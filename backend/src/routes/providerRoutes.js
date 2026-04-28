@@ -12,8 +12,11 @@ router.post('/register',
     registerProvider);
 
 // service routes
-const { createService } = require('../controllers/provider/serviceController');
+const { createService,editService,deleteService, getServicesByProvider } = require('../controllers/provider/serviceController');
 
 router.post('/create-service', upload.array('serviceImages'), createService);
+router.get('/services/:providerId', getServicesByProvider);
+router.put('/edit-service/:serviceId', upload.array('serviceImages'), editService);
+router.delete('/delete-service/:serviceId', deleteService);
 
 module.exports = router;
