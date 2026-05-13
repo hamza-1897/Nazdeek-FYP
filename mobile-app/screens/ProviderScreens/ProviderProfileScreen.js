@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import ProviderServiceCard from '../../Cards/ProviderServiceCard'; 
 
 const ProviderProfileScreen = ({ navigation }) => {
-  const [activeTab, setActiveTab] = useState('Gallery');
+  const [activeTab, setActiveTab] = useState('Services'); 
 
   const provider = {
     name: 'Zayaan Khan',
@@ -16,10 +17,32 @@ const ProviderProfileScreen = ({ navigation }) => {
     image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400'
   };
 
+  
   const servicesList = [
-    { id: 1, name: 'Deep House Cleaning', price: '1500' },
-    { id: 2, name: 'Kitchen Degreasing', price: '800' },
-    { id: 3, name: 'Bathroom Sanitation', price: '600' },
+    { 
+      id: 1, 
+      name: 'Deep House Cleaning', 
+      price: '1500', 
+      category: 'Home Cleaning', 
+      providerName: 'Zayaan Khan',
+      image: 'https://images.pexels.com/photos/4099467/pexels-photo-4099467.jpeg?auto=compress&cs=tinysrgb&w=400'
+    },
+    { 
+      id: 2, 
+      name: 'Kitchen Degreasing', 
+      price: '800', 
+      category: 'Kitchen', 
+      providerName: 'Zayaan Khan',
+      image: 'https://images.pexels.com/photos/6195122/pexels-photo-6195122.jpeg?auto=compress&cs=tinysrgb&w=400'
+    },
+    { 
+      id: 3, 
+      name: 'Bathroom Sanitation', 
+      price: '600', 
+      category: 'Bathroom', 
+      providerName: 'Zayaan Khan',
+      image: 'https://images.pexels.com/photos/4886600/pexels-photo-4886600.jpeg?auto=compress&cs=tinysrgb&w=400'
+    },
   ];
 
   const galleryImages = [
@@ -52,6 +75,7 @@ const ProviderProfileScreen = ({ navigation }) => {
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
+      
       <View className="px-6 py-4 flex-row justify-between items-center mt-8">
         <TouchableOpacity 
           onPress={() => navigation.goBack()}
@@ -66,6 +90,7 @@ const ProviderProfileScreen = ({ navigation }) => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
+       
         <View className="items-center px-6 pt-6">
           <View className="relative">
             <Image 
@@ -86,6 +111,7 @@ const ProviderProfileScreen = ({ navigation }) => {
           </View>
         </View>
 
+       
         <View className="flex-row justify-between px-6 mt-8">
           <StatItem icon="people-outline" value={provider.customers} label="Customer" />
           <StatItem icon="briefcase-outline" value={provider.experience} label="Years Exp." />
@@ -93,6 +119,7 @@ const ProviderProfileScreen = ({ navigation }) => {
           <StatItem icon="chatbubble-outline" value={provider.reviews} label="Review" />
         </View>
 
+       
         <View className="flex-row border-b border-gray-100 mt-8 px-6">
           {['Services', 'About', 'Gallery', 'Review'].map((tab) => (
             <TouchableOpacity 
@@ -107,15 +134,17 @@ const ProviderProfileScreen = ({ navigation }) => {
           ))}
         </View>
 
+       
         <View className="px-6 py-6">
           {activeTab === 'Services' && (
             <View>
-              <Text className="text-lg font-bold text-gray-800 mb-4">Offered Services</Text>
+              <View className="flex-row justify-between items-center mb-4">
+                <Text className="text-lg font-bold text-gray-800">Services ({servicesList.length})</Text>
+              </View>
+              
+             
               {servicesList.map((item) => (
-                <View key={item.id} className="flex-row justify-between items-center bg-gray-50 p-4 rounded-2xl mb-3 border border-gray-100">
-                  <Text className="text-gray-700 font-medium">{item.name}</Text>
-                  <Text className="text-[#1a5ea1] font-bold text-base">Rs. {item.price}</Text>
-                </View>
+                <ProviderServiceCard key={item.id} service={item} />
               ))}
             </View>
           )}
