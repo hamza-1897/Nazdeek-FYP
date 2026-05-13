@@ -10,7 +10,7 @@ const ProviderProfileScreen = ({ navigation }) => {
     category: 'Cleaning Services',
     location: 'Mandi Bahauddin, Pakistan',
     rating: '4.9',
-    reviews: '1350',
+    reviews: '2',
     customers: '500+',
     experience: '10+',
     image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400'
@@ -26,14 +26,32 @@ const ProviderProfileScreen = ({ navigation }) => {
     'https://images.pexels.com/photos/4886600/pexels-photo-4886600.jpeg?auto=compress&cs=tinysrgb&w=600',
     'https://images.pexels.com/photos/6195122/pexels-photo-6195122.jpeg?auto=compress&cs=tinysrgb&w=600',
     'https://images.pexels.com/photos/4099469/pexels-photo-4099469.jpeg?auto=compress&cs=tinysrgb&w=600',
-    'https://images.pexels.com/photos/4099467/pexels-photo-4099467.jpeg?auto=compress&cs=tinysrgb&w=600'
+    'https://images.pexels.com/photos/4099467/pexels-photo-4099467.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+  ];
+
+  const reviewsData = [
+    {
+      id: 1,
+      name: 'Abas Ali',
+      date: '4 months ago',
+      rating: 5,
+      comment: 'Professional service! The cleaning was thorough and the provider was very polite. Highly recommended for deep cleaning.',
+      image: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100'
+    },
+    {
+      id: 2,
+      name: 'Maryam Asghar',
+      date: '2 months ago',
+      rating: 4,
+      comment: 'Great experience. They arrived on time and did a fantastic job with the kitchen and bathrooms.',
+      image: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100'
+    }
   ];
 
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      
       <View className="px-6 py-4 flex-row justify-between items-center mt-8">
         <TouchableOpacity 
           onPress={() => navigation.goBack()}
@@ -48,7 +66,6 @@ const ProviderProfileScreen = ({ navigation }) => {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-       
         <View className="items-center px-6 pt-6">
           <View className="relative">
             <Image 
@@ -69,7 +86,6 @@ const ProviderProfileScreen = ({ navigation }) => {
           </View>
         </View>
 
-       
         <View className="flex-row justify-between px-6 mt-8">
           <StatItem icon="people-outline" value={provider.customers} label="Customer" />
           <StatItem icon="briefcase-outline" value={provider.experience} label="Years Exp." />
@@ -77,7 +93,6 @@ const ProviderProfileScreen = ({ navigation }) => {
           <StatItem icon="chatbubble-outline" value={provider.reviews} label="Review" />
         </View>
 
-        
         <View className="flex-row border-b border-gray-100 mt-8 px-6">
           {['Services', 'About', 'Gallery', 'Review'].map((tab) => (
             <TouchableOpacity 
@@ -92,9 +107,7 @@ const ProviderProfileScreen = ({ navigation }) => {
           ))}
         </View>
 
-        
         <View className="px-6 py-6">
-          {/* Services Section */}
           {activeTab === 'Services' && (
             <View>
               <Text className="text-lg font-bold text-gray-800 mb-4">Offered Services</Text>
@@ -107,7 +120,6 @@ const ProviderProfileScreen = ({ navigation }) => {
             </View>
           )}
 
-          
           {activeTab === 'Gallery' && (
             <View>
               <Text className="text-lg font-bold text-gray-800 mb-4">Gallery ({galleryImages.length})</Text>
@@ -124,17 +136,41 @@ const ProviderProfileScreen = ({ navigation }) => {
           {activeTab === 'About' && (
             <View>
               <Text className="text-lg font-bold text-gray-800 mb-2">About Provider</Text>
-              <Text className="text-gray-500 leading-6">Jenny is a professional cleaner with over 10 years of experience in deep house cleaning and office maintenance. Known for being punctual and detail-oriented.</Text>
+              <Text className="text-gray-500 leading-6">Zayaan is a professional cleaner with over 10 years of experience in deep house cleaning and office maintenance. Known for being punctual and detail-oriented.</Text>
             </View>
           )}
 
           {activeTab === 'Review' && (
             <View>
-               <Text className="text-lg font-bold text-gray-800 mb-4">Customer Feedback</Text>
-               <View className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                 <Text className="font-bold text-gray-800">A. Rashid</Text>
-                 <Text className="text-gray-500 text-sm mt-1">Excellent and detailed work, very punctual.</Text>
-               </View>
+              <Text className="text-lg font-bold text-gray-800 mb-6">Review</Text>
+
+              {reviewsData.map((review) => (
+                <View key={review.id} className="mb-8 pb-6 border-b border-gray-50">
+                  <View className="flex-row justify-between items-center mb-3">
+                    <View className="flex-row items-center">
+                      <Image source={{ uri: review.image }} className="w-10 h-10 rounded-full mr-3" />
+                      <Text className="text-gray-900 font-bold text-base">{review.name}</Text>
+                    </View>
+                    <Text className="text-gray-500 text-xs">{review.date}</Text>
+                  </View>
+                  
+                  <Text className="text-gray-600 leading-5 text-sm mb-2">{review.comment}</Text>
+                  
+                  {/* Stars Section: Comment ke niche */}
+                  <View className="flex-row items-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Ionicons 
+                        key={star} 
+                        name={star <= Math.floor(review.rating) ? "star" : "star-outline"} 
+                        size={16} 
+                        color="#fbbf24" 
+                        style={{ marginRight: 2 }}
+                      />
+                    ))}
+                    <Text className="ml-2 text-gray-800 font-bold text-xs">{review.rating}</Text>
+                  </View>
+                </View>
+              ))}
             </View>
           )}
         </View>
