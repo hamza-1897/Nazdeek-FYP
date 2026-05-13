@@ -135,15 +135,30 @@ const ProviderProfileScreen = ({ navigation }) => {
 
           {activeTab === 'About' && (
             <View>
-              <Text className="text-lg font-bold text-gray-800 mb-2">About Provider</Text>
-              <Text className="text-gray-500 leading-6">Zayaan is a professional cleaner with over 10 years of experience in deep house cleaning and office maintenance. Known for being punctual and detail-oriented.</Text>
+              <Text className="text-lg font-bold text-gray-800 mb-2">About</Text>
+              <Text className="text-gray-500 leading-6 mb-6">
+                Zayaan is a professional cleaner with over 10 years of experience in deep house cleaning. Known for being punctual and detail-oriented.
+              </Text>
+
+              <Text className="text-lg font-bold text-gray-800 mb-4">Service Provider</Text>
+              <View className="flex-row items-center justify-between bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+                <View className="flex-row items-center">
+                  <Image source={{ uri: provider.image }} className="w-12 h-12 rounded-full mr-3" />
+                  <View>
+                    <Text className="text-gray-900 font-bold">{provider.name}</Text>
+                    <Text className="text-gray-400 text-xs">Service Provider</Text>
+                  </View>
+                </View>
+                <TouchableOpacity className="bg-blue-50 p-2 rounded-full">
+                  <Ionicons name="chatbubble-ellipses" size={24} color="#1a5ea1" />
+                </TouchableOpacity>
+              </View>
             </View>
           )}
 
           {activeTab === 'Review' && (
             <View>
               <Text className="text-lg font-bold text-gray-800 mb-6">Review</Text>
-
               {reviewsData.map((review) => (
                 <View key={review.id} className="mb-8 pb-6 border-b border-gray-50">
                   <View className="flex-row justify-between items-center mb-3">
@@ -153,10 +168,7 @@ const ProviderProfileScreen = ({ navigation }) => {
                     </View>
                     <Text className="text-gray-500 text-xs">{review.date}</Text>
                   </View>
-                  
                   <Text className="text-gray-600 leading-5 text-sm mb-2">{review.comment}</Text>
-                  
-                  {/* Stars Section: Comment ke niche */}
                   <View className="flex-row items-center">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Ionicons 
