@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar, Animated } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const CreateServiceScreen = ({ navigation }) => {
-  
   const [category, setCategory] = useState('Select Category');
   const [isCatOpen, setIsCatOpen] = useState(false);
-  
   const [duration, setDuration] = useState('Select Duration');
   const [isDurOpen, setIsDurOpen] = useState(false);
 
-  const categories = ['Plumber', 'Electrician', 'Cleaning', 'Carpenter'];
+  const categories = ['Plumber', 'Electrician', 'Cleaning', 'Home Services,Carpanter'];
   const durations = ['30 min', '1 hour', '2 hours', 'Full day'];
 
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       
-     
       <View className="px-6 py-4 flex-row items-center justify-between mt-8">
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color="black" />
@@ -27,8 +24,6 @@ const CreateServiceScreen = ({ navigation }) => {
       </View>
 
       <ScrollView className="flex-1 px-6 mt-4" showsVerticalScrollIndicator={false}>
-        
-       
         <View className="mb-6">
           <Text className="text-gray-700 font-medium mb-2">Service title</Text>
           <TextInput 
@@ -38,7 +33,6 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
-       
         <View className="mb-6 z-50">
           <Text className="text-gray-700 font-medium mb-2">Category</Text>
           <TouchableOpacity 
@@ -51,7 +45,6 @@ const CreateServiceScreen = ({ navigation }) => {
             <Ionicons name={isCatOpen ? "chevron-up" : "chevron-down"} size={18} color="black" />
           </TouchableOpacity>
 
-         
           {isCatOpen && (
             <View className="bg-gray-50 rounded-xl mt-1 shadow-sm border border-gray-100 overflow-hidden">
               {categories.map((item, index) => (
@@ -67,7 +60,6 @@ const CreateServiceScreen = ({ navigation }) => {
           )}
         </View>
 
-       
         <View className="mb-6">
           <Text className="text-gray-700 font-medium mb-2">Description</Text>
           <TextInput 
@@ -78,7 +70,6 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
-        
         <View className="mb-6">
           <Text className="text-gray-700 font-medium mb-2">Base price (Rs)</Text>
           <TextInput 
@@ -89,7 +80,6 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
-       
         <View className="mb-6 z-40">
           <Text className="text-gray-700 font-medium mb-2">Duration</Text>
           <TouchableOpacity 
@@ -102,7 +92,6 @@ const CreateServiceScreen = ({ navigation }) => {
             <Ionicons name={isDurOpen ? "chevron-up" : "chevron-down"} size={18} color="black" />
           </TouchableOpacity>
 
-          
           {isDurOpen && (
             <View className="bg-gray-50 rounded-xl mt-1 shadow-sm border border-gray-100 overflow-hidden">
               {durations.map((item, index) => (
@@ -118,7 +107,6 @@ const CreateServiceScreen = ({ navigation }) => {
           )}
         </View>
 
-       
         <View className="mb-10">
           <Text className="text-gray-700 font-medium mb-2">Service area / city</Text>
           <TextInput 
@@ -128,14 +116,12 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
-        
         <TouchableOpacity 
-          className="bg-[#1a5ea1] py-4 rounded-xl items-center mb-10 shadow-sm"
-          onPress={() => alert('Service Published!')}
+         className="bg-[#1a5ea1] py-4 rounded-xl items-center mb-10 shadow-sm"
+         onPress={() => navigation.navigate('ServicePublished')}
         >
-          <Text className="text-white font-bold text-base">Publish service</Text>
+        <Text className="text-white font-bold text-base">Publish service</Text>
         </TouchableOpacity>
-
       </ScrollView>
     </View>
   );
