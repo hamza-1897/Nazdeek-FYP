@@ -33,7 +33,6 @@ const ViewDetailScreen = ({ navigation }) => {
     <View className="flex-1 bg-white">
       <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
       
-     
       <View className="h-[380px] w-full relative bg-gray-200">
         <Image 
           source={{ uri: service.mainImage }} 
@@ -50,22 +49,18 @@ const ViewDetailScreen = ({ navigation }) => {
         </View>
       </View>
 
-     
       <View className="flex-1 bg-white -mt-10 rounded-t-[40px] overflow-hidden">
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
           <View className="px-6 pt-8">
             
-           
             <View className="bg-blue-50 self-start px-4 py-1.5 rounded-full mb-4">
               <Text className="text-[#1a5ea1] font-bold text-xs uppercase">{service.category}</Text>
             </View>
 
-           
             <Text className="text-gray-900 text-xl font-extrabold mb-8 leading-tight">
               {service.title}
             </Text>
 
-           
             <View className="flex-row border-b border-gray-100 mb-6">
               {TABS.map(tab => (
                 <TouchableOpacity 
@@ -80,7 +75,6 @@ const ViewDetailScreen = ({ navigation }) => {
               ))}
             </View>
 
-            
             {activeTab === 'About' && (
               <View>
                 <Text className="text-gray-900 font-bold text-lg mb-2">About Service</Text>
@@ -88,36 +82,42 @@ const ViewDetailScreen = ({ navigation }) => {
                   Professional deep cleaning for every corner of your home. We use eco-friendly products and advanced equipment to ensure a spotless environment.
                 </Text>
 
-                
                 <Text className="text-gray-900 font-bold text-lg mb-4">Service Provider</Text>
-                <View className="flex-row items-center justify-between bg-gray-50 p-4 rounded-3xl">
-                  <View className="flex-row items-center">
-                    <Image 
-                      source={{ uri: service.provider.image }} 
-                      className="w-14 h-14 rounded-full mr-4 border-2 border-white"
-                    />
-                    <View>
-                      <Text className="text-gray-900 font-bold text-base">{service.provider.name}</Text>
-                     
-                      <View className="flex-row items-center mt-0.5">
-                        <Ionicons name="location-sharp" size={12} color="#9ca3af" />
-                        <Text className="text-gray-400 text-xs ml-1 font-medium">{service.provider.area}</Text>
+                <View className="bg-gray-50 p-4 rounded-3xl border border-gray-100">
+                  <View className="flex-row items-center justify-between mb-4">
+                    <View className="flex-row items-center">
+                      <Image 
+                        source={{ uri: service.provider.image }} 
+                        className="w-14 h-14 rounded-full mr-4 border-2 border-white"
+                      />
+                      <View>
+                        <Text className="text-gray-900 font-bold text-base">{service.provider.name}</Text>
+                        <View className="flex-row items-center mt-0.5">
+                          <Ionicons name="location-sharp" size={12} color="#9ca3af" />
+                          <Text className="text-gray-400 text-xs ml-1 font-medium">{service.provider.area}</Text>
+                        </View>
                       </View>
                     </View>
+                    
+                    <TouchableOpacity 
+                      className="bg-white w-10 h-10 rounded-full items-center justify-center shadow-sm border border-gray-100"
+                      onPress={() => console.log("Open Chat")}
+                    >
+                      <Ionicons name="chatbubble-ellipses-outline" size={20} color="#1a5ea1" />
+                    </TouchableOpacity>
                   </View>
-                  
-                
+
+                  {/* UPDATE: Yahan Provider Profile ka link add kar diya hai */}
                   <TouchableOpacity 
-                    className="bg-white w-12 h-12 rounded-full items-center justify-center shadow-sm border border-gray-100"
-                    onPress={() => console.log("Open Chat")}
+                    className="bg-[#1a5ea1]/10 py-2.5 rounded-xl items-center border border-[#1a5ea1]/20"
+                    onPress={() => navigation.navigate('ProviderProfile')}
                   >
-                    <Ionicons name="chatbubble-ellipses-outline" size={24} color="#1a5ea1" />
+                    <Text className="text-[#1a5ea1] font-bold text-xs">View Provider</Text>
                   </TouchableOpacity>
                 </View>
               </View>
             )}
 
-            
             {activeTab === 'Gallery' && (
               <View className="flex-row flex-wrap justify-between">
                 {galleryImages.map((img, index) => (
@@ -128,7 +128,6 @@ const ViewDetailScreen = ({ navigation }) => {
               </View>
             )}
 
-            
             {activeTab === 'Review' && (
               <View className="bg-gray-50 p-4 rounded-3xl border border-gray-100">
                 <View className="flex-row items-center mb-2">
@@ -144,7 +143,6 @@ const ViewDetailScreen = ({ navigation }) => {
         </ScrollView>
       </View>
 
-     
       <View className="absolute bottom-0 left-0 right-0 bg-white px-7 pt-5 pb-10 border-t border-gray-100 flex-row justify-between items-center shadow-2xl">
         <View>
           <Text className="text-gray-400 text-[10px] font-bold uppercase tracking-wider">Total Price</Text>

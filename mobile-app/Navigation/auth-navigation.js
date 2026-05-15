@@ -12,6 +12,7 @@ import BookServiceScreen from '../screens/ServicesScrens/BookServiceScreen';
 import BookingSuccessScreen from '../screens/ServicesScrens/BookingSuccessScreen';
 import BookingScreen from '../screens/bookingScreen';
 import CancelBookingScreen from '../screens/Bookings related/CancelBookingScreen';
+import ProviderProfileScreen from '../screens/ProviderScreens/ProviderProfileScreen';
 
 import AppTabs from '../Components/AppTabs';
 import NotificationScreen from '../screens/NotificationScreen';
@@ -42,6 +43,7 @@ const AuthNavigation = () => {
          <Stack.Screen name="CancelBooking" component={CancelBookingScreen} /> 
       <Stack.Screen name="BookingCancelSuccess" component={BookingCancelSuccess} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="ProviderProfile" component={ProviderProfileScreen} />
 
       <Stack.Screen name="AppTabs" component={AppTabs} />
        <Stack.Screen name='Notification' component={NotificationScreen} />
