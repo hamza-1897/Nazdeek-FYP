@@ -117,10 +117,10 @@ const CreateServiceScreen = ({ navigation }) => {
         </View>
 
         <TouchableOpacity 
-         className="bg-[#1a5ea1] py-4 rounded-xl items-center mb-10 shadow-sm"
-         onPress={() => navigation.navigate('ServicePublished')}
+          className="bg-[#1a5ea1] py-4 rounded-xl items-center mb-10 shadow-sm"
+          onPress={() => navigation.replace('ServicePublished')}
         >
-        <Text className="text-white font-bold text-base">Publish service</Text>
+          <Text className="text-white font-bold text-base">Publish service</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

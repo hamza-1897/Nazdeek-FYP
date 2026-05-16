@@ -1,8 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
-
-
 import ProviderTabs from '../Cards/ProviderTabs'; 
 
 const ProviderDashboard = ({ navigation }) => {
@@ -10,8 +8,7 @@ const ProviderDashboard = ({ navigation }) => {
     <View className="flex-1 bg-white">
       <StatusBar barStyle="light-content" backgroundColor="#1a5ea1" />
 
-      
-      <View className="bg-[#1a5ea1] px-6 pt-14 pb-8 rounded-b-[30px] flex-row justify-between items-center">
+      <View className="bg-[#1a5ea1] px-6 pt-14 pb-8 rounded-b-[30px] flex-row justify-between items-center shadow-lg">
         <View>
           <Text className="text-blue-100 text-sm font-medium">Provider dashboard</Text>
           <Text className="text-white text-2xl font-bold">Sana Bibi</Text>
@@ -26,7 +23,6 @@ const ProviderDashboard = ({ navigation }) => {
         className="flex-1 px-6"
         contentContainerStyle={{ paddingBottom: 20 }}
       >
-      
         <View className="flex-row flex-wrap justify-between mt-6">
           <StatCard title="5" subtitle="Active bookings" bgColor="bg-blue-50" textColor="text-blue-600" />
           <StatCard title="Rs 22k" subtitle="This month" bgColor="bg-green-50" textColor="text-green-600" />
@@ -34,8 +30,7 @@ const ProviderDashboard = ({ navigation }) => {
           <StatCard title="20" subtitle="Total bookings" bgColor="bg-gray-50" textColor="text-gray-800" />
         </View>
 
-        
-        <Text className="text-gray-800 font-bold text-lg mt-8 mb-4 uppercase tracking-wider text-[10px]">Quick Actions</Text>
+        <Text className="text-gray-800 font-bold mt-8 mb-4 uppercase tracking-wider text-[10px]">Quick Actions</Text>
         <View className="flex-row justify-between">
           <ActionItem 
             icon="diff-added" 
@@ -43,14 +38,22 @@ const ProviderDashboard = ({ navigation }) => {
             color="#1a5ea1" 
             onPress={() => navigation.navigate('CreateService')} 
           />
-          <ActionItem icon="calendar" label="Bookings" color="#b45309" />
+          <ActionItem 
+            icon="calendar" 
+            label="Bookings" 
+            color="#b45309" 
+            onPress={() => navigation.navigate('ProvidersBooking')} 
+          />
         </View>
 
-        <Text className="text-gray-800 font-bold text-lg mt-8 mb-4 uppercase tracking-wider text-[10px]">
-          Today{"'"}s Bookings
+        <Text className="text-gray-800 font-bold mt-8 mb-4 uppercase tracking-wider text-[10px]">
+          Today's Bookings
         </Text>
         
-        <View className="bg-white border border-gray-100 rounded-2xl p-4 flex-row items-center shadow-sm mb-6">
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('ProvidersBooking')}
+          className="bg-white border border-gray-100 rounded-2xl p-4 flex-row items-center shadow-sm mb-6"
+        >
           <View className="w-12 h-12 bg-blue-100 rounded-full items-center justify-center mr-4">
             <Text className="text-[#1a5ea1] font-bold">SK</Text>
           </View>
@@ -61,15 +64,13 @@ const ProviderDashboard = ({ navigation }) => {
           <View className="bg-blue-50 px-3 py-1 rounded-full">
             <Text className="text-[#1a5ea1] text-xs font-bold">Upcoming</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </ScrollView>
 
-     
       <ProviderTabs activeTab="Home" navigation={navigation} />
     </View>
-      );
+  );
 };
-
 
 const StatCard = ({ title, subtitle, bgColor, textColor }) => (
   <View className={`${bgColor} w-[47%] p-5 rounded-2xl mb-4 items-center justify-center border border-white/50 shadow-sm`}>
@@ -81,7 +82,7 @@ const StatCard = ({ title, subtitle, bgColor, textColor }) => (
 const ActionItem = ({ icon, label, color, onPress }) => (
   <TouchableOpacity 
     onPress={onPress}
-    className="w-[48%] bg-white border border-gray-100 p-4 rounded-2xl mb-4 flex-row items-center shadow-sm"
+    className="w-[48%] bg-white border border-gray-100 p-4 rounded-2xl mb-4 flex-row items-center shadow-sm active:bg-gray-50"
   >
     <View className="mr-3">
       <Octicons name={icon} size={20} color={color} />
