@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, Image, Alert } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Image, Alert, BackHandler } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 
 const ProvidersBooking = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('Upcoming');
@@ -13,6 +14,24 @@ const ProvidersBooking = ({ navigation }) => {
   const [completedData, setCompletedData] = useState([
     { id: 3, name: 'Ali Raza', service: 'Electrician Service', date: 'Mar 15, 10 AM', image: 'https://randomuser.me/api/portraits/men/1.jpg' },
   ]);
+
+  // Updated Hardware Back Button Handler (Fixing the crash)
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'ProviderDashboard' }],
+        });
+        return true;
+      };
+
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      // Naye version ke mutabiq cleanup is tarah hoga:
+      return () => subscription.remove();
+    }, [navigation])
+  );
 
   const handleMarkDone = (item) => {
     Alert.alert("Success", "Job marked as completed!", [
@@ -30,7 +49,15 @@ const ProvidersBooking = ({ navigation }) => {
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
       <View className="px-6 py-4 mt-8 flex-row items-center border-b border-gray-50">
-        <TouchableOpacity onPress={() => navigation.navigate('ProviderDashboard')} className="mr-4">
+        <TouchableOpacity 
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'ProviderDashboard' }],
+            });
+          }} 
+          className="mr-4"
+        >
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <Text className="text-xl font-semibold text-gray-900">My bookings</Text>

@@ -8,7 +8,7 @@ const CreateServiceScreen = ({ navigation }) => {
   const [duration, setDuration] = useState('Select Duration');
   const [isDurOpen, setIsDurOpen] = useState(false);
 
-  const categories = ['Plumber', 'Electrician', 'Cleaning', 'Home Services,Carpanter'];
+  const categories = ['Plumber', 'Electrician', 'Cleaning', 'Home Services','Carpanter'];
   const durations = ['30 min', '1 hour', '2 hours', 'Full day'];
 
   return (

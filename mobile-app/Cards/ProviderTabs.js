@@ -27,7 +27,7 @@ const ProviderTabs = ({ activeTab, navigation }) => {
         icon="person-outline" 
         label="Profile" 
         active={activeTab === 'Profile'} 
-        onPress={() => navigation.navigate('ProviderProfile')} 
+        onPress={() => navigation.navigate('ProvProfileScreen')} 
       />
     </View>
   );
