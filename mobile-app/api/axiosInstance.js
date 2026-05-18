@@ -30,7 +30,6 @@ api.interceptors.request.use(
   }
 );
 
-const {logout } = useContext(AuthContext);
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -38,7 +37,6 @@ api.interceptors.response.use(
       console.log('Token expire or invalid. User logout.');
       
       await SecureStore.deleteItemAsync('userToken');
-        logout();      
     }
     return Promise.reject(error);
   }

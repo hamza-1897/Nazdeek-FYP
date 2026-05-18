@@ -1,7 +1,7 @@
 import React, { createContext, useEffect,useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);

@@ -3,10 +3,32 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
+import {AuthContext} from '../context/AuthContext';
+import { useContext } from 'react';
+import api from '../api/axiosInstance';
+import { userLogin } from '../api/authApi';
+
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+const {login} = useContext(AuthContext);
+
+const handleLogin = async () => {
+    try {
+      const data = await userLogin(email, password);
+      console.log("Login successful:", data);
+      if (data.accessToken) {
+        login(data.accessToken);
+        navigation.replace('AppTabs');
+      }
+    } catch (error) {
+      console.log("Login error:", error);
+      alert(error.message || "Login failed. Please try again.");
+    }
+  };
+    
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -72,7 +94,7 @@ const LoginScreen = ({ navigation }) => {
           onPress={() => {
             // Yahan bad mein hum backend logic lagayenge
            // alert("Login logic will be here!");
-           navigation.replace('RoleSelection');
+           handleLogin();
           }}
         >
           <Text className="text-white text-lg font-bold">Login</Text>
