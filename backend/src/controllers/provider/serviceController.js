@@ -12,7 +12,7 @@ const createService = async (req, res) => {
     } = req.body;
 
 
-    const serviceImages = req.files['serviceImages'] ? req.files['serviceImages'].map(f => f.path) 
+  const serviceImage = req.files['serviceImages'] ? req.files['serviceImages'].map(f => f.path) 
  : [];
 
     const newService = new serviceModel({
@@ -21,7 +21,7 @@ const createService = async (req, res) => {
         description,
         price,
         categoryId,
-        serviceImages,
+        serviceImage,
     });
 
     await newService.save();
