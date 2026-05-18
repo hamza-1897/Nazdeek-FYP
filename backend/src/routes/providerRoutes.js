@@ -19,4 +19,12 @@ router.get('/services/:providerId', getServicesByProvider);
 router.put('/edit-service/:serviceId', upload.array('serviceImages'), editService);
 router.delete('/delete-service/:serviceId', deleteService);
 
+
+// booking routes
+const { getBookingsByProvider, updateBookingStatus } = require('../controllers/provider/bookingController');
+router.get('/bookings/:providerId', getBookingsByProvider);
+router.put('/update-booking-status/:bookingId', updateBookingStatus);
+
+
+
 module.exports = router;
