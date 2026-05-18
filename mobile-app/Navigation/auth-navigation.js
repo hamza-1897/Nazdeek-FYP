@@ -14,6 +14,12 @@ import BookingScreen from '../screens/bookingScreen';
 import CancelBookingScreen from '../screens/Bookings related/CancelBookingScreen';
 import ProviderProfileScreen from '../screens/ProviderScreens/ProviderProfileScreen';
 
+import ProviderDashboard from '../screens/ProviderDashboard';
+import CreateServiceScreen from '../screens/ProviderDashboard/CreateServiceScreen';
+import ServicePublishedScreen from '../screens/ProviderDashboard/ServicePublishedScreen';
+import ProvidersBooking from '../screens/ProviderDashboard/ProvidersBooking';
+import ProvProfile from '../screens/ProviderDashboard/ProvProfile';
+
 import AppTabs from '../Components/AppTabs';
 import NotificationScreen from '../screens/NotificationScreen';
 import BookingCancelSuccess from '../screens/Bookings related/BookingCancelSuccess';
@@ -44,6 +50,12 @@ const AuthNavigation = () => {
       <Stack.Screen name="BookingCancelSuccess" component={BookingCancelSuccess} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="ProviderProfile" component={ProviderProfileScreen} />
+       
+       <Stack.Screen name="ProviderDashboard" component={ProviderDashboard} />
+      <Stack.Screen name="CreateService" component={CreateServiceScreen} />
+      <Stack.Screen name="ServicePublished" component={ServicePublishedScreen} />
+      <Stack.Screen name="ProvidersBooking" component={ProvidersBooking} />
+      <Stack.Screen name="ProvProfileScreen" component={ProvProfile} />
 
       <Stack.Screen name="AppTabs" component={AppTabs} />
        <Stack.Screen name='Notification' component={NotificationScreen} />
