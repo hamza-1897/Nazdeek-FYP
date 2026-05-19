@@ -1,16 +1,41 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Alert } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import ProviderTabs from '../../Cards/ProviderTabs';
 
 const ProvProfile = ({ navigation }) => {
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel" 
+        },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: () => {
+            
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }], 
+            });
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="#e6f0fa" />
 
       <ScrollView className="flex-1 mb-16" showsVerticalScrollIndicator={false}>
         
-      
+       
         <View className="bg-[#e6f0fa] items-center pt-14 pb-8 px-6 rounded-b-[32px]">
           <View className="w-20 h-20 bg-[#1a5ea1] rounded-full items-center justify-center shadow-sm mb-3">
             <Text className="text-white text-2xl font-bold">SB</Text>
@@ -36,10 +61,9 @@ const ProvProfile = ({ navigation }) => {
           </View>
         </View>
 
-       
         <View className="px-6 mt-2 gap-y-3">
           
-          
+         
           <TouchableOpacity 
             onPress={() => navigation.navigate('EditProfileProvider')}
             className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
@@ -51,7 +75,7 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
-          
+         
           <TouchableOpacity 
             onPress={() => navigation.navigate('MyServicesProvider')}
             className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
@@ -63,7 +87,6 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
-         
           <TouchableOpacity 
             onPress={() => navigation.navigate('RatingsReviewsProvider')}
             className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
@@ -75,14 +98,9 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
-         
+          
           <TouchableOpacity 
-            onPress={() => {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'LoginScreen' }], 
-              });
-            }}
+            onPress={handleLogout}
             className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
           >
             <View className="w-9 h-9 bg-red-50 rounded-lg items-center justify-center mr-4">
