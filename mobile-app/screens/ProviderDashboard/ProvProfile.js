@@ -1,17 +1,42 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Alert } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import ProviderTabs from '../../Cards/ProviderTabs';
+
 const ProvProfile = ({ navigation }) => {
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel" 
+        },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: () => {
+            
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }], 
+            });
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="#e6f0fa" />
 
       <ScrollView className="flex-1 mb-16" showsVerticalScrollIndicator={false}>
         
-        
+       
         <View className="bg-[#e6f0fa] items-center pt-14 pb-8 px-6 rounded-b-[32px]">
-         
           <View className="w-20 h-20 bg-[#1a5ea1] rounded-full items-center justify-center shadow-sm mb-3">
             <Text className="text-white text-2xl font-bold">SB</Text>
           </View>
@@ -20,7 +45,7 @@ const ProvProfile = ({ navigation }) => {
           <Text className="text-gray-500 text-xs mt-1">Verified provider · Cleaning</Text>
         </View>
 
-        
+       
         <View className="flex-row justify-around items-center my-6 px-4">
           <View className="items-center">
             <Text className="text-xl font-bold text-[#1a5ea1]">4.9</Text>
@@ -39,7 +64,10 @@ const ProvProfile = ({ navigation }) => {
         <View className="px-6 mt-2 gap-y-3">
           
          
-          <TouchableOpacity className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100">
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('EditProfileProvider')}
+            className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
+          >
             <View className="w-9 h-9 bg-blue-50 rounded-lg items-center justify-center mr-4">
               <Feather name="user" size={18} color="#1a5ea1" />
             </View>
@@ -47,7 +75,11 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
-          <TouchableOpacity className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100">
+         
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('MyServicesProvider')}
+            className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
+          >
             <View className="w-9 h-9 bg-green-50 rounded-lg items-center justify-center mr-4">
               <Feather name="grid" size={18} color="#22c55e" />
             </View>
@@ -55,8 +87,10 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
-         
-          <TouchableOpacity className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100">
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('RatingsReviewsProvider')}
+            className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
+          >
             <View className="w-9 h-9 bg-amber-50 rounded-lg items-center justify-center mr-4">
               <Feather name="star" size={18} color="#eab308" />
             </View>
@@ -64,14 +98,9 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
-         
+          
           <TouchableOpacity 
-            onPress={() => {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'LoginScreen' }], 
-              });
-            }}
+            onPress={handleLogout}
             className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
           >
             <View className="w-9 h-9 bg-red-50 rounded-lg items-center justify-center mr-4">

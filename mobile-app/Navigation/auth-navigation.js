@@ -19,12 +19,16 @@ import CreateServiceScreen from '../screens/ProviderDashboard/CreateServiceScree
 import ServicePublishedScreen from '../screens/ProviderDashboard/ServicePublishedScreen';
 import ProvidersBooking from '../screens/ProviderDashboard/ProvidersBooking';
 import ProvProfile from '../screens/ProviderDashboard/ProvProfile';
+import EditProfileProvider from '../screens/ProviderDashboard/EditProfileProvider'; 
+import MyServicesProvider from '../screens/ProviderDashboard/MyServicesProvider';
+import RatingsReviewsProvider from '../screens/ProviderDashboard/RatingsReviewsProvider';
 
 import AppTabs from '../Components/AppTabs';
 import NotificationScreen from '../screens/NotificationScreen';
 import BookingCancelSuccess from '../screens/Bookings related/BookingCancelSuccess';
 
 import EditProfileScreen from '../screens/CustProfile section/EditProfileScreen';
+import EditServiceProvider from '../screens/ProviderDashboard/EditServiceProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,27 +42,31 @@ const AuthNavigation = () => {
       <Stack.Screen name="Signup" component={SignupScreen} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="VerifyOTP" component={VerifyOTP} />
-       <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="PasswordUpdated" component={PasswordUpdated} />
-        <Stack.Screen name="RoleSelection" component={RoleSelection} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} />
+      <Stack.Screen name="PasswordUpdated" component={PasswordUpdated} />
+      <Stack.Screen name="RoleSelection" component={RoleSelection} />
         
-        <Stack.Screen name="ViewDetail" component={ViewDetailScreen} />
-        <Stack.Screen name="BookService" component={BookServiceScreen} />
-        <Stack.Screen name="BookingSuccess" component={BookingSuccessScreen} />   
+      <Stack.Screen name="ViewDetail" component={ViewDetailScreen} />
+      <Stack.Screen name="BookService" component={BookServiceScreen} />
+      <Stack.Screen name="BookingSuccess" component={BookingSuccessScreen} />   
          
-         <Stack.Screen name="CancelBooking" component={CancelBookingScreen} /> 
+      <Stack.Screen name="CancelBooking" component={CancelBookingScreen} /> 
       <Stack.Screen name="BookingCancelSuccess" component={BookingCancelSuccess} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="ProviderProfile" component={ProviderProfileScreen} />
        
-       <Stack.Screen name="ProviderDashboard" component={ProviderDashboard} />
+      <Stack.Screen name="ProviderDashboard" component={ProviderDashboard} />
       <Stack.Screen name="CreateService" component={CreateServiceScreen} />
       <Stack.Screen name="ServicePublished" component={ServicePublishedScreen} />
       <Stack.Screen name="ProvidersBooking" component={ProvidersBooking} />
       <Stack.Screen name="ProvProfileScreen" component={ProvProfile} />
+      <Stack.Screen name="EditProfileProvider" component={EditProfileProvider} />
+      <Stack.Screen name="MyServicesProvider" component={MyServicesProvider} />
+      <Stack.Screen name="EditServiceProvider" component={EditServiceProvider} />
+      <Stack.Screen name="RatingsReviewsProvider" component={RatingsReviewsProvider} />
 
       <Stack.Screen name="AppTabs" component={AppTabs} />
-       <Stack.Screen name='Notification' component={NotificationScreen} />
+      <Stack.Screen name='Notification' component={NotificationScreen} />
     </Stack.Navigator>
   );
 };
