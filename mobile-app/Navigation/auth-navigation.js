@@ -21,6 +21,7 @@ import ProvidersBooking from '../screens/ProviderDashboard/ProvidersBooking';
 import ProvProfile from '../screens/ProviderDashboard/ProvProfile';
 import EditProfileProvider from '../screens/ProviderDashboard/EditProfileProvider'; 
 import MyServicesProvider from '../screens/ProviderDashboard/MyServicesProvider';
+import RatingsReviewsProvider from '../screens/ProviderDashboard/RatingsReviewsProvider';
 
 import AppTabs from '../Components/AppTabs';
 import NotificationScreen from '../screens/NotificationScreen';
@@ -62,6 +63,7 @@ const AuthNavigation = () => {
       <Stack.Screen name="EditProfileProvider" component={EditProfileProvider} />
       <Stack.Screen name="MyServicesProvider" component={MyServicesProvider} />
       <Stack.Screen name="EditServiceProvider" component={EditServiceProvider} />
+      <Stack.Screen name="RatingsReviewsProvider" component={RatingsReviewsProvider} />
 
       <Stack.Screen name="AppTabs" component={AppTabs} />
       <Stack.Screen name='Notification' component={NotificationScreen} />
