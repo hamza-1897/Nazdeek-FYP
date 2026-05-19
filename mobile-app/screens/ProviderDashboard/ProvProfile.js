@@ -20,7 +20,7 @@ const ProvProfile = ({ navigation }) => {
           <Text className="text-gray-500 text-xs mt-1">Verified provider · Cleaning</Text>
         </View>
 
-       
+     
         <View className="flex-row justify-around items-center my-6 px-4">
           <View className="items-center">
             <Text className="text-xl font-bold text-[#1a5ea1]">4.9</Text>
@@ -36,9 +36,10 @@ const ProvProfile = ({ navigation }) => {
           </View>
         </View>
 
+       
         <View className="px-6 mt-2 gap-y-3">
           
-        
+          
           <TouchableOpacity 
             onPress={() => navigation.navigate('EditProfileProvider')}
             className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
@@ -51,7 +52,10 @@ const ProvProfile = ({ navigation }) => {
           </TouchableOpacity>
 
         
-          <TouchableOpacity className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100">
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('MyServicesProvider')}
+            className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
+          >
             <View className="w-9 h-9 bg-green-50 rounded-lg items-center justify-center mr-4">
               <Feather name="grid" size={18} color="#22c55e" />
             </View>
@@ -59,7 +63,7 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
-        
+         
           <TouchableOpacity className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100">
             <View className="w-9 h-9 bg-amber-50 rounded-lg items-center justify-center mr-4">
               <Feather name="star" size={18} color="#eab308" />
@@ -68,7 +72,7 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
-         
+        
           <TouchableOpacity 
             onPress={() => {
               navigation.reset({
@@ -87,7 +91,7 @@ const ProvProfile = ({ navigation }) => {
         </View>
       </ScrollView>
 
-     
+      
       <ProviderTabs activeTab="Profile" navigation={navigation} />
     </View>
   );
