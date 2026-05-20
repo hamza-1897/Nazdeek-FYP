@@ -2,12 +2,30 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useContext } from 'react';
+import {AuthContext} from '../context/AuthContext';
+import api from '../api/axiosInstance';
+import { userSignup } from '../api/authApi';
 
 const SignupScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+
+  const handleSignUP = async () => {
+    try {
+      const data = await userSignup(fullName, email, password);
+      console.log("Signup successful:", data);
+      if (data.accessToken) {
+        navigation.navigate('VerifyOTP'); 
+      }
+    } catch (error) {
+      console.log("Signup error:", error);
+      alert(error.message || "Signup failed. Please try again.");
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -74,8 +92,9 @@ const SignupScreen = ({ navigation }) => {
         <TouchableOpacity 
           className="bg-[#1a5ea1] py-4 rounded-xl items-center shadow-sm"
           onPress={() => {
-            console.log("Signing up and moving to OTP...");
-            navigation.navigate('VerifyOTP'); // Ye line add ki hai
+            //console.log("Signing up and moving to OTP...");
+           // navigation.navigate('VerifyOTP'); 
+           navigation.navigate('RoleSelection');
           }}
         >
           <Text className="text-white text-lg font-bold">Sign Up</Text>
