@@ -92,16 +92,18 @@ const handleLogin = async () => {
         <TouchableOpacity 
           className="bg-[#1a5ea1] p-4 rounded-lg items-center mb-4"
           onPress={() => {
-            // Yahan bad mein hum backend logic lagayenge
-           // alert("Login logic will be here!");
-           handleLogin();
+            
+          // handleLogin();
+          navigation.replace('AppTabs');
           }}
         >
           <Text className="text-white text-lg font-bold">Login</Text>
         </TouchableOpacity>
 
        
-        <TouchableOpacity className="border-2 border-[#1a5ea1] p-4 rounded-lg items-center">
+        <TouchableOpacity className="border-2 border-[#1a5ea1] p-4 rounded-lg items-center"
+        onPress={()=>{ navigation.replace('AppTabs')}}
+        >
           <Text className="text-[#1a5ea1] text-lg font-bold">Continue as Guest</Text>
         </TouchableOpacity>
 
