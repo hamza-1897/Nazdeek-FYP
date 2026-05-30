@@ -16,6 +16,9 @@ import BookingScreen from '../screens/bookingScreen';
 import CancelBookingScreen from '../screens/Bookings related/CancelBookingScreen';
 import ProviderProfileScreen from '../screens/ProviderScreens/ProviderProfileScreen';
 
+
+import serviceScreen from '../screens/serviceScreen'; 
+
 import ProviderDashboard from '../screens/ProviderDashboard';
 import CreateServiceScreen from '../screens/ProviderDashboard/CreateServiceScreen';
 import ServicePublishedScreen from '../screens/ProviderDashboard/ServicePublishedScreen';
@@ -57,6 +60,9 @@ const AuthNavigation = () => {
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="ProviderProfile" component={ProviderProfileScreen} />
        
+      {/* UPDATE: Service listing wali screen ko navigator ke andar register kar diya ha */}
+      <Stack.Screen name="serviceScreen" component={serviceScreen} />
+
       <Stack.Screen name="ProviderDashboard" component={ProviderDashboard} />
       <Stack.Screen name="CreateService" component={CreateServiceScreen} />
       <Stack.Screen name="ServicePublished" component={ServicePublishedScreen} />
