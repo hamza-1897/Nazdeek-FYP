@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity} from 'react-native';
+import { View, Text, TextInput, ActivityIndicator,TouchableOpacity} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useContext } from 'react';
@@ -8,22 +8,29 @@ import api from '../api/axiosInstance';
 import { userSignup } from '../api/authApi';
 
 const SignupScreen = ({ navigation }) => {
-  const [fullName, setFullName] = useState('');
+  const [name, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState(''); 
+  const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-
   const handleSignUP = async () => {
+    if (!name || !email || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+    setLoading(true);
     try {
-      const data = await userSignup(fullName, email, password);
-      console.log("Signup successful:", data);
-      if (data.accessToken) {
-        navigation.navigate('VerifyOTP'); 
-      }
+      const data = await userSignup(name, email);
+      alert('Signup successful! Please check your email for the OTP to verify your account.');
+      navigation.navigate('VerifyOTP', { name,email,password , flow: 'signup' });
+      
     } catch (error) {
       console.log("Signup error:", error);
       alert(error.message || "Signup failed. Please try again.");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -50,7 +57,7 @@ const SignupScreen = ({ navigation }) => {
           <TextInput
             className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50"
             placeholder="John Doe"
-            value={fullName}
+            value={name}
             onChangeText={setFullName}
           />
         </View>
@@ -93,11 +100,12 @@ const SignupScreen = ({ navigation }) => {
           className="bg-[#1a5ea1] py-4 rounded-xl items-center shadow-sm"
           onPress={() => {
             //console.log("Signing up and moving to OTP...");
-           // navigation.navigate('VerifyOTP'); 
-           navigation.navigate('RoleSelection');
+            //navigation.navigate('VerifyOTP'); 
+           //navigation.navigate('RoleSelection');
+            handleSignUP();
           }}
         >
-          <Text className="text-white text-lg font-bold">Sign Up</Text>
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: '#fff', fontWeight: 'bold' }}>Register</Text>}
         </TouchableOpacity>
 
         

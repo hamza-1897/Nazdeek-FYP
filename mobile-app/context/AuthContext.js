@@ -6,14 +6,19 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [userInfo, setUserInfo] = useState(null);
 
 
   useEffect(() => {
     const checkToken = async () => {
       try {
         const token = await SecureStore.getItemAsync('userToken');
+        const savedUser = await SecureStore.getItemAsync('userData');
         if (token) {
           setUserToken(token);
+        }
+        if (savedUser) {
+          setUserInfo(JSON.parse(savedUser));
         }
       } catch (e) {
         console.log("Token fetch error:", e);
@@ -24,22 +29,23 @@ export const AuthProvider = ({ children }) => {
     checkToken();
   }, []);
 
-  const login = (token) => {
+  const login = async (token, userInfo) => {
     setUserToken(token);
-    SecureStore.setItemAsync('userToken', token).catch(e => {
-        console.log("Token save error:", e);
-    });
+    setUserInfo(userInfo);
+
+    await SecureStore.setItemAsync('userToken', token);
+    await SecureStore.setItemAsync('userData', JSON.stringify(userInfo));
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUserToken(null);
-    SecureStore.deleteItemAsync('userToken').catch(e => {
-        console.log("Token delete error:", e);
-    });
+    setUserInfo(null);
+    await SecureStore.deleteItemAsync('userToken');
+    await SecureStore.deleteItemAsync('userData');
   };
 
   return (
-    <AuthContext.Provider value={{ userToken, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ userToken, userInfo, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

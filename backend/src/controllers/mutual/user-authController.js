@@ -17,24 +17,27 @@ const registerUser = async (req,res) => {
         res.status(400).json({message : "user already exists"})
     } else {
 
-         await signUpOTP(req, res)       
+      return await signUpOTP(req, res)     
+       
   }
 
 }
 
 // OTP Verification for user registration
 const verifySignUPOTP = async (req,res) => {
-    const {email , otp} = req.body;
+    const {email , otp, password} = req.body;
 
     const otpEntry = await otpModel.findOne({email, otp});
 
     if(!otpEntry){
         res.status(400).json({message : "invalid OTP"})
     } else {
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(password,salt)
         const user = new userModel({
             name: otpEntry.name,
             email: otpEntry.email,
-            password: otpEntry.password
+            password: hashPassword,
         });
         await user.save();
         await otpModel.deleteOne({email, otp});
@@ -79,7 +82,7 @@ const forgotOTP = async (req, res) => {
     if(!user){
         res.status(400).json({message : "user with this email does not exist"})
     } else {
-         await forgotPasswordOTP(email, res)       
+       return  await forgotPasswordOTP(email, res)       
   }
 }
 
