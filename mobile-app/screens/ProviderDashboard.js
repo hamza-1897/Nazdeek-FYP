@@ -1,9 +1,13 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, ScrollView ,Image,TouchableOpacity, StatusBar } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
 import ProviderTabs from '../Cards/ProviderTabs'; 
+import { useContext } from 'react';
+import {AuthContext} from '../context/AuthContext';
 
 const ProviderDashboard = ({ navigation }) => {
+  const { providerInfo , userInfo} = useContext(AuthContext);
+
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="light-content" backgroundColor="#1a5ea1" />
@@ -11,10 +15,10 @@ const ProviderDashboard = ({ navigation }) => {
       <View className="bg-[#1a5ea1] px-6 pt-14 pb-8 rounded-b-[30px] flex-row justify-between items-center shadow-lg">
         <View>
           <Text className="text-blue-100 text-sm font-medium">Provider dashboard</Text>
-          <Text className="text-white text-2xl font-bold">Sana Bibi</Text>
+          <Text className="text-white text-2xl font-bold">{providerInfo?.businessName}</Text>
         </View>
         <TouchableOpacity className="w-12 h-12 bg-blue-400/30 rounded-full items-center justify-center border border-blue-300/50">
-          <Text className="text-white font-bold text-lg">SB</Text>
+          <Image source={{ uri: userInfo?.profileImage }} className="w-12 h-12 rounded-full" />
         </TouchableOpacity>
       </View>
 

@@ -1,5 +1,6 @@
 const userModel = require('../../models/usersModel');
 const otpModel = require('../../models/otpModel');
+const providerModel = require('../../models/providerModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/envConfig');
@@ -62,7 +63,11 @@ if(!user || !(await checkPassword(password, user.password))){
         res.status(403).json({message : "user account is deactivated"})
     } else {
         const accessToken = generateToken(user._id, user.role, res);
-        res.status(200).json({_id: user._id, name: user.name, role: user.role, message : "user logged in successfully", accessToken})
+        let providerInfo = null;
+        if(user.role === 'provider'){
+            providerInfo = await providerModel.findOne({userId: user._id}).populate('categoryId', 'name');
+        }
+        res.status(200).json({_id: user._id, name: user.name, role: user.role, profileImage: user.profileImage || null, providerInfo, message : "user logged in successfully", accessToken})
     }
 }
 }

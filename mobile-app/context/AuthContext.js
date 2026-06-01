@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
+  const [providerInfo, setProviderInfo] = useState(null);
 
 
   useEffect(() => {
@@ -18,7 +19,9 @@ export const AuthProvider = ({ children }) => {
           setUserToken(token);
         }
         if (savedUser) {
-          setUserInfo(JSON.parse(savedUser));
+          const userData = JSON.parse(savedUser);
+          setUserInfo(userData);
+          setProviderInfo(userData.providerInfo || null);
         }
       } catch (e) {
         console.log("Token fetch error:", e);
@@ -32,6 +35,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (token, userInfo) => {
     setUserToken(token);
     setUserInfo(userInfo);
+    setProviderInfo(userInfo.providerInfo || null);
 
     await SecureStore.setItemAsync('userToken', token);
     await SecureStore.setItemAsync('userData', JSON.stringify(userInfo));
@@ -40,12 +44,13 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     setUserToken(null);
     setUserInfo(null);
+    setProviderInfo(null);
     await SecureStore.deleteItemAsync('userToken');
     await SecureStore.deleteItemAsync('userData');
   };
 
   return (
-    <AuthContext.Provider value={{ userToken, userInfo, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ userToken, userInfo, providerInfo, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
