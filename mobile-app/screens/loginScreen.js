@@ -24,10 +24,15 @@ const handleLogin = async () => {
         login(data.accessToken, {
           id: data._id,
           name: data.name,
-          role: data.role
+          role: data.role,
+          profileImage: data.profileImage || null,
+          providerInfo: data.providerInfo || null,
         });
-
+        if(data.role === 'provider'){
+          navigation.replace('ProviderDashboard')
+        } else {
         navigation.replace('AppTabs');
+        }
       }
     } catch (error) {
       console.log("Login error:", error);

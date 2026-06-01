@@ -36,7 +36,7 @@ const ProfileScreen = ({ navigation }) => {
         <View className="items-center mt-6 mb-8">
           <View className="relative">
             <Image 
-              source={{ uri: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400' }} 
+              source={{ uri: userInfo.profileImage  }}
               className="w-28 h-28 rounded-full"
             />
           </View>
@@ -61,7 +61,7 @@ const ProfileScreen = ({ navigation }) => {
           
           <TouchableOpacity className="flex-row items-center py-4 mt-4"
           onPress={async () => {
-            await logout();
+            
             navigation.replace('Login');
           }}
           >

@@ -1,8 +1,14 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import { View, Text, Image,TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import ProviderTabs from '../../Cards/ProviderTabs';
+import { useContext } from 'react';
+import {AuthContext} from '../../context/AuthContext';
+
+
 const ProvProfile = ({ navigation }) => {
+  const { providerInfo, userInfo } = useContext(AuthContext);
+
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="#e6f0fa" />
@@ -13,11 +19,11 @@ const ProvProfile = ({ navigation }) => {
         <View className="bg-[#e6f0fa] items-center pt-14 pb-8 px-6 rounded-b-[32px]">
          
           <View className="w-20 h-20 bg-[#1a5ea1] rounded-full items-center justify-center shadow-sm mb-3">
-            <Text className="text-white text-2xl font-bold">SB</Text>
+            <Image source={{ uri: userInfo?.profileImage }} className="w-20 h-20 rounded-full" />
           </View>
           
-          <Text className="text-xl font-bold text-gray-900">Sana Bibi</Text>
-          <Text className="text-gray-500 text-xs mt-1">Verified provider · Cleaning</Text>
+          <Text className="text-xl font-bold text-gray-900">{providerInfo?.businessName}</Text>
+          <Text className="text-gray-500 text-xs mt-1">Verified provider · {providerInfo?.categoryId.name}</Text>
         </View>
 
         
@@ -67,10 +73,7 @@ const ProvProfile = ({ navigation }) => {
          
           <TouchableOpacity 
             onPress={() => {
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'LoginScreen' }], 
-              });
+              navigation.replace('Login');
             }}
             className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
           >
