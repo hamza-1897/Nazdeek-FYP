@@ -2,9 +2,12 @@ import React from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, StatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useContext } from 'react';
+import {AuthContext} from '../context/AuthContext';
 
 const ProfileScreen = ({ navigation }) => {
-  
+  const { userInfo, logout } = useContext(AuthContext);
+
   const MenuItem = ({ icon, title, onPress }) => (
     <TouchableOpacity 
       onPress={onPress}
@@ -62,7 +65,7 @@ const ProfileScreen = ({ navigation }) => {
               className="w-28 h-28 rounded-full"
             />
           </View>
-          <Text className="text-xl font-bold text-gray-900 mt-4">Shamir Ali</Text>
+          <Text className="text-xl font-bold text-gray-900 mt-4">{userInfo.name}</Text>
         </View>
 
         <View className="mt-2">
@@ -83,12 +86,15 @@ const ProfileScreen = ({ navigation }) => {
           />
           
           
-          <TouchableOpacity 
-            onPress={handleLogout} 
-            className="flex-row items-center py-4 mt-4"
+          <TouchableOpacity className="flex-row items-center py-4 mt-4"
+          onPress={async () => {
+            await logout();
+            navigation.replace('Login');
+          }}
           >
             <Ionicons name="log-out-outline" size={22} color="#ef4444" />
             <Text className="ml-4 text-red-500 font-bold text-base">Logout</Text>
+
           </TouchableOpacity>
         </View>
 

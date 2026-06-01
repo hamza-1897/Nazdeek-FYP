@@ -15,17 +15,23 @@ const LoginScreen = ({ navigation }) => {
 
 const {login} = useContext(AuthContext);
 
+
 const handleLogin = async () => {
     try {
       const data = await userLogin(email, password);
       console.log("Login successful:", data);
       if (data.accessToken) {
-        login(data.accessToken);
+        login(data.accessToken, {
+          id: data._id,
+          name: data.name,
+          role: data.role
+        });
+
         navigation.replace('AppTabs');
       }
     } catch (error) {
       console.log("Login error:", error);
-      alert(error.message || "Login failed. Please try again.");
+      alert(error.message || "Login failed. Please check your credentials and try again.");
     }
   };
     
@@ -92,9 +98,10 @@ const handleLogin = async () => {
         <TouchableOpacity 
           className="bg-[#1a5ea1] p-4 rounded-lg items-center mb-4"
           onPress={() => {
-            
-          // handleLogin();
-          navigation.replace('AppTabs');
+        
+        
+           handleLogin();
+         // navigation.replace('AppTabs');
           }}
         >
           <Text className="text-white text-lg font-bold">Login</Text>

@@ -1,8 +1,57 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator,TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useState  } from 'react';
+import { verifySignupOTP , verifyForgotOTP } from '../api/authApi';
 
-const VerifyOTP = ({ navigation }) => {
+const VerifyOTP = ({ navigation, route }) => {
+  const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
+  const email = route.params.email;
+  const password = route.params?.password;
+  const flow = route.params.flow; 
+
+
+const checkOtp = () => {
+  if(otp.length !== 6){
+    alert("Please enter a valid 6-digit OTP.");
+    return false;
+  }
+  alert(`OTP entered: ${otp}`);
+  return true;
+}
+
+
+const handleVerifyOTP = async () => {
+
+  if(otp.length !== 6){
+    alert("Please enter a valid 6-digit OTP.");
+    return false;
+  }
+ 
+ const code = parseInt(otp, 10);
+  setLoading(true);
+  try {
+
+
+    if(flow === 'signup'){
+      const data = await verifySignupOTP( email,code, password );
+      alert(data.message)
+      navigation.replace('Login');
+    }
+    else if(flow === 'forgotPassword'){
+      const data = await verifyForgotOTP( email,code);
+      alert(data.message)
+      navigation.navigate('ResetPassword', { email });
+    }
+  } catch (error) {
+    console.log("OTP Verification error:", error);
+    alert(error.message || "OTP verification failed. Please try again.");
+  }
+  finally {
+    setLoading(false);
+  }
+};
   return (
     <View className="flex-1 bg-white px-6 pt-12">
      
@@ -32,18 +81,25 @@ const VerifyOTP = ({ navigation }) => {
             <TextInput 
             
               maxLength={6}
-              keyboardType="number-pad" 
+              keyboardType="number-pad"
               className="text-2xl font-bold items-center justify-center text-center w-full"
               placeholder="_ _ _ _ _ _"
+              value={otp}
+              onChangeText={setOtp}
             />
           </View>
         
       </View>
 
       
-      <TouchableOpacity className="bg-[#1a5ea1] py-4 rounded-3xl shadow-lg flex-row justify-center items-center">
-        <Text className="text-white font-bold text-lg mr-2">Verify</Text>
-        <Ionicons name="checkmark-circle-outline" size={20} color="white" />
+      <TouchableOpacity className="bg-[#1a5ea1] py-4 rounded-3xl shadow-lg flex-row justify-center items-center"
+      onPress={()=>{
+      // checkOtp(otp)
+       handleVerifyOTP()
+      }}
+      >
+         {loading ? <ActivityIndicator color="#fff" /> :  <Text className="text-white font-bold text-lg mr-2">Verify</Text> }
+        
       </TouchableOpacity>
 
       

@@ -1,15 +1,19 @@
 import React from 'react';
 import { View, ScrollView, StatusBar, Text } from 'react-native';
 import HeaderCard from '../Cards/HeaderCard';
+import { useContext } from 'react';
+import {AuthContext} from '../context/AuthContext';
 
 const HomeScreen = () => {
+  const { userInfo } = useContext(AuthContext);
+
   return (
     <View className="flex-1 bg-white">
      
       <StatusBar barStyle="light-content" backgroundColor="#1a5ea1" />
       
       
-      <HeaderCard userName="Malaika" />
+      <HeaderCard userName={userInfo.name} />
 
       
       <ScrollView 

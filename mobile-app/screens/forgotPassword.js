@@ -1,8 +1,30 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
+import { forgotPassword } from '../api/authApi';
 
 const ForgotPassword = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+
+    const handleForgotPassword = async () => {
+      if (!email) {
+        alert("Please enter your registered email.");
+        return;
+      }
+
+      try {
+        const data  = await forgotPassword(email);
+        alert(data.message);
+        navigation.navigate('VerifyOTP',{ 
+      email: email, 
+      flow: 'forgotPassword' 
+    });
+      } catch (error) {
+        alert("Failed to send OTP. Please try again.");
+      }
+    };
+
   return (
     <View className="flex-1 bg-white px-6 justify-center">
       
@@ -26,13 +48,15 @@ const ForgotPassword = ({ navigation }) => {
           placeholder="Enter your email" 
           className="flex-1 ml-3 text-gray-700"
           keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
         />
       </View>
 
      
       <TouchableOpacity 
         className="bg-[#1a5ea1] py-4 rounded-3xl shadow-lg items-center"
-        onPress={() => navigation.navigate('VerifyOTP')}
+        onPress={handleForgotPassword}
       >
         <Text className="text-white font-bold text-lg">Get OTP</Text>
       </TouchableOpacity>
