@@ -3,31 +3,44 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const ProviderTabs = ({ activeTab, navigation }) => {
+  
+  const handleTabPress = (screenName) => {
+    navigation.navigate({
+      name: screenName,
+      key: screenName,
+      merge: true,
+    });
+  };
+
   return (
     <View className="flex-row justify-around py-4 border-t border-gray-100 bg-white pb-8">
       <TabItem 
         icon="home-outline" 
         label="Home" 
         active={activeTab === 'Home'} 
-        onPress={() => navigation.navigate('ProviderDashboard')} 
+        onPress={() => handleTabPress('ProviderDashboard')} 
       />
+      
+     
       <TabItem 
-        icon="add-circle-outline" 
+        icon="grid-outline" 
         label="Services" 
         active={activeTab === 'Services'} 
-        onPress={() => navigation.navigate('CreateService')} 
+        onPress={() => handleTabPress('serviceScreen')} 
       />
+      
       <TabItem 
         icon="chatbubble-outline" 
         label="Chat" 
         active={activeTab === 'Chat'} 
-        onPress={() => navigation.navigate('ChatScreen')} 
+        onPress={() => handleTabPress('ChatScreen')} 
       />
+      
       <TabItem 
         icon="person-outline" 
         label="Profile" 
         active={activeTab === 'Profile'} 
-        onPress={() => navigation.navigate('ProvProfileScreen')} 
+        onPress={() => handleTabPress('ProvProfileScreen')} 
       />
     </View>
   );

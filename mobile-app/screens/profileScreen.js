@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, StatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useContext } from 'react';
@@ -21,11 +21,36 @@ const ProfileScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
+  
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel" 
+        },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: () => {
+           
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }], // auth-navigation ke mutabiq name 'Login' hai
+            });
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       
-      
+     
       <View className="px-6 py-4 flex-row items-center justify-center relative">
         <Text className="text-xl font-bold text-gray-800">Profile</Text>
       </View>
@@ -44,10 +69,12 @@ const ProfileScreen = ({ navigation }) => {
         </View>
 
         <View className="mt-2">
-        
+          
+       
           <MenuItem 
             icon="person-outline" 
             title="Your profile" 
+            placeholder="Edit profile details"
             onPress={() => navigation.navigate('EditProfile')} 
           />
           
