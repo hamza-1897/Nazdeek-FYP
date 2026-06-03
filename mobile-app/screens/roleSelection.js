@@ -29,7 +29,7 @@ const RoleSelection = ({ navigation }) => {
 
      
       <TouchableOpacity 
-        onPress={() => navigation.navigate('ProviderDashboard')}
+        onPress={() => navigation.navigate('ProviderRegisterScreen')}
         className="flex-row items-center p-6 bg-green-50 border border-green-100 rounded-xl"
       >
         <View className="bg-green-100 p-3 rounded-lg mr-4">
