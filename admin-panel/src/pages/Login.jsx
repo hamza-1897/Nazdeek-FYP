@@ -55,7 +55,7 @@ function Login() {
                 <Link to="/forgot-password" className="text-[#0D4D47] text-sm font-bold hover:underline">Forgot Password?</Link>
               </div>
 
-               <Link to="/admin/dashboard"> <button 
+               <Link to="/admin"> <button 
                 type="submit"
                 to=""
                 className="w-full bg-[#0D4D47] text-white font-bold py-4 rounded-xl text-lg shadow-xl hover:bg-[#0a3a35] transition-colors"

@@ -15,7 +15,7 @@ function App() {
 
          <Route path='/admin' element={<AdminLayout />}>
 
-          <Route path="/admin/user" element= {<Login/>} />
+          <Route path="/admin/users" element= {<Login/>} />
 
 
          </Route>

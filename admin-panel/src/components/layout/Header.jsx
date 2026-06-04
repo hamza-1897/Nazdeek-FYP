@@ -6,11 +6,9 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   
-  // A mock state for the image to show interactivity, though it would usually sit in a global context.
   const [profilePic, setProfilePic] = React.useState('https://i.pravatar.cc/150?img=11');
 
   const handleLogout = () => {
-    // Implement actual logout logic here
     navigate('/');
   };
 
@@ -21,7 +19,6 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Create a local URL just for the preview
       const imageUrl = URL.createObjectURL(file);
       setProfilePic(imageUrl);
     }
@@ -40,10 +37,8 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
         </button>
       </div>
 
-      {/* Right section: Profile & Logout */}
       <div className="flex items-center gap-6">
         
-        {/* Admin Profile Area */}
         <div className="flex items-center gap-3">
           <div className="flex flex-col text-right  sm:flex">
             <span className="text-sm font-bold text-gray-900">Maha Naseer</span>
@@ -56,12 +51,10 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
               alt="Admin Profile" 
               className="w-12 h-12 rounded-full border-2 border-indigo-100 object-cover group-hover:border-indigo-300 transition-colors"
             />
-            {/* Edit overlay on hover */}
             <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <Camera className="w-4 h-4 text-white" />
             </div>
             
-            {/* Hidden file input for image upload */}
             <input 
               type="file" 
               className="hidden" 
@@ -72,10 +65,8 @@ const Header = ({ isCollapsed, setIsCollapsed }) => {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="w-px h-8 bg-gray-200"></div>
 
-        {/* Logout Button */}
         <button 
           onClick={handleLogout}
           className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-xl hover:bg-red-100 focus:outline-hidden transition-all active:scale-95"
