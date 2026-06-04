@@ -12,7 +12,7 @@ const ForgotPassword = ({ navigation }) => {
         </View>
       </View>
 
-      
+           
       <Text className="text-3xl font-bold text-gray-900 text-center mb-2">Forgot Password?</Text>
       <Text className="text-gray-500 text-center mb-10 leading-5">
         Enter your registered email below to receive a password reset OTP.
