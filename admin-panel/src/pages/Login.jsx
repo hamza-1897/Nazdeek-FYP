@@ -1,5 +1,6 @@
 import React from 'react'
 import nazdeekLogo from "../assets/Nazdeek.logo.jpeg";
+import { Link } from 'react-router-dom';
 function Login() {
   return (
     <div>
@@ -51,15 +52,19 @@ function Login() {
                   
                   
                 </label>
-                <a href="#" className="text-[#0D4D47] text-sm font-bold hover:underline">Forgot Password?</a>
+                <Link to="/forgot-password" className="text-[#0D4D47] text-sm font-bold hover:underline">Forgot Password?</Link>
               </div>
 
-              <button 
+               <Link to="/admin"> <button 
                 type="submit"
+                to=""
                 className="w-full bg-[#0D4D47] text-white font-bold py-4 rounded-xl text-lg shadow-xl hover:bg-[#0a3a35] transition-colors"
               >
+              
                 Log In
+                
               </button>
+              </Link>
             </form>
             
           </div>
