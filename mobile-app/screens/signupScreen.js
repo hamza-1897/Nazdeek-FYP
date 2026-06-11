@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, ActivityIndicator,TouchableOpacity} from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useContext } from 'react';
@@ -10,20 +10,24 @@ import { userSignup } from '../api/authApi';
 const SignupScreen = ({ navigation }) => {
   const [name, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState(''); 
+  const [address, setAddress] = useState(''); 
   const [password, setPassword] = useState(''); 
   const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleSignUP = async () => {
-    if (!name || !email || !password) {
+   
+    if (!name || !email || !phone || !address || !password) {
       alert("Please fill in all fields.");
       return;
     }
     setLoading(true);
     try {
-      const data = await userSignup(name, email);
+     
+      const data = await userSignup(name, email, phone, address);
       alert('Signup successful! Please check your email for the OTP to verify your account.');
-      navigation.navigate('VerifyOTP', { name,email,password , flow: 'signup' });
+      navigation.navigate('VerifyOTP', { name, email, phone, address, password, flow: 'signup' });
       
     } catch (error) {
       console.log("Signup error:", error);
@@ -35,88 +39,121 @@ const SignupScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      
-      
-      <View className="px-6 pt-4 flex-row items-center">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text className="flex-1 text-center text-xl font-bold mr-6">Create Account</Text>
-      </View>
-
-      <View className="px-6 pt-10">
-        <Text className="text-4xl font-bold text-gray-900">Join Nazdeek</Text>
-        <Text className="text-lg text-gray-500 mt-2 mb-8">
-          Fill in the details below to get started.
-        </Text>
-
-       
-        <View className="mb-5">
-          <Text className="text-sm font-bold mb-2 text-gray-800">Full Name</Text>
-          <TextInput
-            className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50"
-            placeholder="John Doe"
-            value={name}
-            onChangeText={setFullName}
-          />
-        </View>
-
-       
-        <View className="mb-5">
-          <Text className="text-sm font-bold mb-2 text-gray-800">Email</Text>
-          <TextInput
-            className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50"
-            placeholder="name@example.com"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-          />
-        </View>
-
-       
-        <View className="mb-10">
-          <Text className="text-sm font-bold mb-2 text-gray-800">Password</Text>
-          <View className="flex-row items-center border border-gray-200 rounded-xl px-4 bg-gray-50">
-            <TextInput
-              className="flex-1 py-4 text-base"
-              placeholder="Create a strong password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={!isPasswordVisible}
-            />
-            <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-              <Ionicons 
-                name={isPasswordVisible ? "eye-outline" : "eye-off-outline"} 
-                size={22} 
-                color="#9ca3af" 
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView className="flex-1 bg-white">
         
-        <TouchableOpacity 
-          className="bg-[#1a5ea1] py-4 rounded-xl items-center shadow-sm"
-          onPress={() => {
-            //console.log("Signing up and moving to OTP...");
-            //navigation.navigate('VerifyOTP'); 
-           //navigation.navigate('RoleSelection');
-            handleSignUP();
-          }}
-        >
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: '#fff', fontWeight: 'bold' }}>Register</Text>}
-        </TouchableOpacity>
-
-        
-        <View className="flex-row justify-center mt-12">
-          <Text className="text-gray-500 text-base">Already have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-            <Text className="text-[#1a5ea1] font-bold text-base">Login</Text>
+        <View className="px-6 pt-4 flex-row items-center">
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="black" />
           </TouchableOpacity>
+          <Text className="flex-1 text-center text-xl font-bold mr-6">Create Account</Text>
         </View>
-      </View>
-    </SafeAreaView>
+
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
+          <View className="px-6 pt-10">
+            <Text className="text-4xl font-bold text-gray-900">Join Nazdeek</Text>
+            <Text className="text-lg text-gray-500 mt-2 mb-8">
+              Fill in the details below to get started.
+            </Text>
+
+           
+            <View className="mb-5">
+              <Text className="text-sm font-bold mb-2 text-gray-800">Full Name</Text>
+              <TextInput
+                className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50"
+                placeholder="John Doe"
+                value={name}
+                onChangeText={setFullName}
+              />
+            </View>
+
+           
+            <View className="mb-5">
+              <Text className="text-sm font-bold mb-2 text-gray-800">Email</Text>
+              <TextInput
+                className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50"
+                placeholder="name@example.com"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+              />
+            </View>
+
+          
+            <View className="mb-5">
+              <Text className="text-sm font-bold mb-2 text-gray-800">Contact Number</Text>
+              <TextInput
+                className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50"
+                placeholder="e.g. 03001234567"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+              />
+            </View>
+
+           
+            <View className="mb-5">
+              <Text className="text-sm font-bold mb-2 text-gray-800">Address</Text>
+              <TextInput
+                className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50"
+                placeholder="Enter your residential address"
+                value={address}
+                onChangeText={setAddress}
+              />
+            </View>
+
+           
+            <View className="mb-10">
+              <Text className="text-sm font-bold mb-2 text-gray-800">Password</Text>
+              <View className="flex-row items-center border border-gray-200 rounded-xl px-4 bg-gray-50">
+                <TextInput
+                  className="flex-1 py-4 text-base"
+                  placeholder="Create a strong password"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry={!isPasswordVisible}
+                />
+                <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+                  <Ionicons 
+                    name={isPasswordVisible ? "eye-outline" : "eye-off-outline"} 
+                    size={22} 
+                    color="#9ca3af" 
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            
+            <TouchableOpacity 
+              className="bg-[#1a5ea1] py-4 rounded-xl items-center shadow-sm"
+              onPress={() => {
+                //console.log("Signing up and moving to OTP...");
+                //navigation.navigate('VerifyOTP'); 
+               //navigation.navigate('RoleSelection');
+                handleSignUP();
+              }}
+            >
+              {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: '#fff', fontWeight: 'bold' }}>Register</Text>}
+            </TouchableOpacity>
+
+            
+            <View className="flex-row justify-center mt-12 mb-6">
+              <Text className="text-gray-500 text-base">Already have an account? </Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                <Text className="text-[#1a5ea1] font-bold text-base">Login</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
