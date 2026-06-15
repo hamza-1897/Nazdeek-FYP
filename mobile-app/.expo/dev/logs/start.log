@@ -1701,3 +1701,8 @@
 {"_e":"metro:bundling:done","_t":1780802637597,"id":"2","total":1277,"ms":4254.9537}
 {"_e":"metro:client_log","_t":1780803145871,"level":"log","data":["Login API error:","[AxiosError: Network Error]"]}
 {"_e":"metro:client_log","_t":1780803146065,"level":"log","data":["Login error:","[AxiosError: Network Error]"]}
+{"_e":"root:init","_t":1781545057536,"format":"v0-jsonl","version":"56.1.13"}
+{"_e":"env:mode","_t":1781545057539,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781545057546,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781545058310,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../..\\..\\app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781545059416,"serverRoot":"../..\\..","projectRoot":"../..\\..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
