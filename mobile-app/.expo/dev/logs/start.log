@@ -1701,3 +1701,59 @@
 {"_e":"metro:bundling:done","_t":1780802637597,"id":"2","total":1277,"ms":4254.9537}
 {"_e":"metro:client_log","_t":1780803145871,"level":"log","data":["Login API error:","[AxiosError: Network Error]"]}
 {"_e":"metro:client_log","_t":1780803146065,"level":"log","data":["Login error:","[AxiosError: Network Error]"]}
+{"_e":"root:init","_t":1781583998871,"format":"v0-jsonl","version":"56.1.13"}
+{"_e":"env:mode","_t":1781583998875,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1781583998897,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1781584003014,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../..\\..\\app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1781584008985,"serverRoot":"../..\\..","projectRoot":"../..\\..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:instantiate","_t":1781584044899,"atlas":false,"workers":3,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1781584063968,"id":"2","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1781584063969,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1781584063984,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1781584064085,"id":"2","progress":0.16735537190082647,"total":22,"current":9}
+{"_e":"metro:bundling:progress","_t":1781584064226,"id":"2","progress":0.16735537190082647,"total":69,"current":17}
+{"_e":"metro:bundling:progress","_t":1781584064326,"id":"2","progress":0.16735537190082647,"total":199,"current":29}
+{"_e":"metro:bundling:progress","_t":1781584064430,"id":"2","progress":0.16735537190082647,"total":246,"current":66}
+{"_e":"metro:bundling:progress","_t":1781584064535,"id":"2","progress":0.16735537190082647,"total":267,"current":75}
+{"_e":"metro:bundling:progress","_t":1781584064636,"id":"2","progress":0.16735537190082647,"total":309,"current":103}
+{"_e":"metro:bundling:progress","_t":1781584064736,"id":"2","progress":0.17186482436111702,"total":357,"current":148}
+{"_e":"metro:bundling:progress","_t":1781584064838,"id":"2","progress":0.2117419261041098,"total":389,"current":179}
+{"_e":"metro:bundling:progress","_t":1781584064937,"id":"2","progress":0.2640458349459739,"total":397,"current":204}
+{"_e":"metro:bundling:progress","_t":1781584065039,"id":"2","progress":0.29574043681353357,"total":445,"current":242}
+{"_e":"metro:bundling:progress","_t":1781584065140,"id":"2","progress":0.33360582639714625,"total":464,"current":268}
+{"_e":"metro:bundling:progress","_t":1781584065239,"id":"2","progress":0.35860600324499725,"total":516,"current":309}
+{"_e":"metro:bundling:progress","_t":1781584065339,"id":"2","progress":0.37869822485207105,"total":572,"current":352}
+{"_e":"metro:bundling:progress","_t":1781584065439,"id":"2","progress":0.39037343021099935,"total":621,"current":388}
+{"_e":"metro:bundling:progress","_t":1781584065541,"id":"2","progress":0.46440154874779843,"total":653,"current":445}
+{"_e":"metro:bundling:progress","_t":1781584065641,"id":"2","progress":0.48464597419096606,"total":678,"current":472}
+{"_e":"metro:bundling:progress","_t":1781584065741,"id":"2","progress":0.5727393108077962,"total":699,"current":529}
+{"_e":"metro:bundling:progress","_t":1781584065842,"id":"2","progress":0.6386801859500614,"total":727,"current":581}
+{"_e":"metro:bundling:progress","_t":1781584065949,"id":"2","progress":0.6386801859500614,"total":797,"current":612}
+{"_e":"metro:bundling:progress","_t":1781584066049,"id":"2","progress":0.6386801859500614,"total":848,"current":649}
+{"_e":"metro:bundling:progress","_t":1781584066149,"id":"2","progress":0.6386801859500614,"total":865,"current":682}
+{"_e":"metro:bundling:progress","_t":1781584066249,"id":"2","progress":0.655328798185941,"total":903,"current":731}
+{"_e":"metro:bundling:progress","_t":1781584066350,"id":"2","progress":0.750129025919246,"total":941,"current":815}
+{"_e":"metro:bundling:progress","_t":1781584066461,"id":"2","progress":0.7552007468847387,"total":962,"current":836}
+{"_e":"metro:bundling:progress","_t":1781584066607,"id":"2","progress":0.7685747268383045,"total":965,"current":846}
+{"_e":"metro:bundling:progress","_t":1781584066708,"id":"2","progress":0.7810883857512928,"total":981,"current":867}
+{"_e":"metro:bundling:progress","_t":1781584066810,"id":"2","progress":0.8108957699066855,"total":1005,"current":905}
+{"_e":"metro:bundling:progress","_t":1781584066918,"id":"2","progress":0.8427555045842379,"total":1049,"current":963}
+{"_e":"metro:bundling:progress","_t":1781584067056,"id":"2","progress":0.8926625952408247,"total":1069,"current":1010}
+{"_e":"metro:bundling:progress","_t":1781584067156,"id":"2","progress":0.9018166761554784,"total":1112,"current":1056}
+{"_e":"metro:bundling:progress","_t":1781584067256,"id":"2","progress":0.9018166761554784,"total":1171,"current":1112}
+{"_e":"metro:bundling:progress","_t":1781584067356,"id":"2","progress":0.9357600999583507,"total":1225,"current":1185}
+{"_e":"metro:bundling:progress","_t":1781584067505,"id":"2","progress":0.9558762559324454,"total":1255,"current":1227}
+{"_e":"metro:bundling:progress","_t":1781584067633,"id":"2","progress":0.999,"total":1279,"current":1279}
+{"_e":"metro:bundling:done","_t":1781584067871,"id":"2","total":1279,"ms":3902.0415}
+{"_e":"metro:bundling:started","_t":1781584214335,"id":"7","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1781584214335,"id":"7","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1781584214712,"id":"7","total":1,"ms":376.7476}
+{"_e":"metro:client_log","_t":1781584734057,"level":"error","data":["The action 'NAVIGATE' with payload {\"name\":\"ReportScreen\",\"params\":{\"providerName\":\"Zayaan Khan\"}} was not handled by any navigator.\n\nDo you have a screen named 'ReportScreen'?\n\nIf you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/nesting-navigators#navigating-to-a-screen-in-a-nested-navigator.\n\nIf you're using conditional rendering, navigation will happen automatically and you shouldn't navigate manually, see.\n\nThis is a development-only warning and won't be shown in production."]}
+{"_e":"metro:bundling:started","_t":1781584897801,"id":"c","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1781584897801,"id":"c","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1781584897951,"id":"c","total":1,"ms":149.7134}
+{"_e":"metro:bundling:started","_t":1781585682328,"id":"d","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1781585682328,"id":"d","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1781585682478,"id":"d","total":1,"ms":149.4869}
+{"_e":"metro:client_log","_t":1781585764230,"level":"error","data":["The action 'RESET' with payload {\"index\":0,\"routes\":[{\"name\":\"MainDashboard\"}]} was not handled by any navigator.\n\nThis is a development-only warning and won't be shown in production."]}
+{"_e":"metro:client_log","_t":1781585782873,"level":"error","data":["The action 'RESET' with payload {\"index\":0,\"routes\":[{\"name\":\"MainDashboard\"}]} was not handled by any navigator.\n\nThis is a development-only warning and won't be shown in production."]}

@@ -38,7 +38,7 @@ const ProfileScreen = ({ navigation }) => {
            
             navigation.reset({
               index: 0,
-              routes: [{ name: 'Login' }], // auth-navigation ke mutabiq name 'Login' hai
+              routes: [{ name: 'Login' }], 
             });
           }
         }

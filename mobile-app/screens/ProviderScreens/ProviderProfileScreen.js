@@ -83,10 +83,23 @@ const ProviderProfileScreen = ({ navigation }) => {
         >
           <Ionicons name="arrow-back" size={22} color="#1a5ea1" />
         </TouchableOpacity>
+        
         <Text className="text-lg font-bold text-gray-800">Service Provider</Text>
-        <TouchableOpacity className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center bg-white shadow-sm">
-          <Ionicons name="share-social-outline" size={20} color="#1a5ea1" />
-        </TouchableOpacity>
+        
+       
+        <View className="flex-row items-center">
+         
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('ReportScreen', { providerName: provider.name })}
+            className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center bg-white shadow-sm mr-2"
+          >
+            <Ionicons name="flag-outline" size={20} color="#dc2626" />
+          </TouchableOpacity>
+
+          <TouchableOpacity className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center bg-white shadow-sm">
+            <Ionicons name="share-social-outline" size={20} color="#1a5ea1" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
