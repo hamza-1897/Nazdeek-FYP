@@ -17,6 +17,7 @@ import CancelBookingScreen from '../screens/Bookings related/CancelBookingScreen
 import ProviderProfileScreen from '../screens/ProviderScreens/ProviderProfileScreen';
 
 import ReportScreen from '../screens/ProviderScreens/ReportScreen';
+import LeaveReviewScreen from '../screens/ServicesScrens/LeaveReviewScreen';
 
 import serviceScreen from '../screens/serviceScreen'; 
 
@@ -77,6 +78,7 @@ const AuthNavigation = () => {
        <Stack.Screen name="ProviderRegisterScreen" component={ProviderRegisterScreen} />
 
       <Stack.Screen name="ReportScreen" component={ReportScreen} />
+      <Stack.Screen name="LeaveReview" component={LeaveReviewScreen} />
 
       <Stack.Screen name="AppTabs" component={AppTabs} />
       <Stack.Screen name='Notification' component={NotificationScreen} />

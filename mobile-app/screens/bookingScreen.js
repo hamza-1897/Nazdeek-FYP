@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,7 +6,7 @@ import BookingCard from '../Cards/BookingCard';
 import CompletedCard from '../Cards/CompletedCard'; 
 import CancelledCard from '../Cards/CancelledCard';
 
-const BookingScreen = ({ navigation }) => {
+const BookingScreen = ({ navigation, route }) => {
   const [activeTab, setActiveTab] = useState('Upcoming');
 
   const myBookings = [
@@ -36,14 +36,15 @@ const BookingScreen = ({ navigation }) => {
     }
   ];
 
-  const completedBookings = [
+  const [completedBookings, setCompletedBookings] = useState([
     {
       id: '1',
       serviceName: 'Electric Wiring',
       providerName: 'Alyan khan',
       price: '2000',
       date: 'Oct 04, 2023',
-      imageUri: 'https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=400'
+      imageUri: 'https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=400',
+      isReviewed: false
     },
     {
       id: '2',
@@ -51,9 +52,10 @@ const BookingScreen = ({ navigation }) => {
       providerName: 'Arslan Ahmed',
       price: '500',
       date: 'Oct 01, 2023',
-      imageUri: 'https://images.pexels.com/photos/4239113/pexels-photo-4239113.jpeg?auto=compress&cs=tinysrgb&w=400'
+      imageUri: 'https://images.pexels.com/photos/4239113/pexels-photo-4239113.jpeg?auto=compress&cs=tinysrgb&w=400',
+      isReviewed: false
     }
-  ];
+  ]);
 
   const cancelledBookings = [
     {
@@ -64,7 +66,7 @@ const BookingScreen = ({ navigation }) => {
       date: 'March 29, 2026',
       imageUri: 'https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg?auto=compress&cs=tinysrgb&w=400'
     },
-     {
+    {
       id: '2',
       serviceName: 'Car Wash',
       providerName: 'Sajid Mehmood',
@@ -74,12 +76,23 @@ const BookingScreen = ({ navigation }) => {
     }
   ];
 
+ 
+  useEffect(() => {
+    if (route.params?.reviewedBookingId) {
+      const reviewedId = route.params.reviewedBookingId;
+      setCompletedBookings(prevBookings => 
+        prevBookings.map(booking => 
+          booking.id === reviewedId ? { ...booking, isReviewed: true } : booking
+        )
+      );
+    }
+  }, [route.params?.reviewedBookingId]);
+
   const TABS = ['Upcoming', 'Completed', 'Cancelled'];
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
-      
       
       <View className="px-6 py-4 flex-row justify-center items-center bg-white">
         <Text className="text-xl font-bold text-gray-800">My Bookings</Text>
@@ -121,6 +134,13 @@ const BookingScreen = ({ navigation }) => {
               price={item.price}
               date={item.date}
               imageUri={item.imageUri}
+              isReviewed={item.isReviewed}
+              onLeaveReview={() => navigation.navigate('LeaveReview', {
+                bookingId: item.id,
+                providerName: item.providerName,
+                serviceName: item.serviceName,
+                date: item.date
+              })}
             />
           ))
         )}
