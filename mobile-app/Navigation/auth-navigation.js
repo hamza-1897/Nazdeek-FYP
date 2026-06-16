@@ -18,6 +18,7 @@ import ProviderProfileScreen from '../screens/ProviderScreens/ProviderProfileScr
 
 import ReportScreen from '../screens/ProviderScreens/ReportScreen';
 import LeaveReviewScreen from '../screens/ServicesScrens/LeaveReviewScreen';
+import HelpCenterScreen from '../screens/CustProfile section/HelpCenterScreen';
 
 import serviceScreen from '../screens/serviceScreen'; 
 
@@ -79,6 +80,7 @@ const AuthNavigation = () => {
 
       <Stack.Screen name="ReportScreen" component={ReportScreen} />
       <Stack.Screen name="LeaveReview" component={LeaveReviewScreen} />
+       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
 
       <Stack.Screen name="AppTabs" component={AppTabs} />
       <Stack.Screen name='Notification' component={NotificationScreen} />
