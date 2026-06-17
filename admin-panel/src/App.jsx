@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Forgotpassword from './pages/Forgotpassword';
 import Users from './pages/Users';
 import Providers from './pages/Providers';
+import Categories from './pages/Categories';
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
 
           <Route path="/admin/users" element= {<Users/>} />
 
-          <Route path="/admin/providers" element= {<Providers/>} />
+          <Route path="/admin/categories" element= {<Categories/>} />
          </Route>
 
         <Route path="/forgot-password" element={<Forgotpassword />} />
