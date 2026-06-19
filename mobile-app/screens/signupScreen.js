@@ -18,14 +18,14 @@ const SignupScreen = ({ navigation }) => {
 
   const handleSignUP = async () => {
    
-    if (!name || !email || !phone || !address || !password) {
+    if (!name || !email  || !password) {
       alert("Please fill in all fields.");
       return;
     }
     setLoading(true);
     try {
      
-      const data = await userSignup(name, email, phone, address);
+      const data = await userSignup(name, email);
       alert('Signup successful! Please check your email for the OTP to verify your account.');
       navigation.navigate('VerifyOTP', { name, email, phone, address, password, flow: 'signup' });
       

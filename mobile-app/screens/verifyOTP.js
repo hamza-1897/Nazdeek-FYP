@@ -5,7 +5,7 @@ import { useState  } from 'react';
 import { verifySignupOTP , verifyForgotOTP } from '../api/authApi';
 
 const VerifyOTP = ({ navigation, route }) => {
-  const [otp, setOtp] = useState('');
+  const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const email = route.params.email;
   const password = route.params?.password;
@@ -24,23 +24,23 @@ const checkOtp = () => {
 
 const handleVerifyOTP = async () => {
 
-  if(otp.length !== 6){
+  if(code.length !== 6){
     alert("Please enter a valid 6-digit OTP.");
     return false;
   }
  
- const code = parseInt(otp, 10);
+ const otp = parseInt(code, 10);
   setLoading(true);
   try {
 
 
     if(flow === 'signup'){
-      const data = await verifySignupOTP( email,code, password );
+      const data = await verifySignupOTP( email,otp, password );
       alert(data.message)
       navigation.replace('Login');
     }
     else if(flow === 'forgotPassword'){
-      const data = await verifyForgotOTP( email,code);
+      const data = await verifyForgotOTP( email,otp);
       alert(data.message)
       navigation.navigate('ResetPassword', { email });
     }
@@ -84,8 +84,8 @@ const handleVerifyOTP = async () => {
               keyboardType="number-pad"
               className="text-2xl font-bold items-center justify-center text-center w-full"
               placeholder="_ _ _ _ _ _"
-              value={otp}
-              onChangeText={setOtp}
+              value={code}
+              onChangeText={setCode}
             />
           </View>
         

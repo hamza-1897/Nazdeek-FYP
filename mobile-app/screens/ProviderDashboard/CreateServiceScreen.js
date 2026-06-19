@@ -2,14 +2,42 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker'; 
+import { createService } from '../../api/ProviderApi';
+import { useContext } from 'react';
+import {AuthContext} from '../../context/AuthContext';
 
 const CreateServiceScreen = ({ navigation }) => {
+  const { providerInfo } = useContext(AuthContext);
   const [category, setCategory] = useState('Select Category');
   const [isCatOpen, setIsCatOpen] = useState(false);
   const [imageUri, setImageUri] = useState(null); 
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
 
-  const categories = ['Plumber', 'Electrician', 'Cleaning', 'Home Services', 'Carpanter'];
-
+const handleCreateService = async () => {
+    if (!title || !description || !price  || !imageUri) {
+      Alert.alert("Missing Information", "Please fill in all fields before publishing.");
+      return;
+    }
+    const serviceData = {
+      providerId: providerInfo._id,
+      categoryId: providerInfo.categoryId._id,
+      title,
+      description,
+      price: parseFloat(price),
+      serviceImages: [imageUri],
+    };
+    console.log("Creating service with data:", serviceData);
+    try {
+      const response = await createService(serviceData);
+      console.log("Service created successfully:", response);
+      navigation.replace('ServicePublished');
+    } catch (error) {
+      console.error("Error creating service:", error);
+      Alert.alert("Error", "There was an issue creating your service. Please try again.");
+    }
+  };
  
   const pickImage = async () => {
    
@@ -82,36 +110,13 @@ const CreateServiceScreen = ({ navigation }) => {
             placeholder="e.g. Deep House Cleaning"
             className="border-b border-gray-200 py-2 text-base text-gray-900"
             placeholderTextColor="#9ca3af"
+            value={title}
+            onChangeText={setTitle}
           />
         </View>
 
       
-        <View className="mb-6 z-50">
-          <Text className="text-gray-700 font-medium mb-2">Category</Text>
-          <TouchableOpacity 
-            onPress={() => setIsCatOpen(!isCatOpen)}
-            className="flex-row justify-between items-center border-b border-gray-200 py-2"
-          >
-            <Text className={category === 'Select Category' ? "text-gray-400 text-base" : "text-gray-900 text-base"}>
-              {category}
-            </Text>
-            <Ionicons name={isCatOpen ? "chevron-up" : "chevron-down"} size={18} color="black" />
-          </TouchableOpacity>
-
-          {isCatOpen && (
-            <View className="bg-gray-50 rounded-xl mt-1 shadow-sm border border-gray-100 overflow-hidden">
-              {categories.map((item, index) => (
-                <TouchableOpacity 
-                  key={index}
-                  onPress={() => { setCategory(item); setIsCatOpen(false); }}
-                  className="p-4 border-b border-gray-100 active:bg-blue-50"
-                >
-                  <Text className="text-gray-800">{item}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-        </View>
+        
 
         <View className="mb-6">
           <Text className="text-gray-700 font-medium mb-2">Description</Text>
@@ -120,6 +125,8 @@ const CreateServiceScreen = ({ navigation }) => {
             multiline
             className="border-b border-gray-200 py-2 text-base text-gray-900"
             placeholderTextColor="#9ca3af"
+            value={description}
+            onChangeText={setDescription}
           />
         </View>
 
@@ -130,23 +137,17 @@ const CreateServiceScreen = ({ navigation }) => {
             keyboardType="numeric"
             className="border-b border-gray-200 py-2 text-base text-gray-900"
             placeholderTextColor="#9ca3af"
+            value={price}
+            onChangeText={setPrice}
           />
         </View>
 
        
-        <View className="mb-10">
-          <Text className="text-gray-700 font-medium mb-2">Service area / city</Text>
-          <TextInput 
-            placeholder="e.g. Lahore"
-            className="border-b border-gray-200 py-2 text-base text-gray-900"
-            placeholderTextColor="#9ca3af"
-          />
-        </View>
-
+      
       
         <TouchableOpacity 
           className="bg-[#1a5ea1] py-4 rounded-xl items-center mb-10 shadow-sm"
-          onPress={() => navigation.replace('ServicePublished')}
+          onPress={handleCreateService}
         >
           <Text className="text-white font-bold text-base">Publish service</Text>
         </TouchableOpacity>

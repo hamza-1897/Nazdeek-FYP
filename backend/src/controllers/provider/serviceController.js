@@ -7,13 +7,17 @@ const createService = async (req, res) => {
       serviceName, 
       description, 
       price, 
-      categoryId,
-      serviceImages, 
+      categoryId 
     } = req.body;
 
+    const files = req.files || [];
 
-  const serviceImage = req.files['serviceImages'] ? req.files['serviceImages'].map(f => f.path) 
- : [];
+    if (files.length === 0) {
+      return res.status(400).json({ success: false, message: "At least one service image is required." });
+    }
+
+    
+    const serviceImagesUrls = files.map(file => file.path);
 
     const newService = new serviceModel({
         providerId,
@@ -21,7 +25,7 @@ const createService = async (req, res) => {
         description,
         price,
         categoryId,
-        serviceImage,
+        serviceImages: serviceImagesUrls, 
     });
 
     await newService.save();
@@ -33,8 +37,8 @@ const createService = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error", error: error.message });
+    console.error("Error in createService:", error);
+    res.status(500).json({ success: false, message: "Server Error", error: error.message });
   }
 };
 
