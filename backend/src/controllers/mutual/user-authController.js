@@ -31,7 +31,7 @@ const verifySignUPOTP = async (req,res) => {
     const otpEntry = await otpModel.findOne({email, otp});
 
     if(!otpEntry){
-        res.status(400).json({message : "invalid OTP"})
+        res.status(400).json({message : "no OTP found"})
     } else {
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password,salt)
