@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity, StatusBar, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useContext } from 'react';
-import {AuthContext} from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 
 const ProfileScreen = ({ navigation }) => {
   const { userInfo, logout } = useContext(AuthContext);
+
+  const defaultAvatar = 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400';
+  const profilePicUri = userInfo && userInfo.profileImage ? userInfo.profileImage : defaultAvatar;
+  const userName = userInfo && userInfo.name ? userInfo.name : "Guest User";
 
   const MenuItem = ({ icon, title, onPress }) => (
     <TouchableOpacity 
@@ -21,25 +24,27 @@ const ProfileScreen = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  
   const handleLogout = () => {
     Alert.alert(
       "Logout",
       "Are you sure you want to logout?",
       [
-        {
-          text: "Cancel",
-          style: "cancel" 
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Logout",
           style: "destructive",
-          onPress: () => {
-           
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Login' }], // auth-navigation ke mutabiq name 'Login' hai
-            });
+          onPress: async () => {
+            try {
+              if (logout) {
+                await logout();
+              }
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }], 
+              });
+            } catch (error) {
+              console.log("Logout Error: ", error);
+            }
           }
         }
       ]
@@ -50,31 +55,27 @@ const ProfileScreen = ({ navigation }) => {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       
-     
       <View className="px-6 py-4 flex-row items-center justify-center relative">
         <Text className="text-xl font-bold text-gray-800">Profile</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="px-6">
         
-       
         <View className="items-center mt-6 mb-8">
-          <View className="relative">
+          <View className="w-28 h-28 rounded-full overflow-hidden border-2 border-gray-100 shadow-sm">
             <Image 
-              source={{ uri: userInfo.profileImage  }}
-              className="w-28 h-28 rounded-full"
+              source={{ uri: profilePicUri }}
+              className="w-full h-full"
+              resizeMode="cover"
             />
           </View>
-          <Text className="text-xl font-bold text-gray-900 mt-4">{userInfo.name}</Text>
+          <Text className="text-xl font-bold text-gray-900 mt-4">{userName}</Text>
         </View>
 
         <View className="mt-2">
-          
-       
           <MenuItem 
             icon="person-outline" 
             title="Your profile" 
-            placeholder="Edit profile details"
             onPress={() => navigation.navigate('EditProfile')} 
           />
           
@@ -82,19 +83,15 @@ const ProfileScreen = ({ navigation }) => {
           <MenuItem 
             icon="help-circle-outline" 
             title="Help Center" 
-            onPress={() => {}} 
+            onPress={() => navigation.navigate('HelpCenter')}
           />
           
-          
-          <TouchableOpacity className="flex-row items-center py-4 mt-4"
-          onPress={async () => {
-            
-            navigation.replace('Login');
-          }}
+          <TouchableOpacity 
+            className="flex-row items-center py-4 mt-4"
+            onPress={handleLogout}
           >
             <Ionicons name="log-out-outline" size={22} color="#ef4444" />
             <Text className="ml-4 text-red-500 font-bold text-base">Logout</Text>
-
           </TouchableOpacity>
         </View>
 

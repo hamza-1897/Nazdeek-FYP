@@ -105,8 +105,8 @@ const handleLogin = async () => {
           onPress={() => {
         
         
-           handleLogin();
-         // navigation.replace('AppTabs');
+           //handleLogin();
+           navigation.replace('AppTabs');
           }}
         >
           <Text className="text-white text-lg font-bold">Login</Text>

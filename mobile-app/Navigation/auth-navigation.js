@@ -16,6 +16,9 @@ import BookingScreen from '../screens/bookingScreen';
 import CancelBookingScreen from '../screens/Bookings related/CancelBookingScreen';
 import ProviderProfileScreen from '../screens/ProviderScreens/ProviderProfileScreen';
 
+import ReportScreen from '../screens/ProviderScreens/ReportScreen';
+import LeaveReviewScreen from '../screens/ServicesScrens/LeaveReviewScreen';
+import HelpCenterScreen from '../screens/CustProfile section/HelpCenterScreen';
 
 import serviceScreen from '../screens/serviceScreen'; 
 
@@ -61,7 +64,7 @@ const AuthNavigation = () => {
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="ProviderProfile" component={ProviderProfileScreen} />
        
-      {/* UPDATE: Service listing wali screen ko navigator ke andar register kar diya ha */}
+     
       <Stack.Screen name="serviceScreen" component={serviceScreen} />
 
       <Stack.Screen name="ProviderDashboard" component={ProviderDashboard} />
@@ -74,6 +77,10 @@ const AuthNavigation = () => {
       <Stack.Screen name="EditServiceProvider" component={EditServiceProvider} />
       <Stack.Screen name="RatingsReviewsProvider" component={RatingsReviewsProvider} />
        <Stack.Screen name="ProviderRegisterScreen" component={ProviderRegisterScreen} />
+
+      <Stack.Screen name="ReportScreen" component={ReportScreen} />
+      <Stack.Screen name="LeaveReview" component={LeaveReviewScreen} />
+       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
 
       <Stack.Screen name="AppTabs" component={AppTabs} />
       <Stack.Screen name='Notification' component={NotificationScreen} />

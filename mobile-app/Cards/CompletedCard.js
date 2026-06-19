@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const CompletedCard = ({ serviceName, providerName, price, imageUri, date }) => {
+const CompletedCard = ({ serviceName, providerName, price, imageUri, date, onLeaveReview, isReviewed }) => {
   return (
     <View className="bg-white rounded-[25px] p-4 mb-3 border border-gray-100 shadow-sm">
       <View className="flex-row">
@@ -33,10 +33,18 @@ const CompletedCard = ({ serviceName, providerName, price, imageUri, date }) => 
           <View className="flex-row justify-between items-center mt-3 pt-2 border-t border-gray-50">
             <Text className="text-[#1a5ea1] font-extrabold text-sm">Rs. {price}</Text>
             
-           
-            <TouchableOpacity className="bg-[#1a5ea1] px-4 py-1.5 rounded-full">
-              <Text className="text-white text-[11px] font-bold">Leave Review</Text>
-            </TouchableOpacity>
+            {isReviewed ? (
+              <View className="bg-gray-100 px-4 py-1.5 rounded-full">
+                <Text className="text-gray-400 text-[11px] font-bold">Reviewed</Text>
+              </View>
+            ) : (
+              <TouchableOpacity 
+                onPress={onLeaveReview}
+                className="bg-[#1a5ea1] px-4 py-1.5 rounded-full"
+              >
+                <Text className="text-white text-[11px] font-bold">Leave Review</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>
