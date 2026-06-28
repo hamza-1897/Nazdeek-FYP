@@ -12,12 +12,10 @@ const ProviderProfileScreen = ({ navigation }) => {
     location: 'Mandi Bahauddin, Pakistan',
     rating: '4.9',
     reviews: '2',
-    customers: '500+',
     experience: '10+',
     image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400'
   };
 
-  
   const servicesList = [
     { 
       id: 1, 
@@ -75,7 +73,6 @@ const ProviderProfileScreen = ({ navigation }) => {
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      
       <View className="px-6 py-4 flex-row justify-between items-center mt-8">
         <TouchableOpacity 
           onPress={() => navigation.goBack()}
@@ -83,10 +80,21 @@ const ProviderProfileScreen = ({ navigation }) => {
         >
           <Ionicons name="arrow-back" size={22} color="#1a5ea1" />
         </TouchableOpacity>
+        
         <Text className="text-lg font-bold text-gray-800">Service Provider</Text>
-        <TouchableOpacity className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center bg-white shadow-sm">
-          <Ionicons name="share-social-outline" size={20} color="#1a5ea1" />
-        </TouchableOpacity>
+        
+        <View className="flex-row items-center">
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('ReportScreen', { providerName: provider.name })}
+            className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center bg-white shadow-sm mr-2"
+          >
+            <Ionicons name="flag-outline" size={20} color="#dc2626" />
+          </TouchableOpacity>
+
+          <TouchableOpacity className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center bg-white shadow-sm">
+            <Ionicons name="share-social-outline" size={20} color="#1a5ea1" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -111,15 +119,12 @@ const ProviderProfileScreen = ({ navigation }) => {
           </View>
         </View>
 
-       
-        <View className="flex-row justify-between px-6 mt-8">
-          <StatItem icon="people-outline" value={provider.customers} label="Customer" />
+        <View className="flex-row justify-around px-12 mt-8">
           <StatItem icon="briefcase-outline" value={provider.experience} label="Years Exp." />
           <StatItem icon="star-outline" value={provider.rating} label="Rating" />
           <StatItem icon="chatbubble-outline" value={provider.reviews} label="Review" />
         </View>
 
-       
         <View className="flex-row border-b border-gray-100 mt-8 px-6">
           {['Services', 'About', 'Gallery', 'Review'].map((tab) => (
             <TouchableOpacity 
@@ -134,7 +139,6 @@ const ProviderProfileScreen = ({ navigation }) => {
           ))}
         </View>
 
-       
         <View className="px-6 py-6">
           {activeTab === 'Services' && (
             <View>
@@ -142,7 +146,6 @@ const ProviderProfileScreen = ({ navigation }) => {
                 <Text className="text-lg font-bold text-gray-800">Services ({servicesList.length})</Text>
               </View>
               
-             
               {servicesList.map((item) => (
                 <ProviderServiceCard key={item.id} service={item} />
               ))}

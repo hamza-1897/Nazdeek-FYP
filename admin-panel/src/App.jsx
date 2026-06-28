@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Forgotpassword from './pages/Forgotpassword';
 import Users from './pages/Users';
 import Providers from './pages/Providers';
+import Categories from './pages/Categories';
 
 function App() {
   return (
