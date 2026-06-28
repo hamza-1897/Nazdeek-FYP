@@ -11,26 +11,44 @@ const CreateServiceScreen = ({ navigation }) => {
   const [category, setCategory] = useState('Select Category');
   const [isCatOpen, setIsCatOpen] = useState(false);
   const [imageUri, setImageUri] = useState(null); 
-  const [title, setTitle] = useState('');
+  const [serviceName, setServiceName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
 
 const handleCreateService = async () => {
-    if (!title || !description || !price  || !imageUri) {
+    if (!serviceName || !description || !price  || !imageUri) {
       Alert.alert("Missing Information", "Please fill in all fields before publishing.");
       return;
     }
-    const serviceData = {
-      providerId: providerInfo._id,
-      categoryId: providerInfo.categoryId._id,
-      title,
-      description,
-      price: parseFloat(price),
-      serviceImages: [imageUri],
-    };
-    console.log("Creating service with data:", serviceData);
+
+
+    // 1. Khali FormData ka object banayein
+    const formData = new FormData();
+
+    // 2. Saari text fields ko one-by-one append karein
+    formData.append('providerId', providerInfo._id);
+    formData.append('categoryId', providerInfo.categoryId._id);
+    formData.append('serviceName', serviceName);
+    formData.append('description', description);
+    formData.append('price', parseFloat(price));
+
+    // 3. Image ko specialized tareeqe se append karein (yeh bohot zaroori hai!)
+    // Agarn aapke paas multiple images hain toh loop chalayein, abhi aik hai toh direct:
+    const filename = imageUri.split('/').pop(); // file ka naam nikalein
+    const match = /\.(\w+)$/.exec(filename);
+    const type = match ? `image/${match[1]}` : `image`; // file ki type (jpg/png)
+
+    formData.append('serviceImages', {
+      uri: imageUri,
+      name: filename || 'service_image.jpg',
+      type: type,
+    });
+
+
+    console.log("Creating service with FormData...");
+
     try {
-      const response = await createService(serviceData);
+      const response = await createService(formData);
       console.log("Service created successfully:", response);
       navigation.replace('ServicePublished');
     } catch (error) {
@@ -110,8 +128,8 @@ const handleCreateService = async () => {
             placeholder="e.g. Deep House Cleaning"
             className="border-b border-gray-200 py-2 text-base text-gray-900"
             placeholderTextColor="#9ca3af"
-            value={title}
-            onChangeText={setTitle}
+            value={serviceName}
+            onChangeText={setServiceName}
           />
         </View>
 

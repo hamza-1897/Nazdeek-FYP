@@ -1,8 +1,8 @@
 import api from './axiosInstance';
 
-export const createService = async (serviceData) => {
+export const createService = async (formData) => {
     try {
-        const response = await api.post('/create-service', serviceData);
+        const response = await api.post('/provider/create-service', formData);
         console.log("Create Service API response:", response.data);
         return response.data;
     } catch (error) {
