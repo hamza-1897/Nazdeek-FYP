@@ -7,6 +7,8 @@ import Login from './pages/Login';
 import Forgotpassword from './pages/Forgotpassword';
 import Users from './pages/Users';
 import Providers from './pages/Providers';
+import Dashboard from './pages/Dashboard';
+import Settings from './pages/Settings';
 import Categories from './pages/Categories';
 
 function App() {
@@ -20,10 +22,10 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} /> 
             
-            {/* Baaki pages bina forward slash ke nested hain */}
             <Route path="users" element={<Users />} />
-            <Route path="categories" element={<Categories />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="providers" element={<Providers />} />
+            <Route path='categories' element={<Categories />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 
