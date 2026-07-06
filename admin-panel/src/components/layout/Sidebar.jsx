@@ -12,6 +12,7 @@ const Sidebar = ({ isCollapsed }) => {
     { path: '/admin', name: 'Dashboard', icon: LayoutDashboard },
     { path: '/admin/users', name: 'Users', icon: Users },
     { path: '/admin/categories', name: 'Categories', icon: Grid },
+    { path: '/admin/providers', name: 'Providers', icon: Users },
     { path: '/admin/settings', name: 'Settings', icon: Settings }
   ];
 

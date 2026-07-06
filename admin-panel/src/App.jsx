@@ -24,6 +24,7 @@ function App() {
             
             <Route path="users" element={<Users />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="providers" element={<Providers />} />
             <Route path='categories' element={<Categories />} />
             <Route path="settings" element={<Settings />} />
           </Route>
