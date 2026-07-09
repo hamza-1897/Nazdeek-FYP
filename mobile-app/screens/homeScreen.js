@@ -13,7 +13,8 @@ const HomeScreen = () => {
       <StatusBar barStyle="light-content" backgroundColor="#1a5ea1" />
       
       
-      <HeaderCard userName={userInfo.name} />
+      {/* <HeaderCard userName={userInfo.name } /> */}
+      <HeaderCard userName={'hamza' } />
 
       
       <ScrollView 

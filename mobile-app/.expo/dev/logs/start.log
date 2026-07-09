@@ -2293,3 +2293,264 @@
 {"_e":"metro:bundling:progress","_t":1783529116718,"id":"4","progress":0.999,"total":1273,"current":1273}
 {"_e":"metro:bundling:progress","_t":1783529116885,"id":"4","progress":0.999,"total":1283,"current":1283}
 {"_e":"metro:bundling:done","_t":1783529117741,"id":"4","total":1283,"ms":52489.0107}
+{"_e":"root:init","_t":1783579173163,"format":"v0-jsonl","version":"56.1.13"}
+{"_e":"env:mode","_t":1783579173188,"nodeEnv":"development","babelEnv":"development","mode":"development"}
+{"_e":"env:load","_t":1783579173204,"mode":"development","files":[],"env":{}}
+{"_e":"devserver:start","_t":1783579177115,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../..\\..\\app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
+{"_e":"metro:config","_t":1783579184627,"serverRoot":"../..\\..","projectRoot":"../..\\..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:instantiate","_t":1783579217843,"atlas":false,"workers":6,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1783579809872,"id":"3","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1783579809889,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783579809942,"id":"3","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783579820538,"id":"3","progress":0.010000000000000002,"total":1,"current":1}
+{"_e":"metro:bundling:progress","_t":1783579820638,"id":"3","progress":0.010000000000000002,"total":3,"current":1}
+{"_e":"metro:bundling:progress","_t":1783579820899,"id":"3","progress":0.04000000000000001,"total":3,"current":2}
+{"_e":"metro:bundling:progress","_t":1783579821009,"id":"3","progress":0.09,"total":10,"current":3}
+{"_e":"metro:bundling:progress","_t":1783579821066,"id":"3","progress":0.16000000000000003,"total":10,"current":4}
+{"_e":"metro:bundling:progress","_t":1783579821171,"id":"3","progress":0.16000000000000003,"total":27,"current":4}
+{"_e":"metro:bundling:progress","_t":1783579821379,"id":"3","progress":0.16000000000000003,"total":27,"current":5}
+{"_e":"metro:bundling:progress","_t":1783579821481,"id":"3","progress":0.16000000000000003,"total":28,"current":9}
+{"_e":"metro:bundling:progress","_t":1783579821675,"id":"3","progress":0.16000000000000003,"total":28,"current":10}
+{"_e":"metro:bundling:progress","_t":1783579821870,"id":"3","progress":0.16000000000000003,"total":29,"current":10}
+{"_e":"metro:bundling:progress","_t":1783579822025,"id":"3","progress":0.16000000000000003,"total":30,"current":12}
+{"_e":"metro:bundling:progress","_t":1783579822132,"id":"3","progress":0.18367346938775508,"total":35,"current":15}
+{"_e":"metro:bundling:progress","_t":1783579822201,"id":"3","progress":0.20897959183673467,"total":35,"current":16}
+{"_e":"metro:bundling:progress","_t":1783579822315,"id":"3","progress":0.2644897959183673,"total":35,"current":18}
+{"_e":"metro:bundling:progress","_t":1783579822505,"id":"3","progress":0.2946938775510204,"total":35,"current":19}
+{"_e":"metro:bundling:progress","_t":1783579822605,"id":"3","progress":0.2946938775510204,"total":70,"current":21}
+{"_e":"metro:bundling:progress","_t":1783579822762,"id":"3","progress":0.2946938775510204,"total":70,"current":23}
+{"_e":"metro:bundling:progress","_t":1783579823056,"id":"3","progress":0.2946938775510204,"total":70,"current":24}
+{"_e":"metro:bundling:progress","_t":1783579823159,"id":"3","progress":0.2946938775510204,"total":76,"current":25}
+{"_e":"metro:bundling:progress","_t":1783579823259,"id":"3","progress":0.2946938775510204,"total":169,"current":29}
+{"_e":"metro:bundling:progress","_t":1783579823364,"id":"3","progress":0.2946938775510204,"total":169,"current":33}
+{"_e":"metro:bundling:progress","_t":1783579823481,"id":"3","progress":0.2946938775510204,"total":171,"current":40}
+{"_e":"metro:bundling:progress","_t":1783579823593,"id":"3","progress":0.2946938775510204,"total":173,"current":44}
+{"_e":"metro:bundling:progress","_t":1783579823699,"id":"3","progress":0.2946938775510204,"total":174,"current":44}
+{"_e":"metro:bundling:progress","_t":1783579823827,"id":"3","progress":0.2946938775510204,"total":175,"current":46}
+{"_e":"metro:bundling:progress","_t":1783579823932,"id":"3","progress":0.2946938775510204,"total":193,"current":57}
+{"_e":"metro:bundling:progress","_t":1783579824186,"id":"3","progress":0.2946938775510204,"total":202,"current":65}
+{"_e":"metro:bundling:progress","_t":1783579824336,"id":"3","progress":0.2946938775510204,"total":211,"current":73}
+{"_e":"metro:bundling:progress","_t":1783579824440,"id":"3","progress":0.2946938775510204,"total":284,"current":81}
+{"_e":"metro:bundling:progress","_t":1783579824541,"id":"3","progress":0.2946938775510204,"total":292,"current":90}
+{"_e":"metro:bundling:progress","_t":1783579824672,"id":"3","progress":0.2946938775510204,"total":303,"current":96}
+{"_e":"metro:bundling:progress","_t":1783579824776,"id":"3","progress":0.2946938775510204,"total":307,"current":99}
+{"_e":"metro:bundling:progress","_t":1783579824878,"id":"3","progress":0.2946938775510204,"total":316,"current":109}
+{"_e":"metro:bundling:progress","_t":1783579824978,"id":"3","progress":0.2946938775510204,"total":336,"current":130}
+{"_e":"metro:bundling:progress","_t":1783579825079,"id":"3","progress":0.2946938775510204,"total":354,"current":140}
+{"_e":"metro:bundling:progress","_t":1783579825181,"id":"3","progress":0.2946938775510204,"total":373,"current":157}
+{"_e":"metro:bundling:progress","_t":1783579825286,"id":"3","progress":0.2946938775510204,"total":387,"current":176}
+{"_e":"metro:bundling:progress","_t":1783579825575,"id":"3","progress":0.2946938775510204,"total":389,"current":180}
+{"_e":"metro:bundling:progress","_t":1783579825681,"id":"3","progress":0.2946938775510204,"total":392,"current":194}
+{"_e":"metro:bundling:progress","_t":1783579825886,"id":"3","progress":0.2946938775510204,"total":401,"current":209}
+{"_e":"metro:bundling:progress","_t":1783579825985,"id":"3","progress":0.30653777513384894,"total":410,"current":227}
+{"_e":"metro:bundling:progress","_t":1783579826090,"id":"3","progress":0.30924449732302206,"total":410,"current":228}
+{"_e":"metro:bundling:progress","_t":1783579826275,"id":"3","progress":0.3119631171921476,"total":410,"current":229}
+{"_e":"metro:bundling:progress","_t":1783579826376,"id":"3","progress":0.3119631171921476,"total":413,"current":230}
+{"_e":"metro:bundling:progress","_t":1783579826479,"id":"3","progress":0.3125214109449848,"total":415,"current":232}
+{"_e":"metro:bundling:progress","_t":1783579826590,"id":"3","progress":0.31640625,"total":416,"current":234}
+{"_e":"metro:bundling:progress","_t":1783579827770,"id":"3","progress":0.31911635539940825,"total":416,"current":235}
+{"_e":"metro:bundling:progress","_t":1783579827897,"id":"3","progress":0.31958745437003855,"total":421,"current":238}
+{"_e":"metro:bundling:progress","_t":1783579828461,"id":"3","progress":0.3222787052657117,"total":421,"current":239}
+{"_e":"metro:bundling:progress","_t":1783579828537,"id":"3","progress":0.3249812402322262,"total":421,"current":240}
+{"_e":"metro:bundling:progress","_t":1783579828648,"id":"3","progress":0.32614384223175574,"total":422,"current":241}
+{"_e":"metro:bundling:progress","_t":1783579828749,"id":"3","progress":0.3315794793468251,"total":422,"current":243}
+{"_e":"metro:bundling:progress","_t":1783579829548,"id":"3","progress":0.33431414388715436,"total":422,"current":244}
+{"_e":"metro:bundling:progress","_t":1783579829659,"id":"3","progress":0.3432581314878893,"total":425,"current":249}
+{"_e":"metro:bundling:progress","_t":1783579830916,"id":"3","progress":0.34602076124567477,"total":425,"current":250}
+{"_e":"metro:bundling:progress","_t":1783579831058,"id":"3","progress":0.36507631808434204,"total":427,"current":258}
+{"_e":"metro:bundling:progress","_t":1783579831532,"id":"3","progress":0.3679118516527815,"total":427,"current":259}
+{"_e":"metro:bundling:progress","_t":1783579831663,"id":"3","progress":0.3679118516527815,"total":432,"current":261}
+{"_e":"metro:bundling:progress","_t":1783579832228,"id":"3","progress":0.3728312344708955,"total":434,"current":265}
+{"_e":"metro:bundling:progress","_t":1783579832330,"id":"3","progress":0.4039051271008349,"total":439,"current":279}
+{"_e":"metro:bundling:progress","_t":1783579832446,"id":"3","progress":0.4295562454346238,"total":444,"current":291}
+{"_e":"metro:bundling:progress","_t":1783579832546,"id":"3","progress":0.4530882182911319,"total":465,"current":313}
+{"_e":"metro:bundling:progress","_t":1783579832682,"id":"3","progress":0.4593514032183471,"total":481,"current":326}
+{"_e":"metro:bundling:progress","_t":1783579832782,"id":"3","progress":0.48056380057459414,"total":502,"current":348}
+{"_e":"metro:bundling:progress","_t":1783579832882,"id":"3","progress":0.48056380057459414,"total":517,"current":354}
+{"_e":"metro:bundling:progress","_t":1783579833026,"id":"3","progress":0.48056380057459414,"total":518,"current":355}
+{"_e":"metro:bundling:progress","_t":1783579833134,"id":"3","progress":0.48056380057459414,"total":554,"current":378}
+{"_e":"metro:bundling:progress","_t":1783579833346,"id":"3","progress":0.48056380057459414,"total":555,"current":378}
+{"_e":"metro:bundling:progress","_t":1783579833545,"id":"3","progress":0.48056380057459414,"total":562,"current":385}
+{"_e":"metro:bundling:progress","_t":1783579833728,"id":"3","progress":0.48056380057459414,"total":567,"current":393}
+{"_e":"metro:bundling:progress","_t":1783579833828,"id":"3","progress":0.48056380057459414,"total":592,"current":410}
+{"_e":"metro:bundling:progress","_t":1783579833929,"id":"3","progress":0.48056380057459414,"total":622,"current":415}
+{"_e":"metro:bundling:progress","_t":1783579834563,"id":"3","progress":0.48056380057459414,"total":623,"current":416}
+{"_e":"metro:bundling:progress","_t":1783579834682,"id":"3","progress":0.48056380057459414,"total":629,"current":417}
+{"_e":"metro:bundling:progress","_t":1783579835445,"id":"3","progress":0.48056380057459414,"total":629,"current":420}
+{"_e":"metro:bundling:progress","_t":1783579835448,"id":"3","progress":0.48056380057459414,"total":629,"current":421}
+{"_e":"metro:bundling:progress","_t":1783579835559,"id":"3","progress":0.48056380057459414,"total":638,"current":428}
+{"_e":"metro:bundling:progress","_t":1783579835662,"id":"3","progress":0.48056380057459414,"total":638,"current":434}
+{"_e":"metro:bundling:progress","_t":1783579835762,"id":"3","progress":0.48056380057459414,"total":647,"current":435}
+{"_e":"metro:bundling:progress","_t":1783579835863,"id":"3","progress":0.48056380057459414,"total":649,"current":441}
+{"_e":"metro:bundling:progress","_t":1783579835969,"id":"3","progress":0.48056380057459414,"total":649,"current":442}
+{"_e":"metro:bundling:progress","_t":1783579835992,"id":"3","progress":0.48056380057459414,"total":649,"current":443}
+{"_e":"metro:bundling:progress","_t":1783579836098,"id":"3","progress":0.4853161250743605,"total":656,"current":457}
+{"_e":"metro:bundling:progress","_t":1783579836200,"id":"3","progress":0.5102040816326531,"total":658,"current":470}
+{"_e":"metro:bundling:progress","_t":1783579836353,"id":"3","progress":0.5243757431629014,"total":667,"current":483}
+{"_e":"metro:bundling:progress","_t":1783579836543,"id":"3","progress":0.5409788289113747,"total":673,"current":495}
+{"_e":"metro:bundling:progress","_t":1783579836651,"id":"3","progress":0.5559018166089965,"total":680,"current":507}
+{"_e":"metro:bundling:progress","_t":1783579837325,"id":"3","progress":0.567409067641836,"total":689,"current":519}
+{"_e":"metro:bundling:progress","_t":1783579837991,"id":"3","progress":0.573921028466483,"total":693,"current":525}
+{"_e":"metro:bundling:progress","_t":1783579837996,"id":"3","progress":0.576109476542377,"total":693,"current":526}
+{"_e":"metro:bundling:progress","_t":1783579838097,"id":"3","progress":0.6091612135633552,"total":697,"current":544}
+{"_e":"metro:bundling:progress","_t":1783579838405,"id":"3","progress":0.6422715155173282,"total":705,"current":565}
+{"_e":"metro:bundling:progress","_t":1783579838505,"id":"3","progress":0.6594442226020862,"total":713,"current":579}
+{"_e":"metro:bundling:progress","_t":1783579838626,"id":"3","progress":0.6667157058901992,"total":714,"current":583}
+{"_e":"metro:bundling:progress","_t":1783579838727,"id":"3","progress":0.6667157058901992,"total":756,"current":614}
+{"_e":"metro:bundling:progress","_t":1783579838832,"id":"3","progress":0.6667157058901992,"total":756,"current":615}
+{"_e":"metro:bundling:progress","_t":1783579839265,"id":"3","progress":0.6667157058901992,"total":771,"current":622}
+{"_e":"metro:bundling:progress","_t":1783579839775,"id":"3","progress":0.6667157058901992,"total":805,"current":625}
+{"_e":"metro:bundling:progress","_t":1783579839881,"id":"3","progress":0.6667157058901992,"total":822,"current":636}
+{"_e":"metro:bundling:progress","_t":1783579839981,"id":"3","progress":0.6667157058901992,"total":833,"current":642}
+{"_e":"metro:bundling:progress","_t":1783579840081,"id":"3","progress":0.6667157058901992,"total":839,"current":650}
+{"_e":"metro:bundling:progress","_t":1783579840187,"id":"3","progress":0.6667157058901992,"total":848,"current":662}
+{"_e":"metro:bundling:progress","_t":1783579840289,"id":"3","progress":0.6667157058901992,"total":859,"current":678}
+{"_e":"metro:bundling:progress","_t":1783579840394,"id":"3","progress":0.6667157058901992,"total":862,"current":689}
+{"_e":"metro:bundling:progress","_t":1783579840853,"id":"3","progress":0.6667157058901992,"total":865,"current":692}
+{"_e":"metro:bundling:progress","_t":1783579840955,"id":"3","progress":0.6667157058901992,"total":870,"current":696}
+{"_e":"metro:bundling:progress","_t":1783579841082,"id":"3","progress":0.6667157058901992,"total":870,"current":697}
+{"_e":"metro:bundling:progress","_t":1783579841182,"id":"3","progress":0.6667157058901992,"total":871,"current":702}
+{"_e":"metro:bundling:progress","_t":1783579841247,"id":"3","progress":0.6667157058901992,"total":871,"current":703}
+{"_e":"metro:bundling:progress","_t":1783579841349,"id":"3","progress":0.6667157058901992,"total":879,"current":712}
+{"_e":"metro:bundling:progress","_t":1783579841688,"id":"3","progress":0.6667157058901992,"total":880,"current":715}
+{"_e":"metro:bundling:progress","_t":1783579841793,"id":"3","progress":0.6667157058901992,"total":886,"current":722}
+{"_e":"metro:bundling:progress","_t":1783579841894,"id":"3","progress":0.669087236460043,"total":890,"current":728}
+{"_e":"metro:bundling:progress","_t":1783579842005,"id":"3","progress":0.6697550724929117,"total":892,"current":730}
+{"_e":"metro:bundling:progress","_t":1783579842070,"id":"3","progress":0.6715912747089223,"total":892,"current":731}
+{"_e":"metro:bundling:progress","_t":1783579842175,"id":"3","progress":0.6734299905487744,"total":892,"current":732}
+{"_e":"metro:bundling:progress","_t":1783579842198,"id":"3","progress":0.6752712200124675,"total":892,"current":733}
+{"_e":"metro:bundling:progress","_t":1783579842298,"id":"3","progress":0.6969268176020409,"total":896,"current":748}
+{"_e":"metro:bundling:progress","_t":1783579842407,"id":"3","progress":0.7297986515730618,"total":899,"current":768}
+{"_e":"metro:bundling:progress","_t":1783579842514,"id":"3","progress":0.7480430066383863,"total":903,"current":781}
+{"_e":"metro:bundling:progress","_t":1783579842613,"id":"3","progress":0.7697396294374408,"total":905,"current":794}
+{"_e":"metro:bundling:progress","_t":1783579842723,"id":"3","progress":0.7894695164442105,"total":906,"current":805}
+{"_e":"metro:bundling:progress","_t":1783579842840,"id":"3","progress":0.7894695164442105,"total":914,"current":809}
+{"_e":"metro:bundling:progress","_t":1783579843056,"id":"3","progress":0.7894695164442105,"total":923,"current":812}
+{"_e":"metro:bundling:progress","_t":1783579843188,"id":"3","progress":0.7894695164442105,"total":927,"current":816}
+{"_e":"metro:bundling:progress","_t":1783579843331,"id":"3","progress":0.7894695164442105,"total":930,"current":817}
+{"_e":"metro:bundling:progress","_t":1783579843336,"id":"3","progress":0.7894695164442105,"total":930,"current":818}
+{"_e":"metro:bundling:progress","_t":1783579843468,"id":"3","progress":0.7894695164442105,"total":933,"current":821}
+{"_e":"metro:bundling:progress","_t":1783579843612,"id":"3","progress":0.7894695164442105,"total":947,"current":826}
+{"_e":"metro:bundling:progress","_t":1783579843858,"id":"3","progress":0.7894695164442105,"total":948,"current":826}
+{"_e":"metro:bundling:progress","_t":1783579844069,"id":"3","progress":0.7894695164442105,"total":948,"current":827}
+{"_e":"metro:bundling:progress","_t":1783579844272,"id":"3","progress":0.7894695164442105,"total":948,"current":828}
+{"_e":"metro:bundling:progress","_t":1783579844372,"id":"3","progress":0.7894695164442105,"total":954,"current":833}
+{"_e":"metro:bundling:progress","_t":1783579844598,"id":"3","progress":0.7894695164442105,"total":956,"current":835}
+{"_e":"metro:bundling:progress","_t":1783579844599,"id":"3","progress":0.7894695164442105,"total":956,"current":836}
+{"_e":"metro:bundling:progress","_t":1783579844701,"id":"3","progress":0.7894695164442105,"total":972,"current":846}
+{"_e":"metro:bundling:progress","_t":1783579844809,"id":"3","progress":0.7894695164442105,"total":978,"current":855}
+{"_e":"metro:bundling:progress","_t":1783579844930,"id":"3","progress":0.7894695164442105,"total":984,"current":872}
+{"_e":"metro:bundling:progress","_t":1783579845032,"id":"3","progress":0.7894695164442105,"total":993,"current":879}
+{"_e":"metro:bundling:progress","_t":1783579845308,"id":"3","progress":0.7894695164442105,"total":993,"current":882}
+{"_e":"metro:bundling:progress","_t":1783579845869,"id":"3","progress":0.790720339455747,"total":993,"current":883}
+{"_e":"metro:bundling:progress","_t":1783579846824,"id":"3","progress":0.790720339455747,"total":994,"current":883}
+{"_e":"metro:bundling:progress","_t":1783579849706,"id":"3","progress":0.790720339455747,"total":1001,"current":884}
+{"_e":"metro:bundling:progress","_t":1783579849858,"id":"3","progress":0.790720339455747,"total":1001,"current":886}
+{"_e":"metro:bundling:progress","_t":1783579849964,"id":"3","progress":0.790720339455747,"total":1001,"current":888}
+{"_e":"metro:bundling:progress","_t":1783579850492,"id":"3","progress":0.790720339455747,"total":1002,"current":889}
+{"_e":"metro:bundling:progress","_t":1783579850599,"id":"3","progress":0.790720339455747,"total":1003,"current":891}
+{"_e":"metro:bundling:progress","_t":1783579851176,"id":"3","progress":0.7909114133173759,"total":1003,"current":892}
+{"_e":"metro:bundling:progress","_t":1783579851378,"id":"3","progress":0.7926857513203163,"total":1003,"current":893}
+{"_e":"metro:bundling:progress","_t":1783579854594,"id":"3","progress":0.7950398997664114,"total":1006,"current":897}
+{"_e":"metro:bundling:progress","_t":1783579854607,"id":"3","progress":0.7968135520870798,"total":1006,"current":898}
+{"_e":"metro:bundling:progress","_t":1783579856082,"id":"3","progress":0.8089352613704003,"total":1014,"current":912}
+{"_e":"metro:bundling:progress","_t":1783579856278,"id":"3","progress":0.8124871133519291,"total":1014,"current":914}
+{"_e":"metro:bundling:progress","_t":1783579857790,"id":"3","progress":0.83551025390625,"total":1024,"current":936}
+{"_e":"metro:bundling:progress","_t":1783579857893,"id":"3","progress":0.83551025390625,"total":1054,"current":963}
+{"_e":"metro:bundling:progress","_t":1783579858714,"id":"3","progress":0.8401329709575257,"total":1055,"current":967}
+{"_e":"metro:bundling:progress","_t":1783579863298,"id":"3","progress":0.8547525809896761,"total":1060,"current":980}
+{"_e":"metro:bundling:progress","_t":1783579863644,"id":"3","progress":0.860247516500509,"total":1062,"current":985}
+{"_e":"metro:bundling:progress","_t":1783579863752,"id":"3","progress":0.8679678842458163,"total":1068,"current":995}
+{"_e":"metro:bundling:progress","_t":1783579863859,"id":"3","progress":0.8786872215914054,"total":1070,"current":1003}
+{"_e":"metro:bundling:progress","_t":1783579864353,"id":"3","progress":0.8804402131190497,"total":1070,"current":1004}
+{"_e":"metro:bundling:progress","_t":1783579864469,"id":"3","progress":0.883951436806708,"total":1070,"current":1006}
+{"_e":"metro:bundling:progress","_t":1783579864521,"id":"3","progress":0.8857096689667219,"total":1070,"current":1007}
+{"_e":"metro:bundling:progress","_t":1783579864622,"id":"3","progress":0.8927600663813433,"total":1070,"current":1011}
+{"_e":"metro:bundling:progress","_t":1783579865066,"id":"3","progress":0.8945270329286401,"total":1070,"current":1012}
+{"_e":"metro:bundling:progress","_t":1783579865274,"id":"3","progress":0.8962957463533934,"total":1070,"current":1013}
+{"_e":"metro:bundling:progress","_t":1783579865376,"id":"3","progress":0.8962957463533934,"total":1082,"current":1021}
+{"_e":"metro:bundling:progress","_t":1783579865495,"id":"3","progress":0.8962957463533934,"total":1084,"current":1026}
+{"_e":"metro:bundling:progress","_t":1783579865602,"id":"3","progress":0.8962957463533934,"total":1091,"current":1032}
+{"_e":"metro:bundling:progress","_t":1783579865616,"id":"3","progress":0.8965017504270001,"total":1091,"current":1033}
+{"_e":"metro:bundling:progress","_t":1783579865718,"id":"3","progress":0.898403938719528,"total":1112,"current":1054}
+{"_e":"metro:bundling:progress","_t":1783579865835,"id":"3","progress":0.9053189093366076,"total":1113,"current":1059}
+{"_e":"metro:bundling:progress","_t":1783579865937,"id":"3","progress":0.9176164893655391,"total":1117,"current":1070}
+{"_e":"metro:bundling:progress","_t":1783579866036,"id":"3","progress":0.9391185119055051,"total":1132,"current":1097}
+{"_e":"metro:bundling:progress","_t":1783579866136,"id":"3","progress":0.9391185119055051,"total":1180,"current":1124}
+{"_e":"metro:bundling:progress","_t":1783579866238,"id":"3","progress":0.9391185119055051,"total":1184,"current":1139}
+{"_e":"metro:bundling:progress","_t":1783579866359,"id":"3","progress":0.9391185119055051,"total":1193,"current":1142}
+{"_e":"metro:bundling:progress","_t":1783579866491,"id":"3","progress":0.9391185119055051,"total":1205,"current":1150}
+{"_e":"metro:bundling:progress","_t":1783579866592,"id":"3","progress":0.9391185119055051,"total":1222,"current":1180}
+{"_e":"metro:bundling:progress","_t":1783579866658,"id":"3","progress":0.9391185119055051,"total":1222,"current":1181}
+{"_e":"metro:bundling:progress","_t":1783579866762,"id":"3","progress":0.9391185119055051,"total":1229,"current":1184}
+{"_e":"metro:bundling:progress","_t":1783579866863,"id":"3","progress":0.9391185119055051,"total":1239,"current":1192}
+{"_e":"metro:bundling:progress","_t":1783579866964,"id":"3","progress":0.9391185119055051,"total":1247,"current":1200}
+{"_e":"metro:bundling:progress","_t":1783579867082,"id":"3","progress":0.9391185119055051,"total":1252,"current":1208}
+{"_e":"metro:bundling:progress","_t":1783579867182,"id":"3","progress":0.9560838451916551,"total":1261,"current":1233}
+{"_e":"metro:bundling:progress","_t":1783579867282,"id":"3","progress":0.9625910200372529,"total":1271,"current":1247}
+{"_e":"metro:bundling:progress","_t":1783579867384,"id":"3","progress":0.9874805616003193,"total":1274,"current":1266}
+{"_e":"metro:bundling:progress","_t":1783579867485,"id":"3","progress":0.9984307574013788,"total":1274,"current":1273}
+{"_e":"metro:bundling:progress","_t":1783579869000,"id":"3","progress":0.999,"total":1274,"current":1274}
+{"_e":"metro:bundling:progress","_t":1783579869164,"id":"3","progress":0.999,"total":1284,"current":1284}
+{"_e":"metro:bundling:done","_t":1783579870245,"id":"3","total":1284,"ms":60357.8262}
+{"_e":"metro:bundling:started","_t":1783579904697,"id":"5","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1783579904697,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783579904700,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783579904801,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783579904819,"id":"5","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1783579904927,"id":"5","total":1,"ms":229.4562}
+{"_e":"metro:client_log","_t":1783579926576,"level":"error","data":["[TypeError: Cannot read property 'name' of null]"]}
+{"_e":"metro:client_log","_t":1783579973874,"level":"error","data":["[TypeError: Cannot read property 'name' of null]"]}
+{"_e":"metro:client_log","_t":1783580216627,"level":"error","data":["[TypeError: Cannot read property 'name' of null]"]}
+{"_e":"metro:client_log","_t":1783580343360,"level":"error","data":["Error fetching services:","[AxiosError: Network Error]"]}
+{"_e":"metro:client_log","_t":1783580343408,"level":"error","data":["Error fetching services:","[AxiosError: Network Error]"]}
+{"_e":"metro:bundling:started","_t":1783580711735,"id":"f","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1783580711735,"id":"f","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1783580711817,"id":"f","total":1,"ms":82.1331}
+{"_e":"metro:client_log","_t":1783580864393,"level":"log","data":["Get All Services API response:","{\"data\": [{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Ac worker\"}], \"message\": \"All services retrieved successfully.\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783580864452,"level":"log","data":["Fetched services:","[{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}]"]}
+{"_e":"metro:bundling:started","_t":1783585581669,"id":"i","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1783585581669,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585581673,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585581845,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585586403,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585586504,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585586604,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585586704,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585586804,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585586904,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585587004,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585587119,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1783585587231,"id":"i","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:done","_t":1783585587319,"id":"i","total":1,"ms":5649.5929}
+{"_e":"metro:client_log","_t":1783585608378,"level":"log","data":["Get All Services API response:","{\"data\": [{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Ac worker\"}], \"message\": \"All services retrieved successfully.\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783585608436,"level":"log","data":["Fetched services:","[{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}]"]}
+{"_e":"metro:client_log","_t":1783585646200,"level":"error","data":["[TypeError: Cannot read property 'serviceImages' of undefined]"]}
+{"_e":"metro:client_log","_t":1783585775183,"level":"log","data":["Get All Services API response:","{\"data\": [{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Ac worker\"}], \"message\": \"All services retrieved successfully.\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783585775248,"level":"log","data":["Fetched services:","[{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}]"]}
+{"_e":"metro:client_log","_t":1783585775458,"level":"error","data":["VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead."]}
+{"_e":"metro:client_log","_t":1783585824633,"level":"log","data":["Get Service by ID API response:","{\"data\": {\"__v\": 0, \"_id\": \"6a3048148648c1d90992fdbe\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-06-15T18:44:36.359Z\", \"description\": \"a detailed home cleaning\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783585824686,"level":"log","data":["Fetched service details:","{\"__v\": 0, \"_id\": \"6a3048148648c1d90992fdbe\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-06-15T18:44:36.359Z\", \"description\": \"a detailed home cleaning\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}"]}
+{"_e":"metro:client_log","_t":1783585838267,"level":"log","data":["Get All Services API response:","{\"data\": [{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Ac worker\"}], \"message\": \"All services retrieved successfully.\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783585838317,"level":"log","data":["Fetched services:","[{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}]"]}
+{"_e":"metro:client_log","_t":1783585838317,"level":"error","data":["VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead."]}
+{"_e":"metro:client_log","_t":1783586953304,"level":"log","data":["Get Service by ID API response:","{\"data\": {\"__v\": 0, \"_id\": \"6a3048148648c1d90992fdbe\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-06-15T18:44:36.359Z\", \"description\": \"a detailed home cleaning\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783586953364,"level":"log","data":["Fetched service details:","{\"__v\": 0, \"_id\": \"6a3048148648c1d90992fdbe\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-06-15T18:44:36.359Z\", \"description\": \"a detailed home cleaning\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}"]}
+{"_e":"metro:client_log","_t":1783587077181,"level":"log","data":["Get Service by ID API response:","{\"data\": {\"__v\": 0, \"_id\": \"6a3048148648c1d90992fdbe\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-06-15T18:44:36.359Z\", \"description\": \"a detailed home cleaning\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783587112028,"level":"log","data":["Get Service by ID API response:","{\"data\": {\"__v\": 0, \"_id\": \"6a3048148648c1d90992fdbe\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-06-15T18:44:36.359Z\", \"description\": \"a detailed home cleaning\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783587112080,"level":"log","data":["Fetched service details:","{\"__v\": 0, \"_id\": \"6a3048148648c1d90992fdbe\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-06-15T18:44:36.359Z\", \"description\": \"a detailed home cleaning\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}"]}
+{"_e":"metro:client_log","_t":1783587139053,"level":"log","data":["Get Service by ID API response:","{\"data\": {\"__v\": 0, \"_id\": \"6a3048148648c1d90992fdbe\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-06-15T18:44:36.359Z\", \"description\": \"a detailed home cleaning\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783587249936,"level":"log","data":["Get Service by ID API response:","{\"data\": {\"__v\": 0, \"_id\": \"6a3048148648c1d90992fdbe\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-06-15T18:44:36.359Z\", \"description\": \"a detailed home cleaning\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783587275720,"level":"log","data":["Get All Services API response:","{\"data\": [{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Ac worker\"}], \"message\": \"All services retrieved successfully.\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783587275773,"level":"log","data":["Fetched services:","[{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}]"]}
+{"_e":"metro:client_log","_t":1783587275773,"level":"error","data":["VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead."]}
+{"_e":"metro:client_log","_t":1783587276998,"level":"log","data":["Get Service by ID API response:","{\"data\": {\"__v\": 0, \"_id\": \"6a4e89359a0680e15b0fcbb8\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-07-08T17:30:29.282Z\", \"description\": \"a detailed ac services\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}, \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783587289057,"level":"log","data":["Get All Services API response:","{\"data\": [{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Ac worker\"}], \"message\": \"All services retrieved successfully.\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783587289116,"level":"log","data":["Fetched services:","[{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}]"]}
+{"_e":"metro:client_log","_t":1783587289116,"level":"error","data":["VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead."]}
+{"_e":"metro:client_log","_t":1783587369675,"level":"log","data":["Get All Services API response:","{\"data\": [{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Ac worker\"}], \"message\": \"All services retrieved successfully.\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783587369729,"level":"log","data":["Fetched services:","[{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}]"]}
+{"_e":"metro:client_log","_t":1783587369729,"level":"error","data":["VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead."]}
+{"_e":"metro:client_log","_t":1783587519576,"level":"log","data":["Get All Services API response:","{\"data\": [{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"Ac worker\"}], \"message\": \"All services retrieved successfully.\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1783587519637,"level":"log","data":["Fetched services:","[{\"_id\": \"6a3048148648c1d90992fdbe\", \"price\": 250, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1781549075/Nazdeek_Uploads/mtdg5dvpklso4jzxeh2j.jpg\"], \"serviceName\": \"Home cleaning\"}, {\"_id\": \"6a4e89359a0680e15b0fcbb8\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}]"]}
+{"_e":"metro:client_log","_t":1783587529204,"level":"log","data":["Get Service by ID API response:","{\"data\": {\"__v\": 0, \"_id\": \"6a4e89359a0680e15b0fcbb8\", \"categoryId\": \"69d538231062511ff826e25b\", \"createdAt\": \"2026-07-08T17:30:29.282Z\", \"description\": \"a detailed ac services\", \"price\": 1500, \"providerId\": {\"_id\": \"69d53a453e3488dda2d473d2\", \"address\": \"mandi bahaudin\", \"businessName\": \"Abu BAkar Tarders\"}, \"serviceImages\": [\"https://res.cloudinary.com/djyigw0bw/image/upload/v1783531839/Nazdeek_Uploads/b0ef3gs5f4rqnwliu4lt.jpg\"], \"serviceName\": \"Ac worker\"}, \"success\": true}"]}
