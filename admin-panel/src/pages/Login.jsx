@@ -12,7 +12,7 @@ function Login() {
 
 const tempSubmit = async (e) => {
     e.preventDefault();
-    navigate('/admin'); // Directly navigate to admin dashboard for testing
+    navigate('/admin'); 
   }
 
   const handleSubmit = async (e) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const ServiceCard = ({ serviceName, providerName, rating, price, imageUri, onPress }) => {
+const ServiceCard = ({ serviceName, providerName,  price, imageUri, onPress }) => {
   return (
     <TouchableOpacity 
       onPress={onPress}
@@ -24,10 +24,7 @@ const ServiceCard = ({ serviceName, providerName, rating, price, imageUri, onPre
               {serviceName}
             </Text>
             
-            <View className="flex-row items-center bg-yellow-50 px-1.5 py-0.5 rounded-lg">
-              <Ionicons name="star" size={10} color="#fbbf24" />
-              <Text className="text-yellow-700 text-[9px] font-bold ml-1">{rating}</Text>
-            </View>
+          
           </View>
           
           <View className="flex-row items-center mt-0.5">

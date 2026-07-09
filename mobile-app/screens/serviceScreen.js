@@ -1,10 +1,37 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import React , {useState,useEffect,useCallback}from 'react';
+import { View, Text,ActivityIndicator, TextInput, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import ServiceCard from '../Cards/ServiceCard';
+import { getAllServices } from '../api/customerApi';
 
 const ServicesScreen = ({ navigation }) => {
+const [services, setServices] = useState([]);
+const [loading, setLoading] = useState(false);
+
+
+useFocusEffect(
+  useCallback(() => {
+    fetchServices();
+  }, [])
+);
+
+const fetchServices = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllServices();
+      setServices(response.data);
+      console.log("Fetched services:", response.data);
+    }
+    catch (error) {
+      console.error("Error fetching services:", error);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#f9fafb" />
@@ -26,31 +53,34 @@ const ServicesScreen = ({ navigation }) => {
       </View>
 
       
-      <ScrollView 
+      {loading ? (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#1a5ea1" />
+        </View>
+      ):(<ScrollView 
         showsVerticalScrollIndicator={false} 
         contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 20, paddingBottom: 100 }}
       >
         <Text className="text-gray-800 text-2xl font-bold mb-6">Popular Services</Text>
         
         
-        <ServiceCard 
-    serviceName="Deep House Cleaning"
-    providerName="Wade Warren"
-    rating="4.8"
-    price="1500"
-    imageUri="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=800"
-    onPress={() => navigation.navigate('ViewDetail')} 
-  />
+     {services.length === 0 ? (
+            <Text className="text-gray-500 text-center mt-4">No services found</Text>
+          ) : (
+            services.map((item) => (
+              <ServiceCard 
+                key={item._id}
+                serviceName={item.serviceName}
+                providerName={item.providerId?.businessName || "Unknown Provider"}
+                price={item.price.toString()} 
+                imageUri={item.serviceImages && item.serviceImages[0] ? item.serviceImages[0] : "https://via.placeholder.com/150"}
+                onPress={() => navigation.navigate('ViewDetail', { serviceId: item._id })} 
+              />
+            ))
+          )}
 
-        <ServiceCard 
-    serviceName="Kitchen Cleaning"
-    providerName="Jenny Wilson"
-    rating="5.0"
-    price="1000"
-    imageUri="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800"
-    onPress={() => navigation.navigate('ViewDetail')}
-  />
-      </ScrollView>
+       
+      </ScrollView>)}
     </SafeAreaView>
   );
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/layout/AdminLayout';
-import { AuthProvider } from './context/AuthContext';
 
 import Login from './pages/Login';
 import Forgotpassword from './pages/Forgotpassword';

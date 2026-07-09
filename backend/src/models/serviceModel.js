@@ -15,12 +15,12 @@ const serviceSchema = new mongoose.Schema({
     },
     providerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'provider',
+        ref: 'Provider',
         required: true,
     },
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'category',
+        ref: 'Category',
         required: true,
     },
     serviceImages: [

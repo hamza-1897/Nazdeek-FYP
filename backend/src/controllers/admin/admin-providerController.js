@@ -1,4 +1,15 @@
 const providerModel  = require('../../models/providerModel');
+const userModel = require('../../models/usersModel');
+
+//get all user
+const getAllUsers = async (req,res) => {
+    try {
+        const users = await userModel.find().select('-password');
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
 
 // get all providers
 const getAllProviders = async (req,res) => {
@@ -48,6 +59,7 @@ const updateProvider = async (req,res) => {
 }
 
 module.exports = {
+    getAllUsers,
     getAllProviders,
     getProviderById,
     updateProvider
