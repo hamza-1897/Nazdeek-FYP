@@ -4,7 +4,7 @@ const providerModel = require('../../models/providerModel');
 
 const createBooking = async (req, res) => {
     try {
-        const { userId, providerId, serviceId, bookingDate, bookingTime, description } = req.body;
+        const { userId, providerId, serviceId, customerName, customerPhone, bookingAddress, bookingDate, bookingTime, description } = req.body;
 
         const alreadyBooked = await bookingModel.findOne({
             userId,
@@ -21,6 +21,9 @@ const createBooking = async (req, res) => {
             serviceId,
             bookingDate,
             bookingTime,
+            customerName,
+            customerPhone,
+            bookingAddress,
             description
         });
         res.status(201).json(booking);

@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext,useCallback, useEffect } from 'react';
 import { View, Text, ScrollView, StatusBar, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import{isFocusEffect} from '@react-navigation/native';
 import BookingCard from '../Cards/BookingCard';
 import { getBookingsByUserId } from '../api/customerApi';
 import { AuthContext } from '../context/AuthContext';
@@ -103,6 +104,9 @@ const BookingScreen = ({ navigation, route }) => {
                   bookingDate={formattedDate}
                   bookingTime={item.bookingTime || "N/A"}
                   description={item.description}
+                  bookingAddress={item.bookingAddress || "N/A"}
+                  customerName={item.customerName || "N/A"}
+                  customerPhone={item.customerPhone || "N/A"}
                   status={item.status}
                   isReviewed={item.isReviewed}
                   onLeaveReview={() => navigation.navigate('LeaveReview', {

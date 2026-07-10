@@ -11,13 +11,15 @@ const BookingCard = ({
   bookingDate, 
   bookingTime, 
   description, 
+  bookingAddress,
+  customerName,
+  customerPhone,
   status = "Pending",
   isReviewed,
   onLeaveReview
 }) => {
   const navigation = useNavigation();
 
-  // Status styling configurations
   const getStatusStyles = (statusStr) => {
     const current = statusStr?.toLowerCase();
     if (current === 'completed') return { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-100' };
@@ -29,10 +31,8 @@ const BookingCard = ({
   const currentStatus = status?.toLowerCase();
 
   return (
-    /* shadow-md aur mb-5 se har card ab air-tight ya jura hua mehsoos nahi hoga */
     <View className="bg-white rounded-2xl p-4 mb-5 border border-slate-100 shadow-md shadow-slate-300/60 elevation-3">
       
-      {/* Upper Section */}
       <View className="flex-row items-start">
         <Image 
           source={{ uri: imageUri || 'https://via.placeholder.com/150' }} 
@@ -63,7 +63,6 @@ const BookingCard = ({
         </View>
       </View>
 
-      {/* Middle Section: Date & Time Grid */}
       <View className="flex-row items-center justify-between border-t border-b border-slate-50 py-2.5 my-3">
         <View className="flex-row items-center flex-1">
           <Ionicons name="calendar-outline" size={14} color="#1a5ea1" />
@@ -74,8 +73,29 @@ const BookingCard = ({
           <Text className="text-slate-600 text-xs ml-1.5 font-semibold">{bookingTime}</Text>
         </View>
       </View>
-
-      {/* Description Panel */}
+    <View className="bg-slate-50/50 border border-slate-100 rounded-xl p-3 mb-3">
+  <View className="flex-row items-center justify-between mb-1.5">
+    <View className="flex-row items-center flex-1">
+      <Ionicons name="person-outline" size={13} color="#475569" />
+      <Text className="text-slate-700 text-xs font-semibold ml-1.5" numberOfLines={1}>
+        {customerName || "For Myself"}
+      </Text>
+    </View>
+    <View className="flex-row items-center flex-1 justify-end">
+      <Ionicons name="call-outline" size={13} color="#475569" />
+      <Text className="text-slate-600 text-xs ml-1.5 font-medium">
+        {customerPhone}
+      </Text>
+    </View>
+  </View>
+  
+  <View className="flex-row items-start mt-0.5">
+    <Ionicons name="location-outline" size={14} color="#e11d48" className="mt-0.5" />
+    <Text className="text-slate-600 text-xs ml-1.5 flex-1 leading-normal" numberOfLines={2}>
+      {bookingAddress || "No Address Provided"}
+    </Text>
+  </View>
+</View>
       {description ? (
         <View className="bg-slate-50/70 rounded-xl p-2.5 mb-2">
           <Text className="text-slate-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">Your Note:</Text>
@@ -85,9 +105,7 @@ const BookingCard = ({
         </View>
       ) : null}
 
-      {/* Dynamic Conditional Action Buttons Layer */}
       <View className="flex-row justify-end mt-1.5">
-        {/* 1. Upcoming / Active Bookings -> Show Cancel Button */}
         {currentStatus !== 'cancelled' && currentStatus !== 'completed' && (
           <TouchableOpacity 
             onPress={() => navigation.navigate('CancelBooking')} 
@@ -97,7 +115,6 @@ const BookingCard = ({
           </TouchableOpacity>
         )}
 
-        {/* 2. Completed Bookings -> Show Leave Review Button */}
         {currentStatus === 'completed' && (
           <TouchableOpacity 
             onPress={onLeaveReview}
@@ -114,7 +131,6 @@ const BookingCard = ({
           </TouchableOpacity>
         )}
 
-        {/* 3. Cancelled Bookings -> Show Rebook Button */}
         {currentStatus === 'cancelled' && (
           <TouchableOpacity 
             onPress={() => navigation.navigate('ServiceDetails', { serviceName, providerName, price })} // Apni screen state ke mutabiq link krlein
