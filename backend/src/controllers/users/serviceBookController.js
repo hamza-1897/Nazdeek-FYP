@@ -1,9 +1,20 @@
 const serviceModel = require('../../models/serviceModel');
 const bookingModel = require('../../models/bookingModel');
+const providerModel = require('../../models/providerModel');
 
 const createBooking = async (req, res) => {
     try {
         const { userId, providerId, serviceId, bookingDate, bookingTime, description } = req.body;
+
+        const alreadyBooked = await bookingModel.findOne({
+            userId,
+            providerId,
+            serviceId,
+            status : { $nin: ['cancelled', 'completed'] }
+        });
+        if (alreadyBooked) {
+            return res.status(400).json({ message: 'You have already booked this service.' });
+        }
         const booking = await bookingModel.create({
             userId,
             providerId,
@@ -21,7 +32,9 @@ const createBooking = async (req, res) => {
 const getBookingsbyUserId = async (req, res) => {
     try {
         const { userId } = req.params;
-        const bookings = await bookingModel.find({ userId });
+        const bookings = await bookingModel.find({ userId }).populate('serviceId', 'serviceName serviceImages price').populate('providerId', 'businessName');
+
+
         res.status(200).json(bookings);
     } catch (error) {
         res.status(500).json({ message: error.message });
