@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function StatCard({ title, count, icon, iconBg, iconColor }) {
   return (
-    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm shadow-slate-100/50 flex items-center gap-4 flex-1">
+    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 flex-1">
       <div className={`p-3 rounded-xl ${iconBg} ${iconColor} flex items-center justify-center`}>
         {icon}
       </div>

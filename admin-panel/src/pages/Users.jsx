@@ -17,7 +17,6 @@ export default function Users() {
     setLoading(true);
     try {
       const response = await getAllUsers();
-      // Handle array agar response direct data ho ya response.data ho
       const fetchedData = response?.data || response || [];
       setUsers(fetchedData);
       console.log("Real Data Loaded:", fetchedData);
@@ -45,8 +44,6 @@ export default function Users() {
 
   const handleToggleStatus = (userId) => {
   alert(`Toggle status for user with ID: ${userId}`);
-  // Here you can implement the logic to toggle the user's status (active/inactive)
-  // For example, you might call an API endpoint to update the user's status in the backend
   };
 
 
@@ -55,7 +52,6 @@ export default function Users() {
       
       <h1 className="text-2xl font-bold text-[#0f172a]">Users</h1>
 
-      {/* Stats Layer Panels */}
       <div className="flex flex-col md:flex-row gap-6">
         <StatCard 
           title="Total Customers" 
@@ -73,7 +69,6 @@ export default function Users() {
         />
       </div>
 
-      {/* Global Filter Text Field Input */}
       <div className="relative w-full">
         <span className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
           <Search size={18} />
@@ -87,7 +82,6 @@ export default function Users() {
         />
       </div>
 
-      {/* Data Visual Table Layout */}
       <section className="bg-white rounded-2xl border border-slate-100 shadow-sm shadow-slate-100/50 overflow-hidden">
         <div className="overflow-x-auto max-h-[500px] overflow-y-auto custom-scrollbar">
           <table className="w-full text-left border-collapse">
@@ -115,12 +109,12 @@ export default function Users() {
               ) : filteredUsers.length > 0 ? (
                 filteredUsers.map((user, index) => (
                   <UserRow 
-                    key={user._id || user.id} // MongoDB unique keys tracking map
+                    key={user._id || user.id} 
                     srNo={index + 1}
                     user={{
                       ...user,
-                      id: user._id || user.id, // UserRow fallback sync
-                      joinedAt: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A' // Date formatter parse
+                      id: user._id || user.id, 
+                      joinedAt: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A' 
                     }}
                     onToggleStatus={handleToggleStatus}
                   />
