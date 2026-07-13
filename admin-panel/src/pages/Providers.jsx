@@ -1,38 +1,60 @@
-import React, { useState } from 'react';
-import { Search, Filter } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, Loader2 } from 'lucide-react';
 import ProviderCard from '../components/common/ProviderCard'; 
-
+import { getAllProviders } from '../api/adminApi'; 
+  
 export default function Providers() {
-  const [providersData] = useState([
-    { id: 1, name: 'TechStore Pro', email: 'contact@techstore.com', address: '123 Tech Street, Karachi', category: 'Electronics', status: 'verified' },
-    { id: 2, name: 'Fashion Hub', email: 'info@fashionhub.com', address: '45 Fashion Avenue, Lahore', category: 'Clothing', status: 'pending' },
-    { id: 3, name: 'Garden Master', email: 'support@gardenmaster.com', address: '78 Garden Road, Islamabad', category: 'Home & Garden', status: 'verified' },
-    { id: 4, name: 'Sports Zone', email: 'hello@sportszone.com', address: '9 Sports Plaza, Peshawar', category: 'Sports', status: 'rejected' },
-    { id: 5, name: 'Bookworm Haven', email: 'books@bookwormhaven.com', address: '22 Book Street, Karachi', category: 'Books', status: 'pending' },
-    { id: 6, name: 'Electro World', email: 'sales@electroworld.com', address: '54 Commerce Blvd, Lahore', category: 'Electronics', status: 'verified' },
-  ]);
-
+  const [providers, setProviders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const total = providersData.length;
-  const verified = providersData.filter(p => p.status === 'verified').length;
-  const pending = providersData.filter(p => p.status === 'pending').length;
-  const rejected = providersData.filter(p => p.status === 'rejected').length;
+  useEffect(() => {
+    fetchProviders();
+  }, []);
 
-  const filteredProviders = providersData.filter((provider) => {
-    const matchesSearch = 
-      provider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      provider.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      provider.address.toLowerCase().includes(searchTerm.toLowerCase());
+  const fetchProviders = async () => {
+    try {
+      setLoading(false); 
+      setLoading(true);
+      const response = await getAllProviders();
+      console.log("Raw API Response:", response);
       
-    const matchesStatus = statusFilter === 'all' || provider.status === statusFilter;
+      const rawData = Array.isArray(response) ? response : (response?.data || []);
+      
+      setProviders(rawData);
+    } catch (error) { 
+      console.error("Error fetching providers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const total = providers.length;
+  const verified = providers.filter(p => (p.verificationStatus || p.status) === 'verified').length;
+  const pending = providers.filter(p => (p.verificationStatus || p.status) === 'pending').length;
+  const rejected = providers.filter(p => (p.verificationStatus || p.status) === 'rejected').length;
+
+  const filteredProviders = providers.filter((provider) => {
+    const businessName = provider?.businessName || provider?.name || '';
+    const email = provider?.userId?.email || provider?.email || '';
+    const address = provider?.address || '';
+    const category = provider?.categoryId?.name || provider?.category || '';
+    const currentStatus = provider?.verificationStatus || provider?.status || 'pending';
+
+    const matchesSearch = 
+      businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      address.toLowerCase().includes(searchTerm.toLowerCase());
+      
+    const matchesStatus = statusFilter === 'all' || currentStatus.toLowerCase() === statusFilter.toLowerCase();
 
     return matchesSearch && matchesStatus;
   });
 
   const handleViewDetails = (provider) => {
-    console.log("Viewing details for:", provider.name);
+    console.log("Viewing details for:", provider?.businessName || provider?.name);
   };
 
   return (
@@ -54,7 +76,7 @@ export default function Providers() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by business name, email, or address..."
+            placeholder="Search by business name, email, category or address..."
             className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all"
           />
         </div>
@@ -75,11 +97,15 @@ export default function Providers() {
         </div>
       </div>
 
-      {filteredProviders.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProviders.map((provider) => (
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <Loader2 className="animate-spin text-indigo-600" size={36} />
+        </div>
+      ) : filteredProviders.length > 0 ? (
+<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+             {filteredProviders.map((provider) => (
             <ProviderCard 
-              key={provider.id} 
+              key={provider._id || provider.id} 
               provider={provider} 
               onViewDetails={handleViewDetails} 
             />
