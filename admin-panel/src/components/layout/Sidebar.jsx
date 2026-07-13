@@ -20,18 +20,15 @@ const Sidebar = ({ isCollapsed }) => {
     <aside className={`bg-[#0D4D47] text-white h-screen transition-all duration-300 flex flex-col
       ${isCollapsed ? 'w-20' : 'w-64'} md:flex hidden`}
     >
-      {/* Brand Logo Section */}
       <div className="h-20 flex items-center justify-center border-b border-[#0a3a35] px-6">
         <h1 className={`font-black tracking-wider transition-all ${isCollapsed ? 'text-lg' : 'text-2xl'}`}>
           {isCollapsed ? 'NZ' : 'Nazdeek'}
         </h1>
       </div>
 
-      {/* Navigation Links */}
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
-          // Exact and active path tracking logic
           const isActive = location.pathname === item.path;
 
           return (
