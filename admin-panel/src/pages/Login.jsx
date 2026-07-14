@@ -32,7 +32,6 @@ const tempSubmit = async (e) => {
       navigate('/admin'); 
 
     } catch (error) {
-      // 5. Error handling properly catch block mein hogi
       console.error("Login failed:", error);
       alert(error.response?.data?.message || "Login failed. Please check your credentials.");
     }
@@ -43,7 +42,6 @@ const tempSubmit = async (e) => {
       <div className="min-h-screen bg-[#F0F2F5] flex items-center justify-center p-4 font-sans">
         <div className="bg-white flex flex-col md:flex-row rounded-3xl shadow-2xl overflow-hidden w-full max-w-5xl min-h-150">
           
-          {/* Left Side Banner */}
           <div className="flex-1 bg-[#0D4D47] flex flex-col items-center justify-center p-12 text-center">
             <div className="bg-white p-8 rounded-full mb-6 shadow-lg">
               <img 
@@ -57,13 +55,11 @@ const tempSubmit = async (e) => {
             </h1>
           </div>
 
-          {/* Right Side Form */}
           <div className="flex-1 p-12 flex flex-col justify-center bg-white">
             <div className="max-w-md mx-auto w-full">
               <h2 className="text-4xl font-bold text-[#0D4D47]">Admin Panel</h2>
               <p className="text-gray-500 mb-10 text-xl">Welcome Back!</p>
 
-              {/* onSubmit yahan laga diya taake enter dabane par bhi form submit ho */}
               <form className="space-y-6" onSubmit={tempSubmit}>
                 <div>
                   <label className="block text-gray-700 font-bold mb-2 text-sm">Email</label>
@@ -92,7 +88,6 @@ const tempSubmit = async (e) => {
                   <Link to="/forgot-password" className="text-[#0D4D47] text-sm font-bold hover:underline">Forgot Password?</Link>
                 </div>
 
-                {/* <Link> tag hata diya button ke upar se */}
                 <button 
                   type="submit"
                   className="w-full bg-[#0D4D47] text-white font-bold py-4 rounded-xl text-lg shadow-xl hover:bg-[#0a3a35] transition-colors"
