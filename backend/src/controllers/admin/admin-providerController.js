@@ -14,7 +14,7 @@ const getAllUsers = async (req,res) => {
 // get all providers
 const getAllProviders = async (req,res) => {
     try {
-        const providers = await providerModel.find().populate('userId', 'email').populate('categoryId', 'name');
+        const providers = await providerModel.find({}).select('businessName verificationStatus providerImage address').populate('userId', 'email').populate('categoryId', 'name');
         res.status(200).json(providers);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });

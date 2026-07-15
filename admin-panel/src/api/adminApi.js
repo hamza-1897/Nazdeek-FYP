@@ -23,3 +23,16 @@ export const adminLogin = async (email, password) => {
         throw error;
     }
 };
+
+
+export const getAllProviders = async () => {
+    try {
+        const response = await API.get('/admin/getAllProviders');
+        console.log("Get All Providers API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching all providers:", error);
+        throw error;
+    }
+};
