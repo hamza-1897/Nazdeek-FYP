@@ -1,13 +1,12 @@
 # 📍 Nazdeek: Service Based Marketplace
 
-**Nazdeek** is a comprehensive mobile solution designed to bridge the gap between service providers and end-users. Whether you need a plumber, an electrician, or any professional service, Nazdeek makes it possible through a seamless, location-aware marketplace.
+**Nazdeek** is a comprehensive mobile solution designed to bridge the gap between service providers and end users. Whether you need a plumber, an electrician or professional technition, Nazdeek makes it possible through a seamless marketplace.
 
 ---
 
 ## 🚀 Key Features
 
 * **Service Booking:** Users can browse and book professional services instantly.
-* **Job Posting:** Users can post specific jobs, allowing service providers to apply.
 * **In-App Chat:** Real-time communication between users and providers for better coordination.
 * **Discount System:** Integrated discount management for promotional services.
 * **Reviews & Ratings:** A transparent feedback system to maintain service quality.
@@ -37,13 +36,13 @@ The project is divided into three main modules to ensure scalability and clean m
 ## ⚙️ Installation & Setup
 
 1. **Clone Repository:** `git clone https://github.com/hamza-1897/Nazdeek-FYP.git`
-2. **Backend:** Navigate to `/backend`, run `npm install`, then `npm start`.
-3. **Admin:** Navigate to `/admin`, run `npm install`, then `npm start`.
+2. **Backend:** Navigate to `/backend`, run `npm install`, then `npm run dev`.
+3. **Admin:** Navigate to `/admin`, run `npm install`, then `npm run dev`.
 4. **App:** Navigate to `/mobile`, run `npm install`, then `npx expo start`.
 
 ---
 
 ## 👥 Team
-* **Muhammad Hamza** (Leader)
+* **Muhammad Hamza** 
 * **Malaika Noor**
 * **Maha Naseer**
