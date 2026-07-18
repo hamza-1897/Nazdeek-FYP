@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
-import { Search, Flag, Mail } from 'lucide-react';
-import ReportCard from '../components/common/ReportCard'; 
+import { Search } from 'lucide-react';
+import ReportCard from '../components/common/ReportCard';
 
 const Reports = () => {
-  const [activeTab, setActiveTab] = useState('provider');
   const [searchTerm, setSearchTerm] = useState('');
   const [reportTypeFilter, setReportTypeFilter] = useState('All types');
   const [statusFilter, setStatusFilter] = useState('All statuses');
-  const [isTypeOpen, setIsTypeOpen] = useState(false);
-const [isStatusOpen, setIsStatusOpen] = useState(false);
 
   const [reports, setReports] = useState([
     {
@@ -26,190 +23,100 @@ const [isStatusOpen, setIsStatusOpen] = useState(false);
       id: 2,
       category: 'UNUSUAL ACTIVITY',
       targetName: 'Quick Fix Services',
-      reporter: 'Ali Ahmed',
-      date: '2024-04-08',
+      reporter: 'Ali Raza',
+      date: '2024-04-10',
       views: 12,
       status: 'Pending',
-      reason: 'Multiple rapid account updates and suspicious login attempts from unfamiliar IPs.',
+      reason: 'Multiple rapid logins and sudden change in service rates within an hour.',
       reportedItemType: 'Service Provider'
     }
   ]);
 
-  const handleMarkAsResolved = (id) => {
-    setReports(prev =>
-      prev.map(r => r.id === id ? { ...r, status: 'Resolved' } : r)
-    );
+  const handleResolve = (id) => {
+    setReports(reports.map(report => 
+      report.id === id ? { ...report, status: 'Resolved' } : report
+    ));
   };
 
-  const handleDeleteReport = (id) => {
-    setReports(prev => prev.filter(r => r.id !== id));
+  const handleDelete = (id) => {
+    setReports(reports.filter(report => report.id !== id));
   };
 
   const filteredReports = reports.filter(report => {
-    const matchesSearch = 
-      report.targetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.reporter.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      report.reason.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = report.targetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          report.reporter.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          report.reason.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesType = reportTypeFilter === 'All types' || report.category.toLowerCase() === reportTypeFilter.toLowerCase();
-    const matchesStatus = statusFilter === 'All statuses' || report.status.toLowerCase() === statusFilter.toLowerCase();
+    const matchesType = reportTypeFilter === 'All types' || report.category === reportTypeFilter;
+    const matchesStatus = statusFilter === 'All statuses' || report.status === statusFilter;
 
     return matchesSearch && matchesType && matchesStatus;
   });
 
   return (
-    <div className="p-6 bg-[#F8FAFC] min-h-screen">
-      <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => setActiveTab('provider')}
-          className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
-            activeTab === 'provider'
-              ? 'bg-[#0D4D47] text-white shadow-md'
-              : 'bg-[#F1F5F9] text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          Provider Reports
-        </button>
-        <button
-          onClick={() => setActiveTab('support')}
-          className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
-            activeTab === 'support'
-              ? 'bg-[#0D4D47] text-white shadow-md'
-              : 'bg-[#F1F5F9] text-gray-600 hover:bg-gray-200'
-          }`}
-        >
-          Support Messages
-        </button>
+    <div className="p-6 bg-slate-50 min-h-screen">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-[#0f3d2e]">Provider Reports</h2>
       </div>
-
-      {activeTab === 'provider' ? (
-        <>
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6">
-            <div>
-              <div className="flex items-center gap-2 text-[#0D4D47] mb-1">
-                <Flag className="w-6 h-6" />
-                <h1 className="text-2xl font-extrabold text-slate-800">Provider Reports</h1>
-              </div>
-              <p className="text-sm text-gray-500">
-                Review reports submitted against providers for spam, policy violations, and unusual activity.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1">
-              <label className="text-xs font-semibold text-slate-700 block mb-1">Search reports</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-3.5 h-4.5 w-4.5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search by reporter, target, or reason"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0D4D47] focus:border-[#0D4D47]"
-                />
-              </div>
-            </div>
-
-<div className="flex gap-4">
-  <div className="w-full md:w-48 relative">
-    <label className="text-xs font-semibold text-slate-700 block mb-1">Report type</label>
-    <button
-      type="button"
-      onClick={() => setIsTypeOpen(!isTypeOpen)}
-      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 text-left flex justify-between items-center focus:outline-none focus:border-teal-800 focus:ring-1 focus:ring-teal-800"
-    >
-      <span className="capitalize">{reportTypeFilter.toLowerCase()}</span>
-      <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-      </svg>
-    </button>
-
-    {isTypeOpen && (
-      <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden">
-        {[
-          { label: "All types", value: "All types" },
-          { label: "Spam", value: "SPAM" },
-          { label: "Unusual Activity", value: "UNUSUAL ACTIVITY" }
-        ].map((opt) => (
-          <div
-            key={opt.value}
-            onClick={() => {
-              setReportTypeFilter(opt.value);
-              setIsTypeOpen(false);
-            }}
-            className="px-4 py-2 text-sm cursor-pointer hover:bg-teal-800 hover:text-white transition-colors"
-          >
-            {opt.label}
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-
-  <div className="w-full md:w-48 relative">
-    <label className="text-xs font-semibold text-slate-700 block mb-1">Status</label>
-    <button
-      type="button"
-      onClick={() => setIsStatusOpen(!isStatusOpen)}
-      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 text-left flex justify-between items-center focus:outline-none focus:border-teal-800 focus:ring-1 focus:ring-teal-800"
-    >
-      <span className="capitalize">{statusFilter.toLowerCase()}</span>
-      <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-      </svg>
-    </button>
-
-    {isStatusOpen && (
-      <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden">
-        {[
-          { label: "All statuses", value: "All statuses" },
-          { label: "Pending", value: "Pending" },
-          { label: "Resolved", value: "Resolved" }
-        ].map((opt) => (
-          <div
-            key={opt.value}
-            onClick={() => {
-              setStatusFilter(opt.value);
-              setIsStatusOpen(false);
-            }}
-            className="px-4 py-2 text-sm cursor-pointer hover:bg-teal-800 hover:text-white transition-colors"
-          >
-            {opt.label}
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-</div>
-          </div>
-
-          <div>
-            {filteredReports.length > 0 ? (
-              filteredReports.map((report) => (
-                <ReportCard
-                  key={report.id}
-                  report={report}
-                  onResolve={handleMarkAsResolved}
-                  onDelete={handleDeleteReport}
-                />
-              ))
-            ) : (
-              <div className="bg-white text-center py-12 rounded-2xl border border-slate-100">
-                <p className="text-gray-500">No reports match your filters.</p>
-              </div>
-            )}
-          </div>
-        </>
-      ) : (
-        <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm text-center">
-          <Mail className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-800">Support Messages</h2>
-          <p className="text-gray-500 text-sm mt-2">
-            Messages, inquiries, and customer help requests will show up here.
-          </p>
+      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
+        <div className="relative w-full md:flex-1">
+          <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+            <Search className="w-5 h-5" />
+          </span>
+          <input
+            type="text"
+            placeholder="Search by reporter, target, or reason"
+            className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#0f3d2e] focus:bg-white transition-all"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-      )}
+
+        <div className="flex w-full md:w-auto gap-3">
+          <div className="flex flex-col w-1/2 md:w-40">
+            <label className="text-xs text-gray-500 mb-1 font-medium">Report type</label>
+            <select
+              className="w-full bg-white border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f3d2e]"
+              value={reportTypeFilter}
+              onChange={(e) => setReportTypeFilter(e.target.value)}
+            >
+              <option>All types</option>
+              <option>SPAM</option>
+              <option>UNUSUAL ACTIVITY</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col w-1/2 md:w-40">
+            <label className="text-xs text-gray-500 mb-1 font-medium">Status</label>
+            <select
+              className="w-full bg-white border border-gray-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f3d2e]"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option>All statuses</option>
+              <option>Pending</option>
+              <option>Resolved</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6">
+        {filteredReports.length > 0 ? (
+          filteredReports.map((report) => (
+            <ReportCard 
+              key={report.id} 
+              report={report} 
+              onResolve={handleResolve} 
+              onDelete={handleDelete} 
+            />
+          ))
+        ) : (
+          <div className="text-center py-12 bg-white rounded-xl border border-gray-100 text-gray-400">
+            No reports found matching criteria.
+          </div>
+        )}
+      </div>
     </div>
   );
 };
