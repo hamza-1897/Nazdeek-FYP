@@ -2,17 +2,18 @@
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
+  color: #ffffff; 
+  background: #0D4D47; 
   border: 2px solid transparent;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
   margin-bottom: 24px;
 
   &:hover {
-    border-color: var(--accent-border);
+    background: #0a3a35;
+    border-color: #0d4d47;
   }
   &:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid #0D4D47;
     outline-offset: 2px;
   }
 }
@@ -129,6 +130,7 @@
 
     &:hover {
       box-shadow: var(--shadow);
+      outline: 1.5px solid #0D4D47; 
     }
     .button-icon {
       height: 18px;

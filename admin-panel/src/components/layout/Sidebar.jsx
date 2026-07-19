@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Grid, Settings } from 'lucide-react';
 import { useAdmin } from '../../context/AuthContext'; 
+import { ClipboardList } from 'lucide-react';
 
 const Sidebar = ({ isCollapsed }) => {
   const location = useLocation();
@@ -13,6 +14,7 @@ const Sidebar = ({ isCollapsed }) => {
     { path: '/admin/users', name: 'Users', icon: Users },
     { path: '/admin/categories', name: 'Categories', icon: Grid },
     { path: '/admin/providers', name: 'Providers', icon: Users },
+    { path: '/admin/reports', name: 'Reports', icon: ClipboardList },
     { path: '/admin/settings', name: 'Settings', icon: Settings }
   ];
 

@@ -8,6 +8,7 @@ import Forgotpassword from './pages/Forgotpassword';
 import Users from './pages/Users';
 import Providers from './pages/Providers';
 import Dashboard from './pages/Dashboard';
+import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Categories from './pages/Categories';
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="providers" element={<Providers />} />
             <Route path='categories' element={<Categories />} />
+            <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
           </Route>
 
