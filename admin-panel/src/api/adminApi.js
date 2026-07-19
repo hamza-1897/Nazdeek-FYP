@@ -36,3 +36,15 @@ export const getAllProviders = async () => {
         throw error;
     }
 };
+
+export const getAllReports = async () => {
+    try {
+        const response = await API.get('/admin/getAllReports');
+        console.log("Get All Reports API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching all reports:", error);
+        throw error;
+    }
+};
