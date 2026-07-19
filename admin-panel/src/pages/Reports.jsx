@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Loader2 } from 'lucide-react'; 
 import ReportCard from '../components/common/ReportCard';
-import { getAllReports } from '../api/adminApi'; 
+import { getAllReports , resolveReport , deleteReport} from '../api/adminApi'; 
 
 const Reports = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -29,11 +29,13 @@ const Reports = () => {
 
   const handleResolve = async (id) => {
     try {
+      await resolveReport(id);
       setReportsData(prevData => 
-        prevData.map(report => 
-          report._id === id ? { ...report, status: 'resolved' } : report
-        )
-      );
+      prevData.map(report => 
+        report._id === id ? { ...report, status: 'resolved' } : report
+      )
+    );
+      
     } catch (error) {
       console.error("Error resolving report:", error);
     }
@@ -42,6 +44,7 @@ const Reports = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this report?")) {
       try {
+        await deleteReport(id);
         setReportsData(prevData => prevData.filter(report => report._id !== id));
       } catch (error) {
         console.error("Error deleting report:", error);

@@ -48,3 +48,25 @@ export const getAllReports = async () => {
         throw error;
     }
 };
+
+export const resolveReport = async (id) => {
+    try {
+        const response = await API.put(`/admin/resolveReport/${id}`);
+        console.log("Resolve Report API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error resolving report:", error);
+        throw error;
+    }
+};
+
+export const deleteReport = async (id) => {
+    try {
+        const response = await API.delete(`/admin/deleteReport/${id}`);
+        console.log("Delete Report API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting report:", error);
+        throw error;
+    }
+};

@@ -73,11 +73,12 @@ const getAllReports = async (req,res) => {
 const resolveReport = async (req,res) => {
     try {
         const { id } = req.params;
-        const updatedReport = await Report.findByIdAndUpdate(
+        const updatedReport = await reportModel.findByIdAndUpdate(
       id,
       { status: 'resolved' },
-      { new: true }
+      { returnDocument: 'after' }
     );
+    res.status(200).json({ message: 'Report resolved successfully', report: updatedReport });
 
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
