@@ -1,5 +1,6 @@
 const providerModel  = require('../../models/providerModel');
 const userModel = require('../../models/usersModel');
+const reportModel = require('../../models/reportModel');
 
 //get all user
 const getAllUsers = async (req,res) => {
@@ -58,9 +59,21 @@ const updateProvider = async (req,res) => {
     }
 }
 
+//get all reports for providers
+const getAllReports = async (req,res) => {
+    try {
+        const reports = await reportModel.find().populate('reporterId', 'name').populate('providerId', 'businessName');
+        res.status(200).json(reports);
+    }   catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+
 module.exports = {
     getAllUsers,
     getAllProviders,
     getProviderById,
-    updateProvider
+    updateProvider,
+    getAllReports
 }
