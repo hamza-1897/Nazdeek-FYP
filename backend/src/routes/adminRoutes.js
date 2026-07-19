@@ -11,11 +11,13 @@ router.get('/getallcategories', getAllCategories);
 router.post('/add-category', addCategory);
 
 // provider routes
-const {getAllProviders ,getProviderById, updateProvider, getAllReports } = require('../controllers/admin/admin-providerController');
+const {getAllProviders ,getProviderById, updateProvider, getAllReports, resolveReport, deleteReport } = require('../controllers/admin/admin-providerController');
 router.get('/getAllProviders', getAllProviders);
 router.get('/getProviderById/:id', getProviderById);
 router.put('/updateProvider/:id', updateProvider);
 router.get('/getAllReports', getAllReports);
+router.put('/resolveReport/:id', resolveReport);
+router.delete('/deleteReport/:id', deleteReport);
 
 
 

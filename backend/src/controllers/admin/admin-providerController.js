@@ -69,11 +69,41 @@ const getAllReports = async (req,res) => {
     }
 }
 
+//resolve report 
+const resolveReport = async (req,res) => {
+    try {
+        const { id } = req.params;
+        const updatedReport = await Report.findByIdAndUpdate(
+      id,
+      { status: 'resolved' },
+      { new: true }
+    );
+
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+const deleteReport = async (req,res) => {
+    try {
+        const { id } = req.params;
+        const deletedReport = await reportModel.findByIdAndDelete(id);
+        if (!deletedReport) {
+            return res.status(404).json({ message: 'Report not found' });
+        }
+        res.status(200).json({ message: 'Report deleted successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+
+}
 
 module.exports = {
     getAllUsers,
     getAllProviders,
     getProviderById,
     updateProvider,
-    getAllReports
+    getAllReports,
+    resolveReport,
+    deleteReport
 }
