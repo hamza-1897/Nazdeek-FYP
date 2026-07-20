@@ -1,6 +1,8 @@
 const providerModel  = require('../../models/providerModel');
 const userModel = require('../../models/usersModel');
 const reportModel = require('../../models/reportModel');
+const reviewModel = require('../../models/reviewModel');
+const serviceModel = require('../../models/serviceModel');
 
 //get all user
 const getAllUsers = async (req,res) => {
@@ -99,10 +101,32 @@ const deleteReport = async (req,res) => {
 
 }
 
+// Get Single Provider Full Details for Admin
+const getProviderDetails = async (req, res) => {
+    try {
+        const providerId = req.params.id;
+       const [provider, services, reviews] = await Promise.all([
+            providerModel.findById(providerId).populate('userId', 'name email profileImage').populate('categoryId', 'name'), 
+            serviceModel.find({ providerId }),
+            reviewModel.find({ providerId }).populate('userId', 'name email ')
+        ]);
+
+
+        if (!provider) {
+            return res.status(404).json({ message: 'Provider not found' });
+        }
+
+        res.status(200).json(provider);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
 module.exports = {
     getAllUsers,
     getAllProviders,
     getProviderById,
+    getProviderDetails,
     updateProvider,
     getAllReports,
     resolveReport,

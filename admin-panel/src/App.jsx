@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Categories from './pages/Categories';
+import ProviderDetail from './pages/ProviderDetail';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path='categories' element={<Categories />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="providerDetail/:id" element={<ProviderDetail />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

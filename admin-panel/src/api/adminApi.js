@@ -70,3 +70,15 @@ export const deleteReport = async (id) => {
         throw error;
     }
 };
+
+export const getProviderDetails = async (id) => {
+    try {
+        const response = await API.get(`/admin/getProviderDetails/${id}`);
+        console.log("Get Provider Details API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching provider details:", error);
+        throw error;
+    }
+};
