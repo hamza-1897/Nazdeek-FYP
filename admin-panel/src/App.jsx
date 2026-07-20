@@ -30,7 +30,7 @@ function App() {
             <Route path='categories' element={<Categories />} />
             <Route path="reports" element={<Reports />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="providerDetail" element={<ProviderDetail />} />
+            <Route path="providerDetail/:id" element={<ProviderDetail />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

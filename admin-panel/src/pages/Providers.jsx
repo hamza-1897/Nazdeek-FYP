@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Search, Filter, Loader2 } from 'lucide-react';
 import ProviderCard from '../components/common/ProviderCard'; 
 import { getAllProviders } from '../api/adminApi'; 
+import { useNavigate } from 'react-router-dom';
   
 export default function Providers() {
   const [providers, setProviders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProviders();
@@ -53,9 +56,9 @@ export default function Providers() {
     return matchesSearch && matchesStatus;
   });
 
-  const handleViewDetails = (provider) => {
-    console.log("Viewing details for:", provider?.businessName || provider?.name);
-  };
+ const handleViewDetails = (providerId) => {
+  navigate(`/admin/providerDetail/${providerId}`);
+};
 
   return (
     <div className="space-y-6">
