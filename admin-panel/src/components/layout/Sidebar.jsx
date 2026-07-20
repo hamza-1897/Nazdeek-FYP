@@ -15,7 +15,8 @@ const Sidebar = ({ isCollapsed }) => {
     { path: '/admin/categories', name: 'Categories', icon: Grid },
     { path: '/admin/providers', name: 'Providers', icon: Users },
     { path: '/admin/reports', name: 'Reports', icon: ClipboardList },
-    { path: '/admin/settings', name: 'Settings', icon: Settings }
+    { path: '/admin/settings', name: 'Settings', icon: Settings },
+    { path: '/admin/providerDetail', name: 'Provider Detail', icon: Users },
   ];
 
   return (
