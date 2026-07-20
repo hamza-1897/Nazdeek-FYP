@@ -25,6 +25,9 @@ const { getBookingsByProvider, updateBookingStatus } = require('../controllers/p
 router.get('/bookings/:providerId', getBookingsByProvider);
 router.put('/update-booking-status/:bookingId', updateBookingStatus);
 
+//review routes
+const { getProviderReviews } = require('../controllers/mutual/reviewController');
+router.get('/reviews/:providerId', getProviderReviews);
 
 
 module.exports = router;

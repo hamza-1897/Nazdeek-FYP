@@ -22,4 +22,8 @@ router.put('/rebook/:bookingId', rebook);
 const { createReport } = require('../controllers/mutual/userReportsController');
 router.post('/create-report', createReport);
 
+//review routes
+const { createReview } = require('../controllers/mutual/reviewController');
+router.post('/create-review', createReview);
+
 module.exports = router;

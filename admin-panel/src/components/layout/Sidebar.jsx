@@ -43,7 +43,7 @@ const Sidebar = ({ isCollapsed }) => {
                   ? 'bg-white text-[#0D4D47] shadow-lg font-bold' 
                   : 'text-gray-200 hover:bg-[#0a3a35] hover:text-white'}`}
             >
-              <Icon className="w-5 h-5 flex-shrink-0" />
+              <Icon className="w-5 h-5 shrink-0" />
               {!isCollapsed && <span className="truncate">{item.name}</span>}
             </Link>
           );
