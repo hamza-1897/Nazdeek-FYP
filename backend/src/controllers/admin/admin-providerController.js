@@ -1,5 +1,6 @@
 const providerModel  = require('../../models/providerModel');
 const userModel = require('../../models/usersModel');
+const reportModel = require('../../models/reportModel');
 
 //get all user
 const getAllUsers = async (req,res) => {
@@ -58,9 +59,52 @@ const updateProvider = async (req,res) => {
     }
 }
 
+//get all reports for providers
+const getAllReports = async (req,res) => {
+    try {
+        const reports = await reportModel.find().populate('reporterId', 'name').populate('providerId', 'businessName');
+        res.status(200).json(reports);
+    }   catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+
+//resolve report 
+const resolveReport = async (req,res) => {
+    try {
+        const { id } = req.params;
+        const updatedReport = await reportModel.findByIdAndUpdate(
+      id,
+      { status: 'resolved' },
+      { returnDocument: 'after' }
+    );
+    res.status(200).json({ message: 'Report resolved successfully', report: updatedReport });
+
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+}
+const deleteReport = async (req,res) => {
+    try {
+        const { id } = req.params;
+        const deletedReport = await reportModel.findByIdAndDelete(id);
+        if (!deletedReport) {
+            return res.status(404).json({ message: 'Report not found' });
+        }
+        res.status(200).json({ message: 'Report deleted successfully' });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+
+}
+
 module.exports = {
     getAllUsers,
     getAllProviders,
     getProviderById,
-    updateProvider
+    updateProvider,
+    getAllReports,
+    resolveReport,
+    deleteReport
 }

@@ -30,11 +30,9 @@ const providerSchema = new mongoose.Schema({
     required: true,
   },
   
-  //cnicImages: [String ],
   cnicImages: {
     type: [String],
   },
-  //workImages: [  String  ],
   workImages: {
     type: [String],
   },

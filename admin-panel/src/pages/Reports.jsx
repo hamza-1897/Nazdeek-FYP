@@ -1,54 +1,73 @@
-import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Loader2 } from 'lucide-react'; 
 import ReportCard from '../components/common/ReportCard';
+import { getAllReports , resolveReport , deleteReport} from '../api/adminApi'; 
 
 const Reports = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [reportTypeFilter, setReportTypeFilter] = useState('All types');
   const [statusFilter, setStatusFilter] = useState('All statuses');
+  const [reportsData, setReportsData] = useState([]); 
+  const [loading, setLoading] = useState(true);
 
-  const [reports, setReports] = useState([
-    {
-      id: 1,
-      category: 'SPAM',
-      targetName: 'TechStore Pro',
-      reporter: 'Sara Khan',
-      date: '2024-04-09',
-      views: 34,
-      status: 'Pending',
-      reason: 'Reported for repeated spam messages and unsolicited promotions sent to multiple users.',
-      reportedItemType: 'Service Provider'
-    },
-    {
-      id: 2,
-      category: 'UNUSUAL ACTIVITY',
-      targetName: 'Quick Fix Services',
-      reporter: 'Ali Raza',
-      date: '2024-04-10',
-      views: 12,
-      status: 'Pending',
-      reason: 'Multiple rapid logins and sudden change in service rates within an hour.',
-      reportedItemType: 'Service Provider'
+  const fetchReports = async () => {
+    try {
+      setLoading(true);
+      const data = await getAllReports();
+      const actualData = Array.isArray(data) ? data : (data?.data || []);
+      setReportsData(actualData);
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+    } finally {
+      setLoading(false);
     }
-  ]);
-
-  const handleResolve = (id) => {
-    setReports(reports.map(report => 
-      report.id === id ? { ...report, status: 'Resolved' } : report
-    ));
   };
 
-  const handleDelete = (id) => {
-    setReports(reports.filter(report => report.id !== id));
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  const handleResolve = async (id) => {
+    try {
+      await resolveReport(id);
+      setReportsData(prevData => 
+      prevData.map(report => 
+        report._id === id ? { ...report, status: 'resolved' } : report
+      )
+    );
+      
+    } catch (error) {
+      console.error("Error resolving report:", error);
+    }
   };
 
-  const filteredReports = reports.filter(report => {
-    const matchesSearch = report.targetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          report.reporter.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          report.reason.toLowerCase().includes(searchTerm.toLowerCase());
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this report?")) {
+      try {
+        await deleteReport(id);
+        setReportsData(prevData => prevData.filter(report => report._id !== id));
+      } catch (error) {
+        console.error("Error deleting report:", error);
+      }
+    }
+  };
+
+  const filteredReports = reportsData.filter(report => {
+    const targetName = report?.providerId?.businessName || '';
+    const reporterName = report?.reporterId?.name || '';
+    const reasonText = report?.reason || '';
+    const currentType = report?.reportType || '';
+    const currentStatus = report?.status || 'pending';
+
+    const matchesSearch = targetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          reporterName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          reasonText.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesType = reportTypeFilter === 'All types' || report.category === reportTypeFilter;
-    const matchesStatus = statusFilter === 'All statuses' || report.status === statusFilter;
+    const matchesType = reportTypeFilter === 'All types' || 
+                        currentType.replace('_', ' ').toLowerCase() === reportTypeFilter.toLowerCase();
+    
+    const matchesStatus = statusFilter === 'All statuses' || 
+                          currentStatus.toLowerCase() === statusFilter.toLowerCase();
 
     return matchesSearch && matchesType && matchesStatus;
   });
@@ -58,6 +77,7 @@ const Reports = () => {
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-[#0f3d2e]">Provider Reports</h2>
       </div>
+      
       <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
         <div className="relative w-full md:flex-1">
           <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
@@ -80,9 +100,10 @@ const Reports = () => {
               value={reportTypeFilter}
               onChange={(e) => setReportTypeFilter(e.target.value)}
             >
-              <option>All types</option>
-              <option>SPAM</option>
-              <option>UNUSUAL ACTIVITY</option>
+              <option value="All types">All types</option>
+              <option value="spam">SPAM</option>
+              <option value="unusual activity">UNUSUAL ACTIVITY</option>
+              <option value="fraud">FRAUD</option>
             </select>
           </div>
 
@@ -93,30 +114,34 @@ const Reports = () => {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
-              <option>All statuses</option>
-              <option>Pending</option>
-              <option>Resolved</option>
+              <option value="All statuses">All statuses</option>
+              <option value="pending">Pending</option>
+              <option value="resolved">Resolved</option>
             </select>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
-        {filteredReports.length > 0 ? (
-          filteredReports.map((report) => (
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <Loader2 className="animate-spin text-[#0f3d2e]" size={36} />
+        </div>
+      ) : filteredReports.length > 0 ? (
+        <div className="flex flex-col gap-6">
+          {filteredReports.map((report) => (
             <ReportCard 
-              key={report.id} 
+              key={report._id} 
               report={report} 
               onResolve={handleResolve} 
               onDelete={handleDelete} 
             />
-          ))
-        ) : (
-          <div className="text-center py-12 bg-white rounded-xl border border-gray-100 text-gray-400">
-            No reports found matching criteria.
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12 bg-white rounded-xl border border-gray-100 text-gray-400">
+          No reports found matching criteria.
+        </div>
+      )}
     </div>
   );
 };
