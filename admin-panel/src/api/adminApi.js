@@ -82,3 +82,16 @@ export const getProviderDetails = async (id) => {
         throw error;
     }
 };
+
+// system settings APIs
+export const getSystemSettings = async () => {
+    try {
+        const response = await API.get('/admin/getSystemSettings');
+        console.log("Get System Settings API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching system settings:", error);
+        throw error;
+    }
+};

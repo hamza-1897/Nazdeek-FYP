@@ -1,10 +1,10 @@
-const settingModel = require('../models/settingModel');
+const settingModel = require('../../models/settingModel');
 
 // get System Settings
 const getSystemSettings = async (req, res) => {
   try {
     const settings = await settingModel.findOne();
-    
+    (!settings) && (await settingModel.create({}));
     return res.status(200).json(settings);
     } catch (error) {
     console.error(error);

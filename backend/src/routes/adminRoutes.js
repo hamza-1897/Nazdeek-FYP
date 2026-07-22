@@ -22,6 +22,11 @@ router.get('/getAllReports', getAllReports);
 router.put('/resolveReport/:id', resolveReport);
 router.delete('/deleteReport/:id', deleteReport);
 
-
+// setting routes
+const { getSystemSettings, updatePaymentAccounts, updateFeeConfig, updateContactDetails } = require('../controllers/admin/settingController');
+router.get('/getSystemSettings', getSystemSettings);
+router.put('/updatePaymentAccounts', updatePaymentAccounts);
+router.put('/updateFeeConfig', updateFeeConfig);
+router.put('/updateContactDetails', updateContactDetails);
 
 module.exports = router;

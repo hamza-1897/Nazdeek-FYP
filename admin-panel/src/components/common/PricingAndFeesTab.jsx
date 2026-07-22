@@ -1,10 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const PricingAndFeesTab = ({ initialFeeConfig }) => {
+const PricingAndFeesTab = ({ initialFeeConfig, onSaveSuccess, refreshData }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [feeConfig, setFeeConfig] = useState(initialFeeConfig);
-  const [tempConfig, setTempConfig] = useState(initialFeeConfig);
+  
+  // Safe Fallback Object
+  const defaultConfig = {
+    registrationFee: 0,
+    isRegistrationFree: false,
+    monthlyPremiumPrice: 0,
+    quarterlyPremiumPrice: 0,
+    yearlyPremiumPrice: 0,
+  };
+
+  const [feeConfig, setFeeConfig] = useState({ ...defaultConfig, ...initialFeeConfig });
+  const [tempConfig, setTempConfig] = useState({ ...defaultConfig, ...initialFeeConfig });
+
+  // Sync state when props arrive from API call
+  useEffect(() => {
+    if (initialFeeConfig && Object.keys(initialFeeConfig).length > 0) {
+      setFeeConfig({ ...defaultConfig, ...initialFeeConfig });
+      setTempConfig({ ...defaultConfig, ...initialFeeConfig });
+    }
+  }, [initialFeeConfig]);
 
   const handleChange = (field, value) => {
     setTempConfig((prev) => ({ ...prev, [field]: value }));
@@ -16,17 +35,24 @@ const PricingAndFeesTab = ({ initialFeeConfig }) => {
   };
 
   const handleSaveToBackend = async () => {
-    setIsSaving(true);
-    const payload = { feeConfig: tempConfig };
+    try {
+      setIsSaving(true);
 
-    console.log('📡 API CALL: PUT /api/admin/settings/pricing -> Payload:', payload);
+      // Connect with actual endpoint
+      const response = await axios.put('/api/admin/settings/pricing', { feeConfig: tempConfig });
 
-    setTimeout(() => {
-      setFeeConfig(tempConfig);
+      if (response.data.success || response.status === 200) {
+        setFeeConfig(tempConfig);
+        setIsEditing(false);
+        if (onSaveSuccess) onSaveSuccess('✓ Pricing & Subscription details saved to DB!');
+        if (refreshData) refreshData();
+      }
+    } catch (error) {
+      console.error('API Error saving pricing:', error);
+      alert('Error saving details: ' + (error.response?.data?.message || error.message));
+    } finally {
       setIsSaving(false);
-      setIsEditing(false);
-      alert('✓ Pricing & Subscription details saved to DB!');
-    }, 800);
+    }
   };
 
   return (
@@ -34,15 +60,17 @@ const PricingAndFeesTab = ({ initialFeeConfig }) => {
       <div className="flex justify-between items-center pb-3 border-b border-gray-100">
         <div>
           <h3 className="text-base font-bold text-gray-800">Registration & Subscription Pricing</h3>
-          <p className="text-xs text-gray-500">Manage 1-time onboarding fee, promo switch, and premium monthly plans.</p>
         </div>
         <div className="flex items-center gap-2">
           {!isEditing ? (
             <button
-              onClick={() => { setTempConfig(feeConfig); setIsEditing(true); }}
+              onClick={() => {
+                setTempConfig(feeConfig);
+                setIsEditing(true);
+              }}
               className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer"
             >
-               Edit Pricing
+              Edit Pricing
             </button>
           ) : (
             <>
@@ -54,7 +82,7 @@ const PricingAndFeesTab = ({ initialFeeConfig }) => {
                 disabled={isSaving}
                 className="px-4 py-2 bg-[#0f3d2e] hover:bg-[#0b2e22] text-white text-xs font-bold rounded-lg cursor-pointer disabled:opacity-50"
               >
-                {isSaving ? 'Saving...' : ' Save Pricing'}
+                {isSaving ? 'Saving...' : 'Save Pricing'}
               </button>
             </>
           )}
@@ -71,7 +99,7 @@ const PricingAndFeesTab = ({ initialFeeConfig }) => {
             <input
               type="checkbox"
               disabled={!isEditing}
-              checked={tempConfig.isRegistrationFree}
+              checked={Boolean(tempConfig.isRegistrationFree)}
               onChange={(e) => handleChange('isRegistrationFree', e.target.checked)}
               className="sr-only peer"
             />
@@ -84,8 +112,8 @@ const PricingAndFeesTab = ({ initialFeeConfig }) => {
           <input
             type="number"
             disabled={!isEditing || tempConfig.isRegistrationFree}
-            value={tempConfig.registrationFeeAmount}
-            onChange={(e) => handleChange('registrationFeeAmount', Number(e.target.value))}
+            value={tempConfig.registrationFee ?? ''}
+            onChange={(e) => handleChange('registrationFee', Number(e.target.value))}
             className="w-full text-xs p-2.5 border rounded-lg focus:outline-none focus:border-[#0f3d2e] disabled:bg-gray-100 disabled:text-gray-600"
           />
         </div>
@@ -93,7 +121,7 @@ const PricingAndFeesTab = ({ initialFeeConfig }) => {
 
       <div className="p-4 rounded-xl border border-gray-200 bg-white space-y-4">
         <h4 className="text-xs font-bold text-gray-800 border-b border-gray-100 pb-2">
-          ⭐ Premium Featured Subscription Plans
+          Premium Featured Subscription Plans
         </h4>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -102,7 +130,7 @@ const PricingAndFeesTab = ({ initialFeeConfig }) => {
             <input
               type="number"
               disabled={!isEditing}
-              value={tempConfig.monthlyPremiumPrice}
+              value={tempConfig.monthlyPremiumPrice ?? ''}
               onChange={(e) => handleChange('monthlyPremiumPrice', Number(e.target.value))}
               className="w-full text-xs p-2.5 border rounded-lg focus:outline-none focus:border-[#0f3d2e] disabled:bg-gray-100 disabled:text-gray-600"
             />
@@ -113,7 +141,7 @@ const PricingAndFeesTab = ({ initialFeeConfig }) => {
             <input
               type="number"
               disabled={!isEditing}
-              value={tempConfig.quarterlyPremiumPrice}
+              value={tempConfig.quarterlyPremiumPrice ?? ''}
               onChange={(e) => handleChange('quarterlyPremiumPrice', Number(e.target.value))}
               className="w-full text-xs p-2.5 border rounded-lg focus:outline-none focus:border-[#0f3d2e] disabled:bg-gray-100 disabled:text-gray-600"
             />
@@ -124,7 +152,7 @@ const PricingAndFeesTab = ({ initialFeeConfig }) => {
             <input
               type="number"
               disabled={!isEditing}
-              value={tempConfig.yearlyPremiumPrice}
+              value={tempConfig.yearlyPremiumPrice ?? ''}
               onChange={(e) => handleChange('yearlyPremiumPrice', Number(e.target.value))}
               className="w-full text-xs p-2.5 border rounded-lg focus:outline-none focus:border-[#0f3d2e] disabled:bg-gray-100 disabled:text-gray-600"
             />
