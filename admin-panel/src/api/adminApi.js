@@ -95,3 +95,20 @@ export const getSystemSettings = async () => {
         throw error;
     }
 };
+
+export const updateContactDetails = async (contactDetails) => {
+  const response = await API.put(`/admin/updateContactDetails`, { contactDetails });
+  return response.data;
+};
+
+//  Pricing & Subscription Update
+export const updatePricingAndFees = async (feeConfig) => {
+  const response = await API.put(`/admin/updateFeeConfig`, { feeConfig });
+  return response.data;
+};
+
+// Payment Accounts Update
+export const updatePaymentAccounts = async (paymentAccounts) => {
+  const response = await API.put(`/admin/updatePaymentAccounts`, { paymentAccounts });
+  return response.data;
+};

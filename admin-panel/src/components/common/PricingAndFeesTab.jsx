@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
+import { updatePricingAndFees } from '../../api/adminApi';
 const PricingAndFeesTab = ({ initialFeeConfig, onSaveSuccess, refreshData }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   
-  // Safe Fallback Object
   const defaultConfig = {
     registrationFee: 0,
     isRegistrationFree: false,
@@ -17,7 +15,6 @@ const PricingAndFeesTab = ({ initialFeeConfig, onSaveSuccess, refreshData }) => 
   const [feeConfig, setFeeConfig] = useState({ ...defaultConfig, ...initialFeeConfig });
   const [tempConfig, setTempConfig] = useState({ ...defaultConfig, ...initialFeeConfig });
 
-  // Sync state when props arrive from API call
   useEffect(() => {
     if (initialFeeConfig && Object.keys(initialFeeConfig).length > 0) {
       setFeeConfig({ ...defaultConfig, ...initialFeeConfig });
@@ -36,23 +33,19 @@ const PricingAndFeesTab = ({ initialFeeConfig, onSaveSuccess, refreshData }) => 
 
   const handleSaveToBackend = async () => {
     try {
-      setIsSaving(true);
+    setIsSaving(true);
+    await updatePricingAndFees(tempConfig);
 
-      // Connect with actual endpoint
-      const response = await axios.put('/api/admin/settings/pricing', { feeConfig: tempConfig });
-
-      if (response.data.success || response.status === 200) {
-        setFeeConfig(tempConfig);
-        setIsEditing(false);
-        if (onSaveSuccess) onSaveSuccess('✓ Pricing & Subscription details saved to DB!');
-        if (refreshData) refreshData();
-      }
-    } catch (error) {
-      console.error('API Error saving pricing:', error);
-      alert('Error saving details: ' + (error.response?.data?.message || error.message));
-    } finally {
-      setIsSaving(false);
-    }
+    setFeeConfig(tempConfig);
+    setIsSaving(false);
+    setIsEditing(false);
+    if (onSaveSuccess) onSaveSuccess('Pricing & Subscription details saved to DB!');
+    if (refreshData) refreshData();
+  } catch (error) {
+    console.error('Error updating pricing:', error);
+    alert(error.response?.data?.message || 'Failed to update pricing details');
+    setIsSaving(false);
+  }
   };
 
   return (

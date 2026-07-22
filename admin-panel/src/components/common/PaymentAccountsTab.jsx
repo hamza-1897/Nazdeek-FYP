@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { updatePaymentAccounts } from '../../api/adminApi';
 
-const PaymentAccountsTab = ({ initialAccounts }) => {
+const PaymentAccountsTab = ({ initialAccounts, onSaveSuccess, refreshData }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [accounts, setAccounts] = useState(initialAccounts);
-  const [tempAccounts, setTempAccounts] = useState(initialAccounts);
+  const [accounts, setAccounts] = useState(initialAccounts || []);
+  const [tempAccounts, setTempAccounts] = useState(initialAccounts || []);
+
+  useEffect(() => {
+    if (initialAccounts) {
+      setAccounts(initialAccounts);
+      setTempAccounts(initialAccounts);
+    }
+  }, [initialAccounts]);
 
   const handleAccountChange = (index, field, value) => {
     const updated = [...tempAccounts];
@@ -36,17 +44,20 @@ const PaymentAccountsTab = ({ initialAccounts }) => {
   };
 
   const handleSaveToBackend = async () => {
-    setIsSaving(true);
-    const payload = { paymentAccounts: tempAccounts };
+    try {
+      setIsSaving(true);
+      await updatePaymentAccounts(tempAccounts);
 
-    console.log('📡 API CALL: PUT /api/admin/settings/accounts -> Payload:', payload);
-
-    setTimeout(() => {
       setAccounts(tempAccounts);
       setIsSaving(false);
       setIsEditing(false);
-      alert('✓ Payment Accounts saved to DB successfully!');
-    }, 800);
+      if (onSaveSuccess) onSaveSuccess('Payment accounts updated successfully!');
+      if (refreshData) refreshData();
+    } catch (error) {
+      console.error('Error updating payment accounts:', error);
+      alert(error.response?.data?.message || 'Failed to update payment accounts');
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -62,7 +73,7 @@ const PaymentAccountsTab = ({ initialAccounts }) => {
               onClick={() => { setTempAccounts(accounts); setIsEditing(true); }}
               className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer"
             >
-               Edit Accounts
+              Edit Accounts
             </button>
           ) : (
             <>
@@ -91,9 +102,9 @@ const PaymentAccountsTab = ({ initialAccounts }) => {
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        {tempAccounts.map((acc, index) => (
+        {(tempAccounts || []).map((acc, index) => (
           <div
-            key={acc.id || index}
+            key={acc._id || acc.id || index}
             className={`p-4 rounded-xl border transition-all ${
               acc.isActive ? 'border-gray-200 bg-white' : 'border-gray-100 bg-gray-50'
             }`}
@@ -125,7 +136,7 @@ const PaymentAccountsTab = ({ initialAccounts }) => {
                 <input
                   type="text"
                   disabled={!isEditing}
-                  value={acc.bankName}
+                  value={acc.bankName || ''}
                   onChange={(e) => handleAccountChange(index, 'bankName', e.target.value)}
                   className="w-full text-xs p-2.5 border rounded-lg focus:outline-none focus:border-[#0f3d2e] disabled:bg-gray-100 disabled:text-gray-600"
                 />
@@ -136,7 +147,7 @@ const PaymentAccountsTab = ({ initialAccounts }) => {
                 <input
                   type="text"
                   disabled={!isEditing}
-                  value={acc.accountTitle}
+                  value={acc.accountTitle || ''}
                   onChange={(e) => handleAccountChange(index, 'accountTitle', e.target.value)}
                   className="w-full text-xs p-2.5 border rounded-lg focus:outline-none focus:border-[#0f3d2e] disabled:bg-gray-100 disabled:text-gray-600"
                 />
@@ -147,7 +158,7 @@ const PaymentAccountsTab = ({ initialAccounts }) => {
                 <input
                   type="text"
                   disabled={!isEditing}
-                  value={acc.accountNumber}
+                  value={acc.accountNumber || ''}
                   onChange={(e) => handleAccountChange(index, 'accountNumber', e.target.value)}
                   className="w-full text-xs p-2.5 border rounded-lg focus:outline-none focus:border-[#0f3d2e] disabled:bg-gray-100 disabled:text-gray-600"
                 />
