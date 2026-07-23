@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/layout/AdminLayout';
 import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 import Login from './pages/Login';
 import Forgotpassword from './pages/Forgotpassword';
@@ -21,16 +22,17 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/forgot-password" element={<Forgotpassword />} />
 
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} /> 
-            
-            <Route path="users" element={<Users />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="providers" element={<Providers />} />
-            <Route path='categories' element={<Categories />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="providerDetail/:id" element={<ProviderDetail />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} /> 
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="users" element={<Users />} />
+              <Route path="providers" element={<Providers />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="providerDetail/:id" element={<ProviderDetail />} />
+            </Route>
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

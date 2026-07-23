@@ -53,4 +53,4 @@ const refreshTokenMiddleware = async (req,res,next) => {
 
 }
 
-module.exports = { authMiddleware, refreshTokenMiddleware };
+module.exports = { authMiddleware, checkRole, refreshTokenMiddleware };

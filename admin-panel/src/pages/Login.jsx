@@ -24,7 +24,6 @@ const tempSubmit = async (e) => {
     }
 
     try {
-      // 2. await laga kar API call ki
       const data = await adminLogin(email, password);
       const { accessToken, name , email: adminEmail, _id } = data;
       
@@ -60,7 +59,7 @@ const tempSubmit = async (e) => {
               <h2 className="text-4xl font-bold text-[#0D4D47]">Admin Panel</h2>
               <p className="text-gray-500 mb-10 text-xl">Welcome Back!</p>
 
-              <form className="space-y-6" onSubmit={tempSubmit}>
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label className="block text-gray-700 font-bold mb-2 text-sm">Email</label>
                   <input 
