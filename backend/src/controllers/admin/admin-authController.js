@@ -34,7 +34,7 @@ const {email , password} = req.body;
 const admin = await adminModel.findOne({email})
 
 if(!admin || !(await checkPassword(password, admin.password))){
-    res.status(400).json({message : "invalid credentials"})
+   return res.status(400).json({message : "invalid credentials"})
 } else {
 
         const accessToken = generateToken(admin._id, admin.role, res);
