@@ -10,7 +10,9 @@ const VerifyOTP = ({ navigation, route }) => {
   const email = route.params.email;
   const password = route.params?.password;
   const flow = route.params.flow; 
-
+  const address = route.params?.address;
+  const phone = route.params?.phone;
+  const role = route.params?.role
 
 const checkOtp = () => {
   if(otp.length !== 6){
@@ -35,7 +37,7 @@ const handleVerifyOTP = async () => {
 
 
     if(flow === 'signup'){
-      const data = await verifySignupOTP( email,otp, password );
+      const data = await verifySignupOTP( email,otp, password,address , phone, role);
       alert(data.message)
       navigation.replace('Login');
     }

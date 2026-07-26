@@ -19,6 +19,7 @@ const BookingScreen = ({ navigation, route }) => {
       if (userInfo && userInfo.id) {
         const data = await getBookingsByUserId(userInfo.id);
         setMyBookingsData(data);
+        console.log("Fetched bookings data:", data);
       }
     } catch (error) {
       console.log("Error fetching bookings:", error);
