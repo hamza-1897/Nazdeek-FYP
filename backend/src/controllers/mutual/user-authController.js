@@ -51,30 +51,56 @@ const verifySignUPOTP = async (req,res) => {
     
 }
 
+// User Login Controller
+const userLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-// User Login
-const userLogin = async (req,res) => {
+    const user = await userModel.findOne({ email });
 
-const {email , password} = req.body;
-const user = await userModel.findOne({email})
-
-if(!user || !(await checkPassword(password, user.password))){
-    res.status(400).json({message : "invalid credentials"})
-} else {
-    const isActive = user.isActive;
-    if(!isActive){
-        res.status(403).json({message : "user account is deactivated"})
-    } else {
-        const accessToken = generateToken(user._id, user.role, res);
-        let providerInfo = null;
-        if(user.role === 'provider'){
-            providerInfo = await providerModel.findOne({userId: user._id}).populate('categoryId', 'name');
-        }
-        res.status(200).json({_id: user._id, name: user.name, role: user.role, profileImage: user.profileImage || null, providerInfo, message : "user logged in successfully", accessToken})
+    if (!user || !(await checkPassword(password, user.password))) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
-}
-}
 
+    if (!user.isActive) {
+      return res.status(403).json({ message: "User account is deactivated" });
+    }
+
+    let providerStatus = null;
+    let providerInfo = null;
+
+    if (user.role === 'provider') {
+      const providerDoc = await providerModel.findOne({ userId: user._id });
+
+      if (!providerDoc) {
+        providerStatus = 'unsubmitted';
+      } else {
+        providerStatus = providerDoc.verificationStatus;
+        providerInfo = providerDoc; 
+      }
+    }
+
+    const accessToken = generateToken(user._id, user.role, res);
+
+    return res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      profileImage: user.profileImage || null,
+      providerStatus,
+      providerInfo, 
+      message: "User logged in successfully",
+      accessToken
+    });
+
+  } catch (error) {
+    console.error("Login Error:", error);
+    return res.status(500).json({ 
+      message: error.message || "Internal server error during login" 
+    });
+  }
+};
 // User Logout
 const userLogout = async (req,res) => {
     res.clearCookie('jwt', { httpOnly: true, secure: false, sameSite: 'strict',path: "/" });
