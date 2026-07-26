@@ -1,31 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
   Image,
   Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import {getAllCategories} from '../../api/ProviderApi'
 
-const dummyCategories = [
-  { id: '1', name: 'Electrician' },
-  { id: '2', name: 'Plumber' },
-  { id: '3', name: 'Carpenter' },
-  { id: '4', name: 'AC Technician' },
-  { id: '5', name: 'Painter' },
-  { id: '6', name: 'Cleaner' },
-  { id: '7', name: 'Mechanic' },
-];
+
 
 const ProviderSetupScreen = ({ navigation }) => {
   const [businessName, setBusinessName] = useState('');
   const [cnicNumber, setCnicNumber] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(null);
+const [categories, setCategories] = useState([]);
+const [selectedCategory, setSelectedCategory] = useState(null);
+const [loadingCategories, setLoadingCategories] = useState(true);
   const [bio, setBio] = useState('');
   const [experience, setExperience] = useState('');
 
@@ -33,6 +29,28 @@ const ProviderSetupScreen = ({ navigation }) => {
   const [cnicFront, setCnicFront] = useState(null);
   const [cnicBack, setCnicBack] = useState(null);
   const [workImages, setWorkImages] = useState([]);
+
+  const fetchCategories = async () => {
+  try {
+    setLoadingCategories(true);
+    const res = await getAllCategories(); 
+    const data = res?.data ? res.data : res;
+
+    if (data?.success) {
+      setCategories(data.categories);
+    }
+    } catch (error) {
+    console.log('Categories Fetch Error:', error);
+    Alert.alert('Error', 'Unable to load service categories.');
+  } finally {
+    setLoadingCategories(false);
+  }
+};
+
+useEffect(() => {
+  fetchCategories();
+}, []);
+
 
 const pickSingleImage = async (type) => {
   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -170,33 +188,43 @@ const pickWorkImages = async () => {
           />
         </View>
 
-        <View className="mb-4">
-          <Text className="text-sm font-bold text-gray-800 mb-2">Select Category</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
-            {dummyCategories.map((cat) => {
-              const isSelected = selectedCategory?.id === cat.id;
-              return (
-                <TouchableOpacity
-                  key={cat.id}
-                  onPress={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-full mr-2 border ${
-                    isSelected
-                      ? 'bg-[#1a5ea1] border-[#1a5ea1]'
-                      : 'bg-gray-100 border-gray-300'
-                  }`}
-                >
-                  <Text
-                    className={`text-sm font-medium ${
-                      isSelected ? 'text-white' : 'text-gray-700'
-                    }`}
-                  >
-                    {cat.name}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </View>
+<View className="mb-4">
+  <Text className="text-sm font-bold text-gray-800 mb-2">Select Category</Text>
+  
+  {loadingCategories ? (
+    <View className="py-3 items-center flex-row">
+      <ActivityIndicator size="small" color="#1a5ea1" />
+      <Text className="ml-2 text-xs text-gray-500">Loading categories...</Text>
+    </View>
+  ) : categories.length === 0 ? (
+    <Text className="text-xs text-red-500">No categories available.</Text>
+  ) : (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
+      {categories.map((cat) => {
+        const isSelected = selectedCategory?._id === cat._id;
+        return (
+          <TouchableOpacity
+            key={cat._id}
+            onPress={() => setSelectedCategory(cat)}
+            className={`px-4 py-2 rounded-full mr-2 border ${
+              isSelected
+                ? 'bg-[#1a5ea1] border-[#1a5ea1]'
+                : 'bg-gray-100 border-gray-300'
+            }`}
+          >
+            <Text
+              className={`text-sm font-medium ${
+                isSelected ? 'text-white' : 'text-gray-700'
+              }`}
+            >
+              {cat.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </ScrollView>
+  )}
+</View>
 
         <View className="mb-6">
           <Text className="text-sm font-bold text-gray-800 mb-1">About Your Profile</Text>
