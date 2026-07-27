@@ -10,3 +10,14 @@ export const createService = async (formData) => {
         throw error;
     }
 };
+
+export const getAllCategories = async ()=>{
+    try{
+    const response = await api.get('/provider/getAllCategory');
+    console.log('get category Api response', response.data);
+    return response.data;
+}  catch (error) {
+        console.error("Error creating service:", error);
+        throw error;
+    }
+}

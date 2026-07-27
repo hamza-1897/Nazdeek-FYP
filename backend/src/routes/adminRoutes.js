@@ -8,10 +8,6 @@ const router = express.Router();
 const {getAllUsers} = require('../controllers/admin/admin-providerController');
 router.get('/getallusers', getAllUsers);
 
-// category routes
-const {addCategory,getAllCategories} = require('../controllers/admin/categoryController');
-router.get('/getallcategories', getAllCategories);
-router.post('/add-category', addCategory);
 
 // provider routes
 const {getAllProviders ,getProviderById, updateProvider, getAllReports, getProviderDetails ,resolveReport, deleteReport } = require('../controllers/admin/admin-providerController');
@@ -31,5 +27,10 @@ router.get('/getSystemSettings', getSystemSettings);
 router.put('/updatePaymentAccounts', updatePaymentAccounts);
 router.put('/updateFeeConfig', updateFeeConfig);
 router.put('/updateContactDetails', updateContactDetails);
+
+// category
+const {getCategories , addCategory}  = require('../controllers/mutual/categoryController')
+router.get('/getAllCategory',getCategories);
+router.post('/addCategory',addCategory)
 
 module.exports = router;

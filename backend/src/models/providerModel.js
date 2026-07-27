@@ -5,7 +5,8 @@ const providerSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: true 
+    required: true ,
+    unique: true
   },
   
   businessName: {
@@ -14,7 +15,7 @@ const providerSchema = new mongoose.Schema({
 
   },
   
-  bio: {
+  description: {
     type: String,
     maxLength: 500
   },
@@ -36,13 +37,6 @@ const providerSchema = new mongoose.Schema({
   workImages: {
     type: [String],
   },
-
-
-  address: {
-    type: String,
-    required: true
-  },
-  
   
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -61,8 +55,8 @@ const providerSchema = new mongoose.Schema({
   
   verificationStatus: {
     type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
+    enum: ['unsubmitted','pending', 'approved', 'rejected'],
+    default: 'unsubmitted'
   },
   
   createdAt: {
