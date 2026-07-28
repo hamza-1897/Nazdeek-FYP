@@ -76,12 +76,19 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
             {provider?.workImages && provider.workImages.length > 0 ? (
               <div className="flex gap-2 flex-wrap">
                 {provider.workImages.map((imgUrl, index) => (
-                  <img 
-                    key={index}
-                    src={imgUrl} 
-                    alt={`Work sample ${index + 1}`} 
-                    className="w-24 h-24 object-cover rounded-lg border"
-                  />
+                 <a 
+          key={index} 
+          href={imgUrl} 
+          target="_blank" 
+          rel="noreferrer" 
+          className="inline-block"
+        >
+          <img 
+            src={imgUrl} 
+            alt={`Work sample ${index + 1}`} 
+            className="w-24 h-24 object-cover rounded-lg border hover:opacity-95 cursor-pointer transition-all"
+          />
+        </a>
                 ))}
               </div>
             ) : (
