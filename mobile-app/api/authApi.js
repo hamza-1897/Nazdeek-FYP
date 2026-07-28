@@ -25,13 +25,12 @@ export const userSignup = async (name, email) => {
 };
 
 
-export const verifySignupOTP = async (email, otp, password, address, phone, role) => {
+export const verifySignupOTP = async (email, otp, password,  phone, role) => {
     try {
        const response = await api.post('/user-auth/verify-otp', {
     email,
     otp,
     password,
-    address,
     phone,
     role
   });

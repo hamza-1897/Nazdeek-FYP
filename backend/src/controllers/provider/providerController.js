@@ -1,36 +1,54 @@
 const providerModel = require('../../models/providerModel'); 
-const userModel = require('../../models/usersModel');     
+const userModel = require('../../models/usersModel');  
+
+
 
 const registerProvider = async (req, res) => {
   try {
     const { 
       userId, 
       businessName, 
-      bio, 
+      description, 
       cnicNumber, 
       address, 
       categoryId, 
       experience 
     } = req.body;
 
+    const providerImage = req.files['providerImage'] 
+      ? req.files['providerImage'][0].path 
+      : null;
 
-   
-    const cnicImages = req.files['cnicImages'] ? req.files['cnicImages'].map(f => f.path) : [];
-const providerImage = req.files['providerImage'] 
-            ? req.files['providerImage'][0].path 
-            : null;
+    const cnicFront = req.files['cnicFront'] ? req.files['cnicFront'][0].path : null;
+    const cnicBack = req.files['cnicBack'] ? req.files['cnicBack'][0].path : null;
     
+    const cnicImages = [];
+    if (cnicFront) cnicImages.push(cnicFront);
+    if (cnicBack) cnicImages.push(cnicBack);
+
+    const workImages = req.files['workImages'] 
+      ? req.files['workImages'].map(f => f.path) 
+      : [];
+
+    if (!businessName || !cnicNumber || !categoryId || !providerImage) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Required fields or profile image missing." 
+      });
+    }
+
     const newProvider = new providerModel({
       userId,
       businessName,
-      bio,
+      description, 
       cnicNumber,
       cnicImages,
       providerImage,
+      workImages, 
       address,
       categoryId,
-      experience,
-      
+      experience: Number(experience) || 0,
+      verificationStatus: 'pending',
     });
 
     await newProvider.save();
@@ -42,9 +60,12 @@ const providerImage = req.files['providerImage']
     });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error", error: error.message });
+    console.error("Provider Registration Error:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Server Error", 
+      error: error.message 
+    });
   }
 };
-
 module.exports = { registerProvider };

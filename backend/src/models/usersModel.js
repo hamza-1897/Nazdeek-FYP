@@ -23,11 +23,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: 'customer'
   },
-  address :{
-    type : String,
-    required : true,
-    trim: true
-  },
+ 
   phone:{
     type: String,
     required : true

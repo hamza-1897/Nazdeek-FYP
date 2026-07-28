@@ -81,7 +81,7 @@ export default function ProviderCard({ provider, onViewDetails }) {
 
       <button
         onClick={ () => onViewDetails(providerId) }
-        className="w-full mt-2 bg-[#0a3a35] text-white font-semibold text-xs lg:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm hover:bg-[#072925]"
+        className="w-full mt-2 cursor-pointer bg-[#0a3a35] text-white font-semibold text-xs lg:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm hover:bg-[#072925]"
       >
         <Eye size={14} />
         View Details

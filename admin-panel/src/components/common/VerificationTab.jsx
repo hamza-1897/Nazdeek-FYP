@@ -44,8 +44,8 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         </div>
 
         <div className="mt-4 pt-3 border-t border-gray-50">
-          <p className="text-gray-400 text-xs">Business Bio</p>
-          <p className="text-sm font-medium text-gray-600 mt-1">{provider?.bio || 'No bio provided.'}</p>
+          <p className="text-gray-400 text-xs">Business Detail</p>
+          <p className="text-sm font-medium text-gray-600 mt-1">{provider?.description || 'No bio provided.'}</p>
         </div>
       </div>
 

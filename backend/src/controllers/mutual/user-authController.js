@@ -26,7 +26,7 @@ const registerUser = async (req,res) => {
 
 // OTP Verification for user registration
 const verifySignUPOTP = async (req,res) => {
-    const {email , otp, password, address, phone, role} = req.body;
+    const {email , otp, password,  phone, role} = req.body;
 
     const otpEntry = await otpModel.findOne({email, otp});
 
@@ -38,7 +38,6 @@ const verifySignUPOTP = async (req,res) => {
         const user = new userModel({
             name: otpEntry.name,
             email: otpEntry.email,
-            address :  address,
             phone : phone,
             role : role,
             password: hashPassword,
@@ -76,8 +75,10 @@ const userLogin = async (req, res) => {
         providerStatus = 'unsubmitted';
       } else {
         providerStatus = providerDoc.verificationStatus;
-        providerInfo = providerDoc; 
-      }
+        if (providerStatus === 'approved' || providerStatus === 'rejected') {
+    providerInfo = providerDoc;
+  }
+    }
     }
 
     const accessToken = generateToken(user._id, user.role, res);

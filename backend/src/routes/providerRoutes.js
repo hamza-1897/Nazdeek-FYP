@@ -2,14 +2,20 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../config/cloudinary');
 
-// provider routes
-const { registerProvider } = require('../controllers/provider/providerController');
-router.post('/register',
-    upload.fields([
-    { name: 'cnicImages', maxCount: 2 },    
-    { name: 'providerImage', maxCount: 1 } 
+
+const { registerProvider} = require('../controllers/provider/providerController')
+// Provider Register Route
+router.post(
+  '/registerProvider',
+  upload.fields([
+    { name: 'providerImage', maxCount: 1 }, 
+    { name: 'cnicFront', maxCount: 1 },     
+    { name: 'cnicBack', maxCount: 1 },     
+    { name: 'workImages', maxCount: 5 }     
   ]),
-    registerProvider);
+  registerProvider
+);
+
 
 // service routes
 const { createService,editService,deleteService, getServicesByProvider } = require('../controllers/provider/serviceController');

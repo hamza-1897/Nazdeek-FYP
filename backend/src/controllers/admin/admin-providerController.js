@@ -3,6 +3,7 @@ const userModel = require('../../models/usersModel');
 const reportModel = require('../../models/reportModel');
 const reviewModel = require('../../models/reviewModel');
 const serviceModel = require('../../models/serviceModel');
+const categoryModel = require('../../models/categoryModel')
 
 //get all user
 const getAllUsers = async (req,res) => {
@@ -15,28 +16,43 @@ const getAllUsers = async (req,res) => {
 }
 
 // get all providers
-const getAllProviders = async (req,res) => {
+const getAllProviders = async (req, res) => {
     try {
-        const providers = await providerModel.find({}).select('businessName verificationStatus providerImage address').populate('userId', 'email').populate('categoryId', 'name');
+        const providers = await providerModel
+            .find({})
+            .select('businessName verificationStatus providerImage address userId categoryId') 
+            .populate('userId', 'email ')
+            .populate('categoryId', 'name');
+
         res.status(200).json(providers);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 }
- 
+
+
 // get provider by id
 const getProviderById = async (req,res) => {
     try {
         const providerId = req.params.id;
-        const provider = await providerModel.findById(providerId).populate('userId', 'name email profileImage').populate('categoryId', 'name');
+        const provider = await providerModel.findById(providerId)
+        .populate({
+                path: 'userId',
+                select: 'name email address profileImage' 
+            })
+            .populate({
+                path: 'categoryId',
+                select: 'name'
+            });
         if(!provider){
-            res.status(404).json({message : "provider not found"})
+          return  res.status(404).json({message : "provider not found"})
         }
         res.status(200).json(provider);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 }
+
 
 // update provider status 
 const updateProvider = async (req,res) => {
