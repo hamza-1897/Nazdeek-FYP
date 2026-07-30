@@ -1,18 +1,40 @@
 import React from 'react';
 
 const VerificationTab = ({ provider, onApprove, onBlock }) => {
+  const profileImg = provider?.providerImage || provider?.userId?.profileImage || 'https://via.placeholder.com/150';
+  const status = (provider?.verificationStatus || provider?.status || 'pending').toLowerCase();
+
+  const statusColors = {
+    approved: 'text-emerald-600 font-bold',
+    rejected: 'text-red-600 font-bold',
+    unsubmitted: 'text-red-600 font-bold',
+    pending: 'text-amber-600 font-bold',
+  };
+
+  const isApproved = status === 'approved' ;
+  const isRejected = status === 'rejected' ;
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
-          <img 
-            src={provider?.providerImage || provider?.userId?.profileImage || 'https://via.placeholder.com/150'} 
-            alt="Provider Profile" 
-            className="w-16 h-16 rounded-full object-cover border-2 border-[#0f3d2e]"
-          />
+          <a 
+            href={profileImg} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="shrink-0"
+          >
+            <img 
+              src={profileImg} 
+              alt="Provider Profile" 
+              className="w-16 h-16 rounded-full object-cover border-2 border-[#0f3d2e] hover:opacity-90 transition-opacity cursor-pointer"
+            />
+          </a>
           <div>
             <h3 className="text-lg font-bold text-gray-800">{provider?.businessName || 'N/A'}</h3>
-            <p className="text-xs text-gray-400">Category: <span className="font-semibold text-gray-600">{provider?.categoryId?.name || 'N/A'}</span></p>
+            <p className="text-xs text-gray-400">
+              Category: <span className="font-semibold text-gray-600">{provider?.categoryId?.name || 'N/A'}</span>
+            </p>
           </div>
         </div>
 
@@ -52,6 +74,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <h3 className="text-base font-bold text-gray-800 mb-4">Verification Documents</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* CNIC Images */}
           <div>
             <p className="text-xs font-medium text-gray-500 mb-2">CNIC Document Images</p>
             {provider?.cnicImages && provider.cnicImages.length > 0 ? (
@@ -61,7 +84,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
                     <img 
                       src={imgUrl} 
                       alt={`CNIC Document ${index + 1}`} 
-                      className="w-full h-32 object-cover rounded-lg border hover:opacity-95 transition-all"
+                      className="w-full h-32 object-cover rounded-lg border hover:opacity-90 transition-all cursor-pointer"
                     />
                   </a>
                 ))}
@@ -76,19 +99,19 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
             {provider?.workImages && provider.workImages.length > 0 ? (
               <div className="flex gap-2 flex-wrap">
                 {provider.workImages.map((imgUrl, index) => (
-                 <a 
-          key={index} 
-          href={imgUrl} 
-          target="_blank" 
-          rel="noreferrer" 
-          className="inline-block"
-        >
-          <img 
-            src={imgUrl} 
-            alt={`Work sample ${index + 1}`} 
-            className="w-24 h-24 object-cover rounded-lg border hover:opacity-95 cursor-pointer transition-all"
-          />
-        </a>
+                  <a 
+                    key={index} 
+                    href={imgUrl} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="inline-block"
+                  >
+                    <img 
+                      src={imgUrl} 
+                      alt={`Work sample ${index + 1}`} 
+                      className="w-24 h-24 object-cover rounded-lg border hover:opacity-90 cursor-pointer transition-all"
+                    />
+                  </a>
                 ))}
               </div>
             ) : (
@@ -98,23 +121,39 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex justify-between items-center">
+      <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h4 className="font-bold text-gray-800 text-sm">Verification Status Action</h4>
-          <p className="text-xs text-gray-400">Current status: <span className="font-semibold uppercase text-amber-600">{provider?.verificationStatus || 'Pending'}</span></p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            Current status: <span className={`uppercase ${statusColors[status] || 'text-gray-600'}`}>{status}</span>
+          </p>
         </div>
+        
         <div className="flex gap-3">
           <button 
+            type="button"
+            disabled={isRejected}
             onClick={() => onBlock(provider?._id)}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-all"
+            className={`px-4 py-2 text-white text-xs font-semibold rounded-lg transition-all shadow-sm ${
+              isRejected
+                ? 'bg-red-300 cursor-not-allowed opacity-60'
+                : 'bg-red-600 hover:bg-red-700 active:scale-95 cursor-pointer'
+            }`}
           >
-            Reject / Block
+            {isRejected ? 'Rejected / Blocked' : 'Reject / Block'}
           </button>
+
           <button 
+            type="button"
+            disabled={isApproved}
             onClick={() => onApprove(provider?._id)}
-            className="px-4 py-2 bg-[#0f3d2e] hover:bg-[#0b2e22] text-white text-xs font-semibold rounded-lg transition-all"
+            className={`px-4 py-2 text-white text-xs font-semibold rounded-lg transition-all shadow-sm ${
+              isApproved
+                ? 'bg-emerald-300 cursor-not-allowed opacity-60'
+                : 'bg-[#0f3d2e] hover:bg-[#0b2e22] active:scale-95 cursor-pointer'
+            }`}
           >
-            Approve Provider
+            {isApproved ? 'Already Approved' : 'Approve Provider'}
           </button>
         </div>
       </div>

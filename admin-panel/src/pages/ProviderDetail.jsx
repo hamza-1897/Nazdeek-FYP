@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import VerificationTab from '../components/common/VerificationTab';
 import ActivityTab from '../components/common/ActivityTab';
-import { getProviderDetails } from '../api/adminApi';
+import { getProviderDetails, updateStatus } from '../api/adminApi';
 
 const ProviderDetail = () => {
   const { id } = useParams();
@@ -42,12 +42,33 @@ const ProviderDetail = () => {
     }
   }, [id]);
 
-  const handleApprove = (providerId) => {
-    alert(`Provider ${providerId} Approved!`);
+  const handleApprove = async (providerId) => {
+    try {
+      const targetId = providerId || id;
+      const res = await updateStatus(targetId, 'approved');
+      console.log(res)
+        alert('Provider Approved Successfully!');
+        await fetchProviderDetails(); 
+      
+    } catch (err) {
+      console.error("Approve Error:", err);
+      alert(err?.response?.data?.message || err?.message || 'Error updating status');
+    }
   };
 
-  const handleBlock = (providerId) => {
-    alert(`Provider ${providerId} Blocked!`);
+  const handleBlock = async (providerId) => {
+    try {
+      const targetId = providerId || id;
+      const res = await updateStatus(targetId, 'rejected');
+            console.log(res)
+
+        alert('Provider Rejected Successfully!');
+        await fetchProviderDetails(); 
+      
+    } catch (err) {
+      console.error("Block Error:", err);
+      alert(err?.response?.data?.message || err?.message || 'Error updating status');
+    }
   };
 
   if (loading) {
@@ -79,7 +100,7 @@ const ProviderDetail = () => {
             <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
               currentStatus === 'approved' || currentStatus === 'verified'
                 ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' 
-                : currentStatus === 'rejected'
+                : currentStatus === 'rejected' || currentStatus === 'blocked'
                 ? 'bg-rose-50 text-rose-700 border border-rose-100'
                 : 'bg-amber-50 text-amber-700 border border-amber-100'
             }`}>

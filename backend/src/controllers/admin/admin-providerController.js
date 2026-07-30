@@ -62,16 +62,12 @@ const updateProvider = async (req,res) => {
         const provider = await providerModel.findById(providerId);
         if(!provider){
             res.status(404).json({message : "provider not found"})
-        } else {
-            if(verificationStatus == 'approved'){
-                const user = await provider.populate('userId');
-                user.userId.role = 'provider';
-                await user.userId.save();
-            }
+        } 
+               
             provider.verificationStatus = verificationStatus;
             await provider.save();
-            res.status(200).json({message : "provider status updated successfully"});
-        }
+            res.status(200).json({message : `provider status updated to ${verificationStatus} successfully`});
+        
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }

@@ -13,7 +13,7 @@ router.get('/getallusers', getAllUsers);
 const {getAllProviders ,getProviderById, updateProvider, getAllReports, getProviderDetails ,resolveReport, deleteReport } = require('../controllers/admin/admin-providerController');
 router.get('/getAllProviders', getAllProviders);
 router.get('/getProviderById/:id', getProviderById);
-router.put('/updateProvider/:id', updateProvider);
+router.put('/updateProvider/:id/status', updateProvider);
 router.get('/getProviderDetails/:id', getProviderDetails);
 
 // report routes
