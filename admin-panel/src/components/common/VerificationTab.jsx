@@ -1,18 +1,38 @@
 import React from 'react';
 
 const VerificationTab = ({ provider, onApprove, onBlock }) => {
+  const profileImg = provider?.providerImage || provider?.userId?.profileImage || 'https://via.placeholder.com/150';
+  const status = provider?.verificationStatus?.toLowerCase() || 'pending';
+
+  const statusColors = {
+    approved: 'text-emerald-600 font-bold',
+    verified: 'text-emerald-600 font-bold',
+    rejected: 'text-red-600 font-bold',
+    blocked: 'text-red-600 font-bold',
+    pending: 'text-amber-600 font-bold',
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
-          <img 
-            src={provider?.providerImage || provider?.userId?.profileImage || 'https://via.placeholder.com/150'} 
-            alt="Provider Profile" 
-            className="w-16 h-16 rounded-full object-cover border-2 border-[#0f3d2e]"
-          />
+          <a 
+            href={profileImg} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="shrink-0"
+          >
+            <img 
+              src={profileImg} 
+              alt="Provider Profile" 
+              className="w-16 h-16 rounded-full object-cover border-2 border-[#0f3d2e] hover:opacity-90 transition-opacity cursor-pointer"
+            />
+          </a>
           <div>
             <h3 className="text-lg font-bold text-gray-800">{provider?.businessName || 'N/A'}</h3>
-            <p className="text-xs text-gray-400">Category: <span className="font-semibold text-gray-600">{provider?.categoryId?.name || 'N/A'}</span></p>
+            <p className="text-xs text-gray-400">
+              Category: <span className="font-semibold text-gray-600">{provider?.categoryId?.name || 'N/A'}</span>
+            </p>
           </div>
         </div>
 
@@ -61,7 +81,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
                     <img 
                       src={imgUrl} 
                       alt={`CNIC Document ${index + 1}`} 
-                      className="w-full h-32 object-cover rounded-lg border hover:opacity-95 transition-all"
+                      className="w-full h-32 object-cover rounded-lg border hover:opacity-90 transition-all cursor-pointer"
                     />
                   </a>
                 ))}
@@ -76,19 +96,19 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
             {provider?.workImages && provider.workImages.length > 0 ? (
               <div className="flex gap-2 flex-wrap">
                 {provider.workImages.map((imgUrl, index) => (
-                 <a 
-          key={index} 
-          href={imgUrl} 
-          target="_blank" 
-          rel="noreferrer" 
-          className="inline-block"
-        >
-          <img 
-            src={imgUrl} 
-            alt={`Work sample ${index + 1}`} 
-            className="w-24 h-24 object-cover rounded-lg border hover:opacity-95 cursor-pointer transition-all"
-          />
-        </a>
+                  <a 
+                    key={index} 
+                    href={imgUrl} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="inline-block"
+                  >
+                    <img 
+                      src={imgUrl} 
+                      alt={`Work sample ${index + 1}`} 
+                      className="w-24 h-24 object-cover rounded-lg border hover:opacity-90 cursor-pointer transition-all"
+                    />
+                  </a>
                 ))}
               </div>
             ) : (
@@ -98,21 +118,23 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex justify-between items-center">
+      <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h4 className="font-bold text-gray-800 text-sm">Verification Status Action</h4>
-          <p className="text-xs text-gray-400">Current status: <span className="font-semibold uppercase text-amber-600">{provider?.verificationStatus || 'Pending'}</span></p>
+          <p className="text-xs text-gray-400 mt-0.5">
+            Current status: <span className={`uppercase ${statusColors[status] || 'text-gray-600'}`}>{status}</span>
+          </p>
         </div>
         <div className="flex gap-3">
           <button 
             onClick={() => onBlock(provider?._id)}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-all"
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 active:scale-95 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-sm"
           >
-            Reject / Block
+            Reject 
           </button>
           <button 
             onClick={() => onApprove(provider?._id)}
-            className="px-4 py-2 bg-[#0f3d2e] hover:bg-[#0b2e22] text-white text-xs font-semibold rounded-lg transition-all"
+            className="px-4 py-2 bg-[#0f3d2e] hover:bg-[#0b2e22] active:scale-95 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-sm"
           >
             Approve Provider
           </button>

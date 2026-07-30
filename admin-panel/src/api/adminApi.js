@@ -83,6 +83,12 @@ export const getProviderDetails = async (id) => {
     }
 };
 
+//update provider 
+export const updateStatus = async (providerId, verificationStatus) => {
+   const response = await API.put(`/admin/updateProvider/${providerId}/status`, { verificationStatus });
+  return response.data;
+}; 
+
 // system settings APIs
 export const getSystemSettings = async () => {
     try {
