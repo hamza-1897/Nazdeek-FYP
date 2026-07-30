@@ -127,7 +127,20 @@ export const getPendingPayemnts = async () =>{
         return response.data;
     }
     catch (error) {
-        console.error("Error fetching system settings:", error);
+        console.error("Error fetching  pending payments:", error);
+        throw error;
+    } 
+}
+
+//  update pending payments status
+export const updatePayments = async (providerId, status) =>{
+    try{
+    const response= await API.put(`/admin/providers/${providerId}/update-payment`,{status});
+     console.log("Get pending payments API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error updating payments  :", error);
         throw error;
     } 
 }

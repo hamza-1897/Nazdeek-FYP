@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PaymentCard from '../components/common/PaymentCard';
-import { getPendingPayemnts } from '../api/adminApi';
+import { getPendingPayemnts ,updatePayments} from '../api/adminApi';
 
 const PendingPaymentsList = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 🔄 Fetch Data from API
   const fetchPendingList = async () => {
     try {
       setLoading(true);
       setError(null);
       const response = await getPendingPayemnts();
       
-      // Check response data structure (e.g., response.data or response.data.requests)
       const data = response?.data?.pendingPayments || response?.data || response;
       setRequests(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -29,22 +27,35 @@ const PendingPaymentsList = () => {
     fetchPendingList();
   }, []);
 
-  // Button Handlers
   const handleApprove = async (id) => {
-    console.log("Approve Clicked for ID:", id);
-    // TODO: Call approve API here
-    // e.g., await approvePaymentApi(id);
-    // Re-fetch list to sync state
-    // fetchPendingList();
-  };
+  try {
+    const res = await updatePayments(id, 'approve');
 
-  const handleReject = async (id) => {
-    console.log("Reject Clicked for ID:", id);
-    // TODO: Call reject API here
-    // e.g., await rejectPaymentApi(id);
-    // Re-fetch list to sync state
-    // fetchPendingList();
-  };
+    if (res?.success || res?.status === 200) {
+      setRequests((prev) => prev.filter((item) => item._id !== id));
+      
+      alert("Payment approved successfully!");
+    }
+  } catch (error) {
+    console.error("Error approving payment:", error);
+    alert(error?.response?.data?.message || "Failed to approve payment.");
+  }
+};
+
+const handleReject = async (id) => {
+  try {
+    const res = await updatePayments(id, 'reject');
+
+    if (res?.success || res?.status === 200) {
+      setRequests((prev) => prev.filter((item) => item._id !== id));
+      
+    alert("Payment rejected successfully!");
+    }
+  } catch (error) {
+    console.error("Error rejecting payment:", error);
+    alert(error?.response?.data?.message || "Failed to reject payment.");
+  }
+};
 
   const handleViewDetails = (id) => {
     console.log("View Details for ID:", id);
@@ -75,7 +86,6 @@ const PendingPaymentsList = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
-      {/* Top Header */}
       <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
         <div>
           <h2 className="text-lg font-bold text-gray-800">Pending Payments</h2>
@@ -86,7 +96,6 @@ const PendingPaymentsList = () => {
         </span>
       </div>
 
-      {/* Cards Grid */}
       {requests.length === 0 ? (
         <div className="bg-white p-8 text-center text-gray-400 text-sm rounded-xl border border-gray-200">
           No pending payment requests right now.
