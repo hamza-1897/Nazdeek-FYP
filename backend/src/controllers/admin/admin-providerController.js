@@ -73,6 +73,55 @@ const updateProvider = async (req,res) => {
     }
 }
 
+// approve payment
+const updatePayment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const provider = await providerModel.findById(id);
+    if (!provider) {
+      return res.status(404).json({ success: false, message: 'Provider not found.' });
+    }
+
+    const paymentType = provider.paymentDetails?.paymentType;
+
+    if(status === 'approve'){
+    if (paymentType === 'registration') {
+      provider.registrationFee = 'paid';
+    } 
+    else if (paymentType === 'premium') {
+      provider.isPremium = true;
+    }
+}else if (status === 'reject'){
+     if (paymentType === 'registration') {
+      provider.registrationFee = 'unpaid';
+    } 
+    else if (paymentType === 'premium') {
+      provider.isPremium = false;
+    }
+}
+
+provider.paymentDetails = {
+      paymentType: null,
+      paymentSlip: null,
+      submittedAt: null
+    };
+
+    await provider.save();
+
+  return res.status(200).json({
+      success: true,
+      message: `Provider ${paymentType} payment has been ${status === 'approve' ? 'approved' : 'rejected'} successfully!`,
+      data: provider
+    });
+
+  } catch (error) {
+    console.error('Approve Payment Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error approving payment.' });
+  }
+};
+
 //get all reports for providers
 const getAllReports = async (req,res) => {
     try {
@@ -139,6 +188,7 @@ module.exports = {
     getAllProviders,
     getProviderById,
     getProviderDetails,
+    updatePayment,
     updateProvider,
     getAllReports,
     resolveReport,

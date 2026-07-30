@@ -62,12 +62,33 @@ const providerSchema = new mongoose.Schema({
     enum: ['unsubmitted','pending', 'approved', 'rejected'],
     default: 'unsubmitted'
   },
+   accountRejectionReason: {
+    type: String,
+    default: null
+  },
+
+ paymentDetails: {
+    paymentType: { 
+      type: String, 
+      enum: ['registration', 'premium', null], 
+      default: null 
+    },
+    paymentSlip: { type: String, default: null },       
+    submittedAt: { type: Date, default: null },
+  },
+  registrationFee: { 
+    type: String, 
+    enum: ['unpaid', 'paid', 'pending_approval'], 
+    default: 'unpaid' 
+  },
   
   createdAt: {
     type: Date,
     default: Date.now
   }
 });
+
+
 
 const providerModel = mongoose.model('Provider', providerSchema);
 

@@ -3,7 +3,7 @@ const router = express.Router();
 const upload = require('../config/cloudinary');
 
 
-const { registerProvider} = require('../controllers/provider/providerController')
+const { registerProvider ,submitPaymentSlip} = require('../controllers/provider/providerController')
 // Provider Register Route
 router.post(
   '/registerProvider',
@@ -16,6 +16,7 @@ router.post(
   registerProvider
 );
 
+router.post('/submit-payment', upload.single('paymentSlip'), submitPaymentSlip);
 
 // service routes
 const { createService,editService,deleteService, getServicesByProvider } = require('../controllers/provider/serviceController');
