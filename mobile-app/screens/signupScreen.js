@@ -19,13 +19,12 @@ const SignupScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState(''); 
-  const [address, setAddress] = useState(''); 
   const [password, setPassword] = useState(''); 
   const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const validateForm = () => {
-    if (!name.trim() || !email.trim() || !phone.trim() || !address.trim() || !password) {
+    if (!name.trim() || !email.trim() || !phone.trim() || !password) {
       Alert.alert('Error', 'Please fill in all input fields.');
       return false;
     }
@@ -57,7 +56,6 @@ const SignupScreen = ({ navigation }) => {
         name, 
         email, 
         phone, 
-        address, 
         password, 
         role, 
         flow: 'signup' 
@@ -139,7 +137,7 @@ const SignupScreen = ({ navigation }) => {
               <Text className="text-sm font-bold mb-2 text-gray-800">Full Name</Text>
               <TextInput
                 className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50 text-gray-900"
-                placeholder="John Doe"
+                placeholder="Enter Your Name"
                 value={name}
                 onChangeText={setName}
               />
@@ -168,16 +166,7 @@ const SignupScreen = ({ navigation }) => {
               />
             </View>
 
-            <View className="mb-4">
-              <Text className="text-sm font-bold mb-2 text-gray-800">Address</Text>
-              <TextInput
-                className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50 text-gray-900"
-                placeholder="Enter residential or business address"
-                value={address}
-                onChangeText={setAddress}
-              />
-            </View>
-
+            
             <View className="mb-8">
               <Text className="text-sm font-bold mb-2 text-gray-800">Password</Text>
               <View className="flex-row items-center border border-gray-200 rounded-xl px-4 bg-gray-50">

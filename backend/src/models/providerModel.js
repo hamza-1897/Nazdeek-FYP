@@ -40,10 +40,14 @@ const providerSchema = new mongoose.Schema({
   
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'category',
+    ref: 'Category',
     required: true
   },
-  
+  address:{
+    type:String,
+    default:"",
+
+  },
   experience: {
     type: Number,
     default: 0

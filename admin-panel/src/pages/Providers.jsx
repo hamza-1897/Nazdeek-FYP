@@ -18,12 +18,14 @@ export default function Providers() {
 
   const fetchProviders = async () => {
     try {
-      setLoading(false); 
       setLoading(true);
       const response = await getAllProviders();
       console.log("Raw API Response:", response);
       
-      const rawData = Array.isArray(response) ? response : (response?.data || []);
+      // Fix 1: Properly extract array based on possible backend structures
+      const rawData = Array.isArray(response) 
+        ? response 
+        : (response?.providers || response?.data || response?.data?.providers || []);
       
       setProviders(rawData);
     } catch (error) { 
@@ -34,16 +36,31 @@ export default function Providers() {
   };
 
   const total = providers.length;
-  const verified = providers.filter(p => (p.verificationStatus || p.status) === 'verified').length;
-  const pending = providers.filter(p => (p.verificationStatus || p.status) === 'pending').length;
-  const rejected = providers.filter(p => (p.verificationStatus || p.status) === 'rejected').length;
+
+  // Fix 2: Check for both 'approved' and 'verified'
+  const approvedCount = providers.filter(p => {
+    const status = (p.verificationStatus || p.status || '').toLowerCase();
+    return status === 'approved' || status === 'verified';
+  }).length;
+
+  const pendingCount = providers.filter(p => {
+    const status = (p.verificationStatus || p.status || '').toLowerCase();
+    return status === 'pending';
+  }).length;
+
+  const rejectedCount = providers.filter(p => {
+    const status = (p.verificationStatus || p.status || '').toLowerCase();
+    return status === 'rejected';
+  }).length;
 
   const filteredProviders = providers.filter((provider) => {
     const businessName = provider?.businessName || provider?.name || '';
     const email = provider?.userId?.email || provider?.email || '';
     const address = provider?.address || '';
     const category = provider?.categoryId?.name || provider?.category || '';
-    const currentStatus = provider?.verificationStatus || provider?.status || 'pending';
+    
+    // Status normalization
+    let currentStatus = (provider?.verificationStatus || provider?.status || 'pending').toLowerCase();
 
     const matchesSearch = 
       businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -51,14 +68,22 @@ export default function Providers() {
       category.toLowerCase().includes(searchTerm.toLowerCase()) ||
       address.toLowerCase().includes(searchTerm.toLowerCase());
       
-    const matchesStatus = statusFilter === 'all' || currentStatus.toLowerCase() === statusFilter.toLowerCase();
+    // Fix 3: Status Matching logic for dropdown
+    let matchesStatus = false;
+    if (statusFilter === 'all') {
+      matchesStatus = true;
+    } else if (statusFilter === 'approved' || statusFilter === 'verified') {
+      matchesStatus = currentStatus === 'approved' || currentStatus === 'verified';
+    } else {
+      matchesStatus = currentStatus === statusFilter.toLowerCase();
+    }
 
     return matchesSearch && matchesStatus;
   });
 
- const handleViewDetails = (providerId) => {
-  navigate(`/admin/providerDetail/${providerId}`);
-};
+  const handleViewDetails = (providerId) => {
+    navigate(`/admin/providerDetail/${providerId}`);
+  };
 
   return (
     <div className="space-y-6">
@@ -66,9 +91,9 @@ export default function Providers() {
         <h1 className="text-2xl font-bold text-slate-800">Providers</h1>
         <div className="text-xs font-semibold text-slate-400 bg-white border border-slate-100 px-4 py-2 rounded-xl shadow-sm">
           Total: <span className="text-slate-700 font-bold">{total}</span> | 
-          Verified: <span className="text-emerald-600 font-bold"> {verified}</span> | 
-          Pending: <span className="text-amber-600 font-bold"> {pending}</span> | 
-          Rejected: <span className="text-rose-600 font-bold"> {rejected}</span>
+          Approved: <span className="text-emerald-600 font-bold"> {approvedCount}</span> | 
+          Pending: <span className="text-amber-600 font-bold"> {pendingCount}</span> | 
+          Rejected: <span className="text-rose-600 font-bold"> {rejectedCount}</span>
         </div>
       </div>
 
@@ -92,7 +117,7 @@ export default function Providers() {
             className="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 pr-10 focus:outline-none focus:border-indigo-500 transition-all cursor-pointer"
           >
             <option value="all">All Status ({filteredProviders.length})</option>
-            <option value="verified">Verified</option>
+            <option value="approved">Approved</option>
             <option value="pending">Pending</option>
             <option value="rejected">Rejected</option>
           </select>
@@ -105,8 +130,8 @@ export default function Providers() {
           <Loader2 className="animate-spin text-indigo-600" size={36} />
         </div>
       ) : filteredProviders.length > 0 ? (
-<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-             {filteredProviders.map((provider) => (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {filteredProviders.map((provider) => (
             <ProviderCard 
               key={provider._id || provider.id} 
               provider={provider} 

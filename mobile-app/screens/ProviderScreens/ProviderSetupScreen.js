@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState , useEffect , useContext} from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import {getAllCategories} from '../../api/ProviderApi'
+import {getAllCategories , registerProviderApi} from '../../api/ProviderApi'
+import { AuthContext } from '../../context/AuthContext';
 
 
 
@@ -24,11 +25,15 @@ const [selectedCategory, setSelectedCategory] = useState(null);
 const [loadingCategories, setLoadingCategories] = useState(true);
   const [bio, setBio] = useState('');
   const [experience, setExperience] = useState('');
+  const [address, setAddress] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const [profileImage, setProfileImage] = useState(null);
   const [cnicFront, setCnicFront] = useState(null);
   const [cnicBack, setCnicBack] = useState(null);
   const [workImages, setWorkImages] = useState([]);
+
+  const { userInfo } = useContext(AuthContext); 
 
   const fetchCategories = async () => {
   try {
@@ -100,7 +105,7 @@ const pickWorkImages = async () => {
     setWorkImages(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!businessName.trim()) {
       Alert.alert('Validation Error', 'Please enter Business/Service Name.');
       return;
@@ -117,6 +122,10 @@ const pickWorkImages = async () => {
       Alert.alert('Validation Error', 'Please select a profile picture.');
       return;
     }
+    if (!address) {
+      Alert.alert('Validation Error', 'Please Enter your address.');
+      return;
+    }
     if (!experience.trim()) {
   Alert.alert('Validation Error', 'Please enter your years of experience.');
   return;
@@ -126,17 +135,73 @@ const pickWorkImages = async () => {
       return;
     }
 
-    Alert.alert(
-      "UI Test Success!",
-      "Form validation passed! Currently in UI mode (No API call made).",
-      [
-        {
-          text: "Go to Pending Screen",
-          onPress: () => navigation.navigate('PendingApproval')
-        },
-        { text: "Stay Here", style: "cancel" }
-      ]
-    );
+try {
+    setSubmitting(true);
+
+  const userId = userInfo.id;
+    
+    if (!userId) {
+      Alert.alert('Session Expired', 'User ID not found. Please login again.');
+      setSubmitting(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('userId', userId);
+    formData.append('businessName', businessName);
+    formData.append('cnicNumber', cnicNumber);
+    formData.append('categoryId', selectedCategory._id);
+    formData.append('description', bio);
+    formData.append('experience', experience);
+    formData.append('address', address); 
+
+    // Helper function image object format karne ke liye
+   const createImageObject = (uri, defaultName) => {
+  const filename = uri.split('/').pop() || defaultName;
+  const match = /\.(\w+)$/.exec(filename);
+  const type = match ? `image/${match[1]}` : 'image/jpeg';
+  return { uri, name: filename, type };
+};
+
+    // Profile Image
+    formData.append('providerImage', createImageObject(profileImage, 'profile.jpg'));
+
+    // CNIC Front and Back
+    formData.append('cnicFront', createImageObject(cnicFront, 'cnic_front.jpg'));
+    formData.append('cnicBack', createImageObject(cnicBack, 'cnic_back.jpg'));
+
+    //  Work Images (Multiple)
+    if (workImages && workImages.length > 0) {
+      workImages.forEach((imgUri, index) => {
+        formData.append('workImages', createImageObject(imgUri, `work_${index}.jpg`));
+      });
+    }
+
+    const response = await registerProviderApi(formData);
+
+    if (response?.success) {
+      Alert.alert(
+        'Success',
+        'Application submit Sucessfully. Please Wait for Admin verification.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('PendingApproval'),
+          },
+        ]
+      );
+    } else {
+      Alert.alert('Submission Failed', response?.message || 'Something went wrong.');
+    }
+
+  } catch (error) {
+    console.log('Provider Submit Error:', error);
+    Alert.alert('Error', error?.message || 'Failed to submit details. Please try again.');
+  } finally {
+    setSubmitting(false);
+  }
+
+
   };
 
   return (
@@ -173,6 +238,16 @@ const pickWorkImages = async () => {
             placeholder="e.g. Ali Electric Work"
             value={businessName}
             onChangeText={setBusinessName}
+          />
+        </View>
+
+         <View className="mb-4">
+          <Text className="text-sm font-bold text-gray-800 mb-1">Business Address</Text>
+          <TextInput
+            className="border border-gray-300 rounded-lg p-3 text-base bg-gray-50 text-gray-900"
+            placeholder="Enter your Address "
+            value={address}
+            onChangeText={setAddress}
           />
         </View>
 
@@ -317,7 +392,11 @@ const pickWorkImages = async () => {
           onPress={handleSubmit}
           className="bg-[#1a5ea1] p-4 rounded-lg items-center mb-10"
         >
-          <Text className="text-white text-lg font-bold">Submit for Approval</Text>
+          {submitting ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text className="text-white text-lg font-bold">Submit for Approval</Text>
+          )}
         </TouchableOpacity>
 
       </ScrollView>

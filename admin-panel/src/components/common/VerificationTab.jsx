@@ -44,8 +44,8 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         </div>
 
         <div className="mt-4 pt-3 border-t border-gray-50">
-          <p className="text-gray-400 text-xs">Business Bio</p>
-          <p className="text-sm font-medium text-gray-600 mt-1">{provider?.bio || 'No bio provided.'}</p>
+          <p className="text-gray-400 text-xs">Business Detail</p>
+          <p className="text-sm font-medium text-gray-600 mt-1">{provider?.description || 'No bio provided.'}</p>
         </div>
       </div>
 
@@ -76,12 +76,19 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
             {provider?.workImages && provider.workImages.length > 0 ? (
               <div className="flex gap-2 flex-wrap">
                 {provider.workImages.map((imgUrl, index) => (
-                  <img 
-                    key={index}
-                    src={imgUrl} 
-                    alt={`Work sample ${index + 1}`} 
-                    className="w-24 h-24 object-cover rounded-lg border"
-                  />
+                 <a 
+          key={index} 
+          href={imgUrl} 
+          target="_blank" 
+          rel="noreferrer" 
+          className="inline-block"
+        >
+          <img 
+            src={imgUrl} 
+            alt={`Work sample ${index + 1}`} 
+            className="w-24 h-24 object-cover rounded-lg border hover:opacity-95 cursor-pointer transition-all"
+          />
+        </a>
                 ))}
               </div>
             ) : (

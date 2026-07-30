@@ -34,6 +34,7 @@ import EditProfileProvider from '../screens/ProviderDashboard/EditProfileProvide
 import MyServicesProvider from '../screens/ProviderDashboard/MyServicesProvider';
 import RatingsReviewsProvider from '../screens/ProviderDashboard/RatingsReviewsProvider';
 import ProviderRegisterScreen from '../screens/ProviderDashboard/ProviderRegisterScreen';
+import PendingApprovalScreen from '../screens/ProviderScreens/PendingApprovalScreen';
 
 import AppTabs from '../Components/AppTabs';
 import NotificationScreen from '../screens/NotificationScreen';
@@ -60,6 +61,7 @@ const AuthNavigation = () => {
       <Stack.Screen name="PasswordUpdated" component={PasswordUpdated} />
       <Stack.Screen name="RoleSelection" component={RoleSelection} />
        <Stack.Screen name='ProviderSetup' component={ProviderSetup}/> 
+       <Stack.Screen name='PendingApproval' component={PendingApprovalScreen}/>
       <Stack.Screen name="ViewDetail" component={ViewDetailScreen} />
       <Stack.Screen name="BookService" component={BookServiceScreen} />
       <Stack.Screen name="BookingSuccess" component={BookingSuccessScreen} />   
