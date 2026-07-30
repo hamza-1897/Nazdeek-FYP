@@ -2,7 +2,11 @@ import React from 'react';
 
 const VerificationTab = ({ provider, onApprove, onBlock }) => {
   const profileImg = provider?.providerImage || provider?.userId?.profileImage || 'https://via.placeholder.com/150';
+  
   const status = (provider?.verificationStatus || provider?.status || 'pending').toLowerCase();
+  
+  const regFeeStatus = (provider?.registrationFee || 'unpaid').toLowerCase();
+  const isPremium = provider?.isPremium || false;
 
   const statusColors = {
     approved: 'text-emerald-600 font-bold',
@@ -11,8 +15,14 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
     pending: 'text-amber-600 font-bold',
   };
 
-  const isApproved = status === 'approved' ;
-  const isRejected = status === 'rejected' ;
+  const regFeeBadges = {
+    paid: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    pending_approval: 'bg-amber-100 text-amber-800 border-amber-300',
+    unpaid: 'bg-rose-100 text-rose-800 border-rose-200',
+  };
+
+  const isApproved = status === 'approved';
+  const isRejected = status === 'rejected';
 
   return (
     <div className="space-y-6">
@@ -30,11 +40,26 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
               className="w-16 h-16 rounded-full object-cover border-2 border-[#0f3d2e] hover:opacity-90 transition-opacity cursor-pointer"
             />
           </a>
-          <div>
-            <h3 className="text-lg font-bold text-gray-800">{provider?.businessName || 'N/A'}</h3>
-            <p className="text-xs text-gray-400">
-              Category: <span className="font-semibold text-gray-600">{provider?.categoryId?.name || 'N/A'}</span>
-            </p>
+          
+          <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="text-lg font-bold text-gray-800">{provider?.businessName || 'N/A'}</h3>
+              <p className="text-xs text-gray-400">
+                Category: <span className="font-semibold text-gray-600">{provider?.categoryId?.name || 'N/A'}</span>
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`px-3 py-1 text-xs font-bold rounded-full border ${regFeeBadges[regFeeStatus] || 'bg-gray-100 text-gray-700'}`}>
+                Reg. Fee: {regFeeStatus.toUpperCase().replace('_', ' ')}
+              </span>
+
+              <span className={`px-3 py-1 text-xs font-bold rounded-full border ${
+                isPremium ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-gray-100 text-gray-600 border-gray-200'
+              }`}>
+                {isPremium ? '⭐ Premium Tier' : 'Free Tier'}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -61,7 +86,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
           </div>
           <div>
             <p className="text-gray-400 text-xs">Subscription Type</p>
-            <p className="font-semibold text-gray-700">{provider?.isPremium ? 'Premium Tier' : 'Free Tier'}</p>
+            <p className="font-semibold text-gray-700">{isPremium ? 'Premium Tier' : 'Free Tier'}</p>
           </div>
         </div>
 
@@ -74,7 +99,6 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <h3 className="text-base font-bold text-gray-800 mb-4">Verification Documents</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* CNIC Images */}
           <div>
             <p className="text-xs font-medium text-gray-500 mb-2">CNIC Document Images</p>
             {provider?.cnicImages && provider.cnicImages.length > 0 ? (
@@ -133,7 +157,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
           <button 
             type="button"
             disabled={isRejected}
-            onClick={() => onBlock(provider?._id)}
+            onClick={() => onBlock && onBlock(provider?._id)}
             className={`px-4 py-2 text-white text-xs font-semibold rounded-lg transition-all shadow-sm ${
               isRejected
                 ? 'bg-red-300 cursor-not-allowed opacity-60'
@@ -146,7 +170,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
           <button 
             type="button"
             disabled={isApproved}
-            onClick={() => onApprove(provider?._id)}
+            onClick={() => onApprove && onApprove(provider?._id)}
             className={`px-4 py-2 text-white text-xs font-semibold rounded-lg transition-all shadow-sm ${
               isApproved
                 ? 'bg-emerald-300 cursor-not-allowed opacity-60'

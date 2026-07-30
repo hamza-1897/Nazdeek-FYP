@@ -118,3 +118,16 @@ export const updatePaymentAccounts = async (paymentAccounts) => {
   const response = await API.put(`/admin/updatePaymentAccounts`, { paymentAccounts });
   return response.data;
 };
+
+// get all pending payments
+export const getPendingPayemnts = async () =>{
+    try{
+    const response= await API.get('/admin/pending-payments');
+     console.log("Get pending payments API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching system settings:", error);
+        throw error;
+    } 
+}
