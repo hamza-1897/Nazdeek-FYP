@@ -122,6 +122,28 @@ provider.paymentDetails = {
   }
 };
 
+const getPendingPaymentRequests = async (req, res) => {
+  try {
+    const pendingProviders = await providerModel.find({
+      'paymentDetails.paymentSlip': { $ne: null }
+    }).select('businessName categoryId providerImage registrationFee isPremium paymentDetails createdAt')
+      .populate('userId', 'name email phone ')
+      .populate('categoryId', 'name');
+
+    return res.status(200).json({
+      success: true,
+      count: pendingProviders.length,
+      data: pendingProviders
+    });
+  } catch (error) {
+    console.error('Get Pending Payments Error:', error);
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Server error while fetching pending payments.' 
+    });
+  }
+};
+
 //get all reports for providers
 const getAllReports = async (req,res) => {
     try {
@@ -188,6 +210,7 @@ module.exports = {
     getAllProviders,
     getProviderById,
     getProviderDetails,
+    getPendingPaymentRequests,
     updatePayment,
     updateProvider,
     getAllReports,
