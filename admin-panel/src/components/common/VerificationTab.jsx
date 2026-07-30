@@ -2,15 +2,17 @@ import React from 'react';
 
 const VerificationTab = ({ provider, onApprove, onBlock }) => {
   const profileImg = provider?.providerImage || provider?.userId?.profileImage || 'https://via.placeholder.com/150';
-  const status = provider?.verificationStatus?.toLowerCase() || 'pending';
+  const status = (provider?.verificationStatus || provider?.status || 'pending').toLowerCase();
 
   const statusColors = {
     approved: 'text-emerald-600 font-bold',
-    verified: 'text-emerald-600 font-bold',
     rejected: 'text-red-600 font-bold',
-    blocked: 'text-red-600 font-bold',
+    unsubmitted: 'text-red-600 font-bold',
     pending: 'text-amber-600 font-bold',
   };
+
+  const isApproved = status === 'approved' ;
+  const isRejected = status === 'rejected' ;
 
   return (
     <div className="space-y-6">
@@ -72,6 +74,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <h3 className="text-base font-bold text-gray-800 mb-4">Verification Documents</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* CNIC Images */}
           <div>
             <p className="text-xs font-medium text-gray-500 mb-2">CNIC Document Images</p>
             {provider?.cnicImages && provider.cnicImages.length > 0 ? (
@@ -125,18 +128,32 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
             Current status: <span className={`uppercase ${statusColors[status] || 'text-gray-600'}`}>{status}</span>
           </p>
         </div>
+        
         <div className="flex gap-3">
           <button 
+            type="button"
+            disabled={isRejected}
             onClick={() => onBlock(provider?._id)}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 active:scale-95 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-sm"
+            className={`px-4 py-2 text-white text-xs font-semibold rounded-lg transition-all shadow-sm ${
+              isRejected
+                ? 'bg-red-300 cursor-not-allowed opacity-60'
+                : 'bg-red-600 hover:bg-red-700 active:scale-95 cursor-pointer'
+            }`}
           >
-            Reject 
+            {isRejected ? 'Rejected / Blocked' : 'Reject / Block'}
           </button>
+
           <button 
+            type="button"
+            disabled={isApproved}
             onClick={() => onApprove(provider?._id)}
-            className="px-4 py-2 bg-[#0f3d2e] hover:bg-[#0b2e22] active:scale-95 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-sm"
+            className={`px-4 py-2 text-white text-xs font-semibold rounded-lg transition-all shadow-sm ${
+              isApproved
+                ? 'bg-emerald-300 cursor-not-allowed opacity-60'
+                : 'bg-[#0f3d2e] hover:bg-[#0b2e22] active:scale-95 cursor-pointer'
+            }`}
           >
-            Approve Provider
+            {isApproved ? 'Already Approved' : 'Approve Provider'}
           </button>
         </div>
       </div>
