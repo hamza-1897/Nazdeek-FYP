@@ -118,3 +118,29 @@ export const updatePaymentAccounts = async (paymentAccounts) => {
   const response = await API.put(`/admin/updatePaymentAccounts`, { paymentAccounts });
   return response.data;
 };
+
+// get all pending payments
+export const getPendingPayemnts = async () =>{
+    try{
+    const response= await API.get('/admin/pending-payments');
+     console.log("Get pending payments API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching  pending payments:", error);
+        throw error;
+    } 
+}
+
+//  update pending payments status
+export const updatePayments = async (providerId, status) =>{
+    try{
+    const response= await API.put(`/admin/providers/${providerId}/update-payment`,{status});
+     console.log("Get pending payments API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error updating payments  :", error);
+        throw error;
+    } 
+}

@@ -68,4 +68,40 @@ const registerProvider = async (req, res) => {
     });
   }
 };
-module.exports = { registerProvider };
+
+// payment setup
+const submitPaymentSlip = async (req, res) => {
+  try {
+    const { providerId, paymentType  } = req.body;
+    const provider = await providerModel.findById(providerId);
+
+    if (!provider) {
+      return res.status(404).json({ success: false, message: 'Provider profile not found.' });
+    }
+    const paymentSlipUrl = req.file.path;
+
+    provider.paymentDetails = {
+      paymentType,
+      paymentSlip: paymentSlipUrl,
+      submittedAt: new Date()
+    };
+
+    if (paymentType === 'registration') {
+      provider.registrationFee = 'pending_approval';
+    }
+
+    await provider.save();
+
+    return res.status(200).json({
+      success: true,
+      message: `${paymentType} payment slip submitted successfully. Waiting for admin verification.`,
+      data: provider
+    });
+    } catch (error) {
+    console.error('Submit Payment Slip Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error while submitting payment slip.' });
+  }
+};
+
+
+module.exports = { registerProvider , submitPaymentSlip };

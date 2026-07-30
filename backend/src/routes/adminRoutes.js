@@ -10,11 +10,14 @@ router.get('/getallusers', getAllUsers);
 
 
 // provider routes
-const {getAllProviders ,getProviderById, updateProvider, getAllReports, getProviderDetails ,resolveReport, deleteReport } = require('../controllers/admin/admin-providerController');
+const {getAllProviders ,getProviderById, updateProvider, getPendingPaymentRequests,getAllReports, updatePayment ,getProviderDetails ,resolveReport, deleteReport } = require('../controllers/admin/admin-providerController');
 router.get('/getAllProviders', getAllProviders);
 router.get('/getProviderById/:id', getProviderById);
 router.put('/updateProvider/:id/status', updateProvider);
 router.get('/getProviderDetails/:id', getProviderDetails);
+router.put('/providers/:id/update-payment', updatePayment);
+router.get('/pending-payments',getPendingPaymentRequests);
+
 
 // report routes
 router.get('/getAllReports', getAllReports);
