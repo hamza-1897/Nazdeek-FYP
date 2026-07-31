@@ -119,6 +119,11 @@ export const updatePaymentAccounts = async (paymentAccounts) => {
   return response.data;
 };
 
+// update user status 
+export const updateUserStatus = async (userId)=>{
+    const response = await API.put(`/admin/updateStatus`, { userId });
+  return response.data;
+}
 // get all pending payments
 export const getPendingPayemnts = async () =>{
     try{

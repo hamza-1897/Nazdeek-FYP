@@ -36,13 +36,13 @@ export default function UserRow({ srNo, user, onToggleStatus }) {
       <td className="py-4 px-6">
         <button
           onClick={() => onToggleStatus(userId)}
-          className={`text-xs font-bold px-3 py-1.5 rounded-lg border transition-all ${
-            status === 'active' 
+          className={`text-xs font-bold px-3 cursor-pointer py-1.5 rounded-lg border transition-all ${
+            status === 'Active' 
               ? 'text-rose-600 bg-rose-50 border-rose-100 hover:bg-rose-100' 
               : 'text-emerald-600 bg-emerald-50 border-emerald-100 hover:bg-emerald-100'
           }`}
         >
-          {status === 'active' ? 'Block' : 'Activate'}
+          {status === 'Active' ? 'Block' : 'Activate'}
         </button>
       </td>
     </tr>
