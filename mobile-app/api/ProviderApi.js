@@ -1,5 +1,23 @@
 import api from './axiosInstance';
 
+
+export const registerProviderApi = async (formData) => {
+  try {
+    const response = await api.post('/provider/registerProvider', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};
+
+
+
+
+
 export const createService = async (formData) => {
     try {
         const response = await api.post('/provider/create-service', formData);
@@ -10,3 +28,14 @@ export const createService = async (formData) => {
         throw error;
     }
 };
+
+export const getAllCategories = async ()=>{
+    try{
+    const response = await api.get('/provider/getAllCategory');
+    console.log('get category Api response', response.data);
+    return response.data;
+}  catch (error) {
+        console.error("Error creating service:", error);
+        throw error;
+    }
+}

@@ -18,6 +18,12 @@ router.get('/my-bookings/:userId', getBookingsbyUserId);
 router.put('/cancel-booking/:bookingId', cancelBooking);
 router.put('/rebook/:bookingId', rebook);
 
+//report routes
+const { createReport } = require('../controllers/mutual/userReportsController');
+router.post('/create-report', createReport);
 
+//review routes
+const { createReview } = require('../controllers/mutual/reviewController');
+router.post('/create-review', createReview);
 
 module.exports = router;

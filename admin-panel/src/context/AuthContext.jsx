@@ -3,31 +3,42 @@ import React, { createContext, useState, useContext } from 'react';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [admin, setAdmin] = useState(() => {
-    const data = localStorage.getItem('adminData');
+ const savedToken = sessionStorage.getItem('adminToken') || null;
+  
+  const getSavedAdminData = () => {
+    const data = sessionStorage.getItem('adminData');
     if (data && data !== "undefined") {
-      try { return JSON.parse(data); } catch { return null; }
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        return null;
+      }
     }
     return null;
-  });
+  
+  }
 
-  const [token, setToken] = useState(() => localStorage.getItem('adminToken') || null);
+const [token, setToken] = useState(savedToken);
+  const [admin, setAdmin] = useState(getSavedAdminData);
 
-  const loginAdmin = (accessToken, adminData) => {
+ const loginAdmin = (accessToken, adminData) => {
     setToken(accessToken);
     setAdmin(adminData);
-    localStorage.setItem('adminToken', accessToken);
-    localStorage.setItem('adminData', JSON.stringify(adminData)); 
+    
+    sessionStorage.setItem('adminToken', accessToken);
+    sessionStorage.setItem('adminData', JSON.stringify(adminData));
   };
 
-  const logoutAdmin = () => {
+
+ const logoutAdmin = () => {
     setToken(null);
     setAdmin(null);
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminData');
+    
+    sessionStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminData');
   };
 
-  return (
+ return (
     <AuthContext.Provider value={{ admin, token, loginAdmin, logoutAdmin }}>
       {children}
     </AuthContext.Provider>

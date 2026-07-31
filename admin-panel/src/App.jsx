@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import AdminLayout from './components/layout/AdminLayout';
 import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
 import Login from './pages/Login';
 import Forgotpassword from './pages/Forgotpassword';
@@ -13,6 +14,8 @@ import Dashboard from './pages/Dashboard';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Categories from './pages/Categories';
+import ProviderDetail from './pages/ProviderDetail';
+import PendingPaymentsList from './pages/PendingPaymentsList'
 
 function App() {
   return (
@@ -24,14 +27,18 @@ function App() {
           <Route path="/verify-otp" element={<VerifyOTP />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} /> 
-            <Route path="users" element={<Users />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="providers" element={<Providers />} />
-            <Route path='categories' element={<Categories />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="settings" element={<Settings />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} /> 
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="users" element={<Users />} />
+              <Route path="providers" element={<Providers />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="providerDetail/:id" element={<ProviderDetail />} />
+              <Route path='pendingProviders' element={<PendingPaymentsList/>}/>
+            </Route>
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

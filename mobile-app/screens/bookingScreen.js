@@ -1,172 +1,143 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
+import React, { useState, useContext,useCallback, useEffect } from 'react';
+import { View, Text, ScrollView, StatusBar, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import{isFocusEffect} from '@react-navigation/native';
 import BookingCard from '../Cards/BookingCard';
-import CompletedCard from '../Cards/CompletedCard'; 
-import CancelledCard from '../Cards/CancelledCard';
+import { getBookingsByUserId } from '../api/customerApi';
+import { AuthContext } from '../context/AuthContext';
 
 const BookingScreen = ({ navigation, route }) => {
+  const { userInfo } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState('Upcoming');
+  const [bookingsData, setMyBookingsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const myBookings = [
-    {
-      id: '1',
-      serviceName: 'Home Cleaning',
-      providerName: 'Sajid Mehmood',
-      price: '1500',
-      status: 'Upcoming',
-      imageUri: 'https://images.pexels.com/photos/4099467/pexels-photo-4099467.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    {
-      id: '2',
-      serviceName: 'AC Repairing',
-      providerName: 'M. Ali',
-      price: '1500',
-      status: 'Upcoming',
-      imageUri: 'https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    {
-      id: '3',
-      serviceName: 'Plumbing Work',
-      providerName: 'Zubair Khan',
-      price: '800',
-      status: 'Upcoming',
-      imageUri: 'https://images.pexels.com/photos/2310904/pexels-photo-2310904.jpeg?auto=compress&cs=tinysrgb&w=400'
+  const fetchBookings = async () => {
+    try {
+      setIsLoading(true);
+      if (userInfo && userInfo.id) {
+        const data = await getBookingsByUserId(userInfo.id);
+        setMyBookingsData(data);
+        console.log("Fetched bookings data:", data);
+      }
+    } catch (error) {
+      console.log("Error fetching bookings:", error);
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
-  const [completedBookings, setCompletedBookings] = useState([
-    {
-      id: '1',
-      serviceName: 'Electric Wiring',
-      providerName: 'Alyan khan',
-      price: '2000',
-      date: 'Oct 04, 2023',
-      imageUri: 'https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=400',
-      isReviewed: false
-    },
-    {
-      id: '2',
-      serviceName: 'Glass Cleaning',
-      providerName: 'Arslan Ahmed',
-      price: '500',
-      date: 'Oct 01, 2023',
-      imageUri: 'https://images.pexels.com/photos/4239113/pexels-photo-4239113.jpeg?auto=compress&cs=tinysrgb&w=400',
-      isReviewed: false
-    }
-  ]);
-
-  const cancelledBookings = [
-    {
-      id: '1',
-      serviceName: 'Appliance Repairing', 
-      providerName: 'Arslan Ahmed', 
-      price: '3000',
-      date: 'March 29, 2026',
-      imageUri: 'https://images.pexels.com/photos/257736/pexels-photo-257736.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    {
-      id: '2',
-      serviceName: 'Car Wash',
-      providerName: 'Sajid Mehmood',
-      price: '1800',
-      date: 'April 01, 2026',
-      imageUri: 'https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=400'
-    }
-  ];
+  useEffect(() => {
+    fetchBookings();
+  }, [userInfo]);
 
  
-  useEffect(() => {
-    if (route.params?.reviewedBookingId) {
-      const reviewedId = route.params.reviewedBookingId;
-      setCompletedBookings(prevBookings => 
-        prevBookings.map(booking => 
-          booking.id === reviewedId ? { ...booking, isReviewed: true } : booking
-        )
-      );
-    }
-  }, [route.params?.reviewedBookingId]);
 
   const TABS = ['Upcoming', 'Completed', 'Cancelled'];
+
+  const getFilteredData = () => {
+    if (!bookingsData || bookingsData.length === 0) return [];
+
+    return bookingsData.filter((item) => {
+      const currentStatus = item.status?.toLowerCase();
+      
+      if (activeTab === 'Upcoming') {
+        return currentStatus === 'pending' || currentStatus === 'accepted';
+      }
+      if (activeTab === 'Completed') {
+        return currentStatus === 'completed';
+      }
+      if (activeTab === 'Cancelled') {
+        return currentStatus === 'cancelled';
+      }
+      return false;
+    });
+  };
+
+  const currentData = getFilteredData();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
       
-      <View className="px-6 py-4 flex-row justify-center items-center bg-white">
-        <Text className="text-xl font-bold text-gray-800">My Bookings</Text>
+      <View className="py-4 flex-row justify-center items-center border-b border-slate-50">
+        <Text className="text-xl font-bold text-slate-800">My Bookings</Text>
       </View>
 
-      <View className="flex-row px-6 border-b border-gray-50 mb-4">
-        {TABS.map((tab) => (
-          <TouchableOpacity 
-            key={tab}
-            onPress={() => setActiveTab(tab)}
-            className={`mr-6 pb-3 ${activeTab === tab ? 'border-b-4 border-[#1a5ea1]' : ''}`}
-          >
-            <Text className={`text-sm font-bold ${activeTab === tab ? 'text-[#1a5ea1]' : 'text-gray-400'}`}>
-              {tab}
-            </Text>
-          </TouchableOpacity>
-        ))}
+      <View className="flex-row px-4 bg-white mt-2">
+        {TABS.map((tab) => {
+          const isActive = activeTab === tab;
+          return (
+            <TouchableOpacity 
+              key={tab}
+              onPress={() => setActiveTab(tab)}
+              className="flex-1 items-center py-3"
+            >
+              <Text className={`text-xs font-bold tracking-wide ${isActive ? 'text-[#1a5ea1]' : 'text-slate-400'}`}>
+                {tab}
+              </Text>
+              {isActive && (
+                <View className="absolute bottom-0 w-12 h-[3.5px] bg-[#1a5ea1] rounded-full" />
+              )}
+            </TouchableOpacity>
+          );
+        })}
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} className="px-5">
-        {activeTab === 'Upcoming' && (
-          myBookings.map((item) => (
-            <BookingCard 
-              key={item.id}
-              serviceName={item.serviceName}
-              providerName={item.providerName}
-              price={item.price}
-              imageUri={item.imageUri}
-            />
-          ))
-        )}
+      {isLoading ? (
+        <View className="flex-1 justify-center items-center">
+          <ActivityIndicator size="large" color="#1a5ea1" />
+        </View>
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false} className="px-4 pt-4 bg-slate-50/40">
+          {currentData.length > 0 ? (
+            currentData.map((item) => {
+              const formattedDate = item.bookingDate ? item.bookingDate.split('T')[0] : 'N/A';
 
-        {activeTab === 'Completed' && (
-          completedBookings.map((item) => (
-            <CompletedCard 
-              key={item.id}
-              serviceName={item.serviceName}
-              providerName={item.providerName}
-              price={item.price}
-              date={item.date}
-              imageUri={item.imageUri}
-              isReviewed={item.isReviewed}
-              onLeaveReview={() => navigation.navigate('LeaveReview', {
-                bookingId: item.id,
-                providerName: item.providerName,
-                serviceName: item.serviceName,
-                date: item.date
-              })}
-            />
-          ))
-        )}
-
-        {activeTab === 'Cancelled' && (
-          cancelledBookings.length > 0 ? (
-            cancelledBookings.map((item) => (
-              <CancelledCard 
-                key={item.id}
-                serviceName={item.serviceName}
-                providerName={item.providerName}
-                price={item.price}
-                date={item.date}
-                imageUri={item.imageUri}
-              />
-            ))
+              return (
+                <BookingCard 
+                  key={item._id}
+                  serviceName={item.serviceId?.serviceName || "Service Name"}
+                  providerName={item.providerId?.businessName || "Provider Name"}
+                  price={item.serviceId?.price || item.price || 0}
+                  imageUri={item.serviceId?.serviceImages && item.serviceId.serviceImages[0]} 
+                  bookingDate={formattedDate}
+                  bookingTime={item.bookingTime || "N/A"}
+                  description={item.description}
+                  bookingAddress={item.bookingAddress || "N/A"}
+                  customerName={item.customerName || "N/A"}
+                  customerPhone={item.customerPhone || "N/A"}
+                  status={item.status}
+                  isReviewed={item.isReviewed}
+                  onLeaveReview={() => navigation.navigate('LeaveReview', {
+                    bookingId: item._id,
+                    providerName: item.providerId?.businessName,
+                    serviceName: item.serviceId?.serviceName,
+                    date: formattedDate
+                  })}
+                />
+              );
+            })
           ) : (
-            <View className="items-center justify-center mt-20">
-              <Ionicons name="close-circle-outline" size={80} color="#f3f4f6" />
-              <Text className="text-gray-400 mt-2 font-medium">No Cancelled bookings yet.</Text>
+            <View className="items-center justify-center mt-28">
+              <View className="w-20 h-20 bg-slate-100 rounded-full items-center justify-center mb-4">
+                <Ionicons 
+                  name={activeTab === 'Cancelled' ? "close-circle-outline" : activeTab === 'Completed' ? "checkmark-circle-outline" : "calendar-outline"} 
+                  size={40} 
+                  color="#94a3b8" 
+                />
+              </View>
+              <Text className="text-slate-700 font-bold text-base">No {activeTab} Bookings</Text>
+              <Text className="text-slate-400 text-xs mt-1 text-center px-8">
+                Your {activeTab.toLowerCase()} bookings will appear here.
+              </Text>
             </View>
-          )
-        )}
-        
-        <View className="h-24" />
-      </ScrollView>
+          )}
+          
+          <View className="h-16" />
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

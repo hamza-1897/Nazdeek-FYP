@@ -1,38 +1,88 @@
-import React, { useState } from 'react';
-import { Search, Filter } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, Loader2 } from 'lucide-react';
 import ProviderCard from '../components/common/ProviderCard'; 
-
+import { getAllProviders } from '../api/adminApi'; 
+import { useNavigate } from 'react-router-dom';
+  
 export default function Providers() {
-  const [providersData] = useState([
-    { id: 1, name: 'TechStore Pro', email: 'contact@techstore.com', address: '123 Tech Street, Karachi', category: 'Electronics', status: 'verified' },
-    { id: 2, name: 'Fashion Hub', email: 'info@fashionhub.com', address: '45 Fashion Avenue, Lahore', category: 'Clothing', status: 'pending' },
-    { id: 3, name: 'Garden Master', email: 'support@gardenmaster.com', address: '78 Garden Road, Islamabad', category: 'Home & Garden', status: 'verified' },
-    { id: 4, name: 'Sports Zone', email: 'hello@sportszone.com', address: '9 Sports Plaza, Peshawar', category: 'Sports', status: 'rejected' },
-    { id: 5, name: 'Bookworm Haven', email: 'books@bookwormhaven.com', address: '22 Book Street, Karachi', category: 'Books', status: 'pending' },
-    { id: 6, name: 'Electro World', email: 'sales@electroworld.com', address: '54 Commerce Blvd, Lahore', category: 'Electronics', status: 'verified' },
-  ]);
-
+  const [providers, setProviders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const total = providersData.length;
-  const verified = providersData.filter(p => p.status === 'verified').length;
-  const pending = providersData.filter(p => p.status === 'pending').length;
-  const rejected = providersData.filter(p => p.status === 'rejected').length;
+  const navigate = useNavigate();
 
-  const filteredProviders = providersData.filter((provider) => {
-    const matchesSearch = 
-      provider.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      provider.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      provider.address.toLowerCase().includes(searchTerm.toLowerCase());
+  useEffect(() => {
+    fetchProviders();
+  }, []);
+
+  const fetchProviders = async () => {
+    try {
+      setLoading(true);
+      const response = await getAllProviders();
+      console.log("Raw API Response:", response);
       
-    const matchesStatus = statusFilter === 'all' || provider.status === statusFilter;
+      // Fix 1: Properly extract array based on possible backend structures
+      const rawData = Array.isArray(response) 
+        ? response 
+        : (response?.providers || response?.data || response?.data?.providers || []);
+      
+      setProviders(rawData);
+    } catch (error) { 
+      console.error("Error fetching providers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const total = providers.length;
+
+  // Fix 2: Check for both 'approved' and 'verified'
+  const approvedCount = providers.filter(p => {
+    const status = (p.verificationStatus || p.status || '').toLowerCase();
+    return status === 'approved' || status === 'verified';
+  }).length;
+
+  const pendingCount = providers.filter(p => {
+    const status = (p.verificationStatus || p.status || '').toLowerCase();
+    return status === 'pending';
+  }).length;
+
+  const rejectedCount = providers.filter(p => {
+    const status = (p.verificationStatus || p.status || '').toLowerCase();
+    return status === 'rejected';
+  }).length;
+
+  const filteredProviders = providers.filter((provider) => {
+    const businessName = provider?.businessName || provider?.name || '';
+    const email = provider?.userId?.email || provider?.email || '';
+    const address = provider?.address || '';
+    const category = provider?.categoryId?.name || provider?.category || '';
+    
+    // Status normalization
+    let currentStatus = (provider?.verificationStatus || provider?.status || 'pending').toLowerCase();
+
+    const matchesSearch = 
+      businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      address.toLowerCase().includes(searchTerm.toLowerCase());
+      
+    // Fix 3: Status Matching logic for dropdown
+    let matchesStatus = false;
+    if (statusFilter === 'all') {
+      matchesStatus = true;
+    } else if (statusFilter === 'approved' || statusFilter === 'verified') {
+      matchesStatus = currentStatus === 'approved' || currentStatus === 'verified';
+    } else {
+      matchesStatus = currentStatus === statusFilter.toLowerCase();
+    }
 
     return matchesSearch && matchesStatus;
   });
 
-  const handleViewDetails = (provider) => {
-    console.log("Viewing details for:", provider.name);
+  const handleViewDetails = (providerId) => {
+    navigate(`/admin/providerDetail/${providerId}`);
   };
 
   return (
@@ -41,9 +91,9 @@ export default function Providers() {
         <h1 className="text-2xl font-bold text-slate-800">Providers</h1>
         <div className="text-xs font-semibold text-slate-400 bg-white border border-slate-100 px-4 py-2 rounded-xl shadow-sm">
           Total: <span className="text-slate-700 font-bold">{total}</span> | 
-          Verified: <span className="text-emerald-600 font-bold"> {verified}</span> | 
-          Pending: <span className="text-amber-600 font-bold"> {pending}</span> | 
-          Rejected: <span className="text-rose-600 font-bold"> {rejected}</span>
+          Approved: <span className="text-emerald-600 font-bold"> {approvedCount}</span> | 
+          Pending: <span className="text-amber-600 font-bold"> {pendingCount}</span> | 
+          Rejected: <span className="text-rose-600 font-bold"> {rejectedCount}</span>
         </div>
       </div>
 
@@ -54,7 +104,7 @@ export default function Providers() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by business name, email, or address..."
+            placeholder="Search by business name, email, category or address..."
             className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition-all"
           />
         </div>
@@ -67,7 +117,7 @@ export default function Providers() {
             className="appearance-none bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 pr-10 focus:outline-none focus:border-indigo-500 transition-all cursor-pointer"
           >
             <option value="all">All Status ({filteredProviders.length})</option>
-            <option value="verified">Verified</option>
+            <option value="approved">Approved</option>
             <option value="pending">Pending</option>
             <option value="rejected">Rejected</option>
           </select>
@@ -75,11 +125,15 @@ export default function Providers() {
         </div>
       </div>
 
-      {filteredProviders.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <Loader2 className="animate-spin text-indigo-600" size={36} />
+        </div>
+      ) : filteredProviders.length > 0 ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {filteredProviders.map((provider) => (
             <ProviderCard 
-              key={provider.id} 
+              key={provider._id || provider.id} 
               provider={provider} 
               onViewDetails={handleViewDetails} 
             />

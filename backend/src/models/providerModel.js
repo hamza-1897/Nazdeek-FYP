@@ -5,7 +5,8 @@ const providerSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: true 
+    required: true ,
+    unique: true
   },
   
   businessName: {
@@ -14,7 +15,7 @@ const providerSchema = new mongoose.Schema({
 
   },
   
-  bio: {
+  description: {
     type: String,
     maxLength: 500
   },
@@ -30,28 +31,23 @@ const providerSchema = new mongoose.Schema({
     required: true,
   },
   
-  //cnicImages: [String ],
   cnicImages: {
     type: [String],
   },
-  //workImages: [  String  ],
   workImages: {
     type: [String],
   },
-
-
-  address: {
-    type: String,
-    required: true
-  },
-  
   
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'category',
+    ref: 'Category',
     required: true
   },
-  
+  address:{
+    type:String,
+    default:"",
+
+  },
   experience: {
     type: Number,
     default: 0
@@ -63,8 +59,27 @@ const providerSchema = new mongoose.Schema({
   
   verificationStatus: {
     type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
+    enum: ['unsubmitted','pending', 'approved', 'rejected'],
+    default: 'unsubmitted'
+  },
+   accountRejectionReason: {
+    type: String,
+    default: null
+  },
+
+ paymentDetails: {
+    paymentType: { 
+      type: String, 
+      enum: ['registration', 'premium', null], 
+      default: null 
+    },
+    paymentSlip: { type: String, default: null },       
+    submittedAt: { type: Date, default: null },
+  },
+  registrationFee: { 
+    type: String, 
+    enum: ['unpaid', 'paid', 'pending_approval'], 
+    default: 'unpaid' 
   },
   
   createdAt: {
@@ -72,6 +87,8 @@ const providerSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+
 
 const providerModel = mongoose.model('Provider', providerSchema);
 

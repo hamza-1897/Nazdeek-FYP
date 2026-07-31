@@ -8,7 +8,7 @@ const bookingSchema = new mongoose.Schema({
     },
     providerId: {    
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'provider',
+        ref: 'Provider',
         required: true
     },
     serviceId: {                     
@@ -24,6 +24,9 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    customerName: { type: String, required: true },
+  customerPhone: { type: String, required: true },
+  bookingAddress: { type: String, required: true },
     status: {
         type: String,
         enum: ['pending', 'confirmed', 'cancelled'],

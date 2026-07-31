@@ -1,4 +1,4 @@
-import React, { createContext, useEffect,useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 
 export const AuthContext = createContext();
@@ -9,12 +9,12 @@ export const AuthProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
   const [providerInfo, setProviderInfo] = useState(null);
 
-
   useEffect(() => {
     const checkToken = async () => {
       try {
         const token = await SecureStore.getItemAsync('userToken');
         const savedUser = await SecureStore.getItemAsync('userData');
+        
         if (token) {
           setUserToken(token);
         }
@@ -32,13 +32,24 @@ export const AuthProvider = ({ children }) => {
     checkToken();
   }, []);
 
-  const login = async (token, userInfo) => {
+  const login = async (token, userData) => {
     setUserToken(token);
-    setUserInfo(userInfo);
-    setProviderInfo(userInfo.providerInfo || null);
+    setUserInfo(userData);
+    setProviderInfo(userData.providerInfo || null);
 
     await SecureStore.setItemAsync('userToken', token);
-    await SecureStore.setItemAsync('userData', JSON.stringify(userInfo));
+    await SecureStore.setItemAsync('userData', JSON.stringify(userData));
+  };
+
+  const updateProviderDetails = async (newProviderInfo, newStatus = 'pending') => {
+    const updatedUser = {
+      ...userInfo,
+      providerInfo: newProviderInfo,
+      providerStatus: newStatus
+    };
+    setUserInfo(updatedUser);
+    setProviderInfo(newProviderInfo);
+    await SecureStore.setItemAsync('userData', JSON.stringify(updatedUser));
   };
 
   const logout = async () => {
@@ -50,7 +61,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ userToken, userInfo, providerInfo, login, logout, isLoading }}>
+    <AuthContext.Provider 
+      value={{ 
+        userToken, 
+        userInfo, 
+        providerInfo, 
+        login, 
+        logout, 
+        updateProviderDetails,
+        isLoading 
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
