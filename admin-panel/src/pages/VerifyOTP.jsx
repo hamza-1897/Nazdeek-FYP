@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
-import { Mail, ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { KeyRound, ArrowLeft } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
+const VerifyOTP = () => {
+  const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
+  const location = useLocation();
   const navigate = useNavigate();
-const handleEmailSubmit = (e) => {
+  const email = location.state?.email || "your email";
+  const handleOtpSubmit = (e) => {
     e.preventDefault();
-    if (!email) {
-      setError('Please enter your email address');
+    if (!otp) {
+      setError('Please enter the verification code');
+      return;
+    }
+    if (otp.length < 4) {
+      setError('Please enter a valid OTP');
       return;
     }
     setError('');
-    console.log('Sending OTP to:', email);
-    navigate('/verify-otp');
+    console.log('Verifying OTP:', otp);
+    navigate('/reset-password');ss
   };
 
   return (
@@ -44,10 +49,12 @@ const handleEmailSubmit = (e) => {
             Back
           </button>
 
-          <form onSubmit={handleEmailSubmit} className="space-y-6">
+          <form onSubmit={handleOtpSubmit} className="space-y-6">
             <div>
-              <h2 className="text-3xl font-bold text-[#0c4e43] mb-1">Forgot Password</h2>
-              <p className="text-xs text-gray-400">Enter your email to verify your admin account.</p>
+              <h2 className="text-3xl font-bold text-[#0c4e43] mb-1">Verification Code</h2>
+              <p className="text-xs text-gray-400">
+                We've sent a code to <span className="text-gray-600 font-medium">{email}</span>
+              </p>
             </div>
 
             {error && (
@@ -57,26 +64,29 @@ const handleEmailSubmit = (e) => {
             )}
             
             <div>
-              <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Email</label>
+              <label className="block text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider">Enter OTP</label>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-gray-400">
-                  <Mail className="w-4 h-4" />
+                  <KeyRound className="w-4 h-4" />
                 </span>
                 <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-[#f8fafc] border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0c4e43] focus:bg-white transition-all text-gray-700"
+                  type="text"
+                  maxLength={6}
+                  placeholder="Enter code"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)} 
+                  className="w-full pl-10 pr-4 py-3 bg-[#f8fafc] border border-gray-100 rounded-xl text-sm font-semibold tracking-wider focus:outline-none focus:ring-2 focus:ring-[#0c4e43] focus:bg-white transition-all text-gray-700 placeholder:tracking-normal placeholder:font-normal"
                 />
               </div>
             </div>
 
-           <Link to="/verify-otp" className="w-full block">
-            <button type="button" className="w-full bg-[#0c4e43] text-white text-sm font-bold py-3.5 px-4 rounded-xl transition-colors shadow-md">
-             Send OTP
-            </button>
-            </Link>
+            <button
+  type="button"
+  onClick={() => navigate('/reset-password')}
+  className="w-full bg-[#0c4e43] text-white py-3 rounded-xl font-semibold hover:bg-[#093c34] transition"
+>
+  Verify OTP
+</button>
           </form>
 
         </div>
@@ -85,4 +95,4 @@ const handleEmailSubmit = (e) => {
   );
 };
 
-export default ForgotPassword;
+export default VerifyOTP;

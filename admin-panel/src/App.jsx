@@ -6,6 +6,8 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 
 import Login from './pages/Login';
 import Forgotpassword from './pages/Forgotpassword';
+import VerifyOTP from './pages/VerifyOTP';
+import ResetPassword from './pages/ResetPassword';
 import Users from './pages/Users';
 import Providers from './pages/Providers';
 import Dashboard from './pages/Dashboard';
@@ -22,6 +24,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/forgot-password" element={<Forgotpassword />} />
+          <Route path="/verify-otp" element={<VerifyOTP />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route element={<ProtectedRoute />}>
             <Route path="/admin" element={<AdminLayout />}>
