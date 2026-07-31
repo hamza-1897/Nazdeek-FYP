@@ -24,7 +24,6 @@ const tempSubmit = async (e) => {
     }
 
     try {
-      // 2. await laga kar API call ki
       const data = await adminLogin(email, password);
       const { accessToken, name , email: adminEmail, _id } = data;
       

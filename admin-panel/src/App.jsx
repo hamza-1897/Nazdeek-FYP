@@ -5,6 +5,8 @@ import { AuthProvider } from './context/AuthContext';
 
 import Login from './pages/Login';
 import Forgotpassword from './pages/Forgotpassword';
+import VerifyOTP from './pages/VerifyOTP';
+import ResetPassword from './pages/ResetPassword';
 import Users from './pages/Users';
 import Providers from './pages/Providers';
 import Dashboard from './pages/Dashboard';
@@ -19,10 +21,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/forgot-password" element={<Forgotpassword />} />
+          <Route path="/verify-otp" element={<VerifyOTP />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} /> 
-            
             <Route path="users" element={<Users />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="providers" element={<Providers />} />
