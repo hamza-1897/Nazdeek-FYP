@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, UserCheck, Search } from 'lucide-react';
 import StatCard from '../components/common/StatCard';
 import UserRow from '../components/common/UserRow';
-import { getAllUsers } from '../api/adminApi';
+import { getAllUsers , updateUserStatus} from '../api/adminApi';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -27,7 +27,18 @@ export default function Users() {
     }
   };
 
- 
+ const updateStatus = async (userId)=>{
+  try{
+      const response = await updateUserStatus(userId);
+      alert("user status updated")
+    fetchUsers();
+  }catch(error){
+    
+          console.error("Error fetching users:", error);
+
+  }
+    
+ }
 
   const totalCustomers = users.filter(u => u.role?.toLowerCase() === 'customer').length;
   const totalProviders = users.filter(u => u.role?.toLowerCase() === 'provider').length;
@@ -42,9 +53,7 @@ export default function Users() {
     return name.includes(query) || email.includes(query) || role.includes(query) || status.includes(query);
   });
 
-  const handleToggleStatus = (userId) => {
-  alert(`Toggle status for user with ID: ${userId}`);
-  };
+ 
 
 
   return (
@@ -116,7 +125,7 @@ export default function Users() {
                       id: user._id || user.id, 
                       joinedAt: user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A' 
                     }}
-                    onToggleStatus={handleToggleStatus}
+                    onToggleStatus={updateStatus}
                   />
                 ))
               ) : (

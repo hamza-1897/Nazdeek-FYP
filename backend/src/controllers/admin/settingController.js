@@ -1,4 +1,59 @@
 const settingModel = require('../../models/settingModel');
+const userModel = require('../../models/usersModel');
+const providerModel  = require('../../models/providerModel');
+
+
+
+
+const getDashboardStats = async (req, res) => {
+  try {
+    const [
+      totalCustomers,
+      totalProviders,
+      pendingPayments,
+      pendingVerifications,
+      premiumProviders
+    ] = await Promise.all([
+      userModel.countDocuments({ role: 'customer' }),
+      userModel.countDocuments({ role: 'provider' }),
+      providerModel.countDocuments({ registrationFee: 'pending_approval' }),
+      providerModel.countDocuments({ verificationStatus: 'pending' }),
+      providerModel.countDocuments({ isPremium: true })
+    ]);
+
+   const recentCustomers = await userModel.find({ role: 'customer' })
+      .sort({ createdAt: -1 })
+      .limit(4)
+      .select('name email isActive createdAt');
+
+    const recentProviders = await providerModel.find()
+    .select('businessName verificationStatus createdAt categoryId ')
+      .populate('userId', 'name email')
+      .populate('categoryId', 'name')
+      .sort({ createdAt: -1 })
+      .limit(4);
+
+      return res.status(200).json({
+      success: true,
+      stats: {
+        totalCustomers,
+        totalProviders,
+        pendingPayments,
+        pendingVerifications,
+        premiumProviders
+      },
+      recentCustomers,
+      recentProviders
+    });
+    } catch (error) {
+    console.error("Error in Dashboard Stats:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error fetching stats",
+      error: error.message
+    });
+  }
+};
 
 // get System Settings
 const getSystemSettings = async (req, res) => {
@@ -60,5 +115,6 @@ module.exports = {
   getSystemSettings,
   updatePaymentAccounts,
   updateFeeConfig,
-  updateContactDetails
+  updateContactDetails,
+  getDashboardStats
 };
