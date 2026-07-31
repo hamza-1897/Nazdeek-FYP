@@ -1,5 +1,16 @@
 import API from './axiosInstance';
 
+//dashboard stats
+export const getdashboard = async () => {
+    try {
+        const response = await API.get('/admin/dashbaord-stats');
+        return response.data;
+         }
+    catch (error) {
+        console.error("Error fetching  dashboard:", error);
+        throw error;
+    }
+}; 
 
 export const getAllUsers = async () => {
     try {

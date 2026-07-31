@@ -1,65 +1,124 @@
-import React, { useState } from 'react';
-import { Users, Folder, UserCheck, Clock, TrendingUp, Briefcase } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Users, UserCheck, CreditCard, Clock, Crown, Briefcase } from 'lucide-react';
 import StatCard from '../components/common/StatCard';
+import { getdashboard } from '../api/adminApi';
 
 export default function Dashboard() {
-  const [stats] = useState({
-    totalUsers: 10,
-    categories: 5,
-    totalProviders: 6,
-    pendingProviders: 2
+  const [stats, setStats] = useState({
+    totalCustomers: 0,
+    totalProviders: 0,
+    pendingPayments: 0,
+    pendingVerifications: 0,
+    premiumProviders: 0
   });
 
-  const [recentUsers] = useState([
-    { id: 1, name: 'Henry Ford', email: 'henry@example.com', status: 'Active', date: '2023-10-25' },
-    { id: 2, name: 'Grace Lee', email: 'grace@example.com', status: 'Active', date: '2023-09-14' },
-    { id: 3, name: 'Frank Miller', email: 'frank@example.com', status: 'Inactive', date: '2023-08-30' },
-    { id: 4, name: 'Eve Adams', email: 'eve@example.com', status: 'Active', date: '2023-07-22' },
-  ]);
+  const [recentUsers, setRecentUsers] = useState([]);
+  const [recentProviders, setRecentProviders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [recentProviders] = useState([
-    { id: 1, name: 'Electro World', category: 'Electronics', status: 'Verified', date: '2023-06-18' },
-    { id: 2, name: 'Bookworm Haven', category: 'Books', status: 'Pending', date: '2023-05-12' },
-    { id: 3, name: 'Sports Zone', category: 'Sports', status: 'Rejected', date: '2023-04-05' },
-    { id: 4, name: 'Garden Master', category: 'Home & Garden', status: 'Verified', date: '2023-03-10' },
-  ]);
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        const res = await getdashboard();
+        if (res?.data?.success) {
+          setStats(res.data.stats || {});
+          setRecentUsers(res.data.recentUsers || []);
+          setRecentProviders(res.data.recentProviders || []);
+        } else if (res?.success) {
+          setStats(res.stats || {});
+          setRecentUsers(res.recentUsers || []);
+          setRecentProviders(res.recentProviders || []);
+        }
+      } catch (err) {
+        console.error("Dashboard data load failed:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDashboardData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-8 max-w-6xl w-full mx-auto space-y-6">
-      
+    <div className="p-8 max-w-7xl w-full mx-auto space-y-6">
       <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-        <h1 className="text-xl font-bold text-[#0f172a]">Welcome to Nazdeek Admin Dashboard</h1>
+        <h1 className="text-xl font-bold text-[#0f172a]">Nazdeek Admin Dashboard</h1>
+        <p className="text-xs text-slate-400 mt-1">Platform overview and activity metrics</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Total Users" count={stats.totalUsers} icon={<Users size={20} />} iconBg="bg-blue-50" iconColor="text-blue-600" />
-        <StatCard title="Categories" count={stats.categories} icon={<Folder size={20} />} iconBg="bg-emerald-50" iconColor="text-emerald-600" />
-        <StatCard title="Total Providers" count={stats.totalProviders} icon={<UserCheck size={20} />} iconBg="bg-purple-50" iconColor="text-purple-600" />
-        <StatCard title="Pending Providers" count={stats.pendingProviders} icon={<Clock size={20} />} iconBg="bg-amber-50" iconColor="text-amber-500" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <StatCard 
+          title="Total Customers" 
+          count={stats.totalCustomers || 0} 
+          icon={<Users size={20} />} 
+          iconBg="bg-blue-50" 
+          iconColor="text-blue-600" 
+        />
+        <StatCard 
+          title="Total Providers" 
+          count={stats.totalProviders || 0} 
+          icon={<UserCheck size={20} />} 
+          iconBg="bg-purple-50" 
+          iconColor="text-purple-600" 
+        />
+        <StatCard 
+          title="Pending Payments" 
+          count={stats.pendingPayments || 0} 
+          icon={<CreditCard size={20} />} 
+          iconBg="bg-rose-50" 
+          iconColor="text-rose-600" 
+        />
+        <StatCard 
+          title="Pending Verifications" 
+          count={stats.pendingVerifications || 0} 
+          icon={<Clock size={20} />} 
+          iconBg="bg-amber-50" 
+          iconColor="text-amber-500" 
+        />
+        <StatCard 
+          title="Premium Providers" 
+          count={stats.premiumProviders || 0} 
+          icon={<Crown size={20} />} 
+          iconBg="bg-emerald-50" 
+          iconColor="text-emerald-600" 
+        />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
-        
         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
           <div className="flex items-center gap-2 pb-2 border-b border-slate-50">
-            <TrendingUp size={18} className="text-slate-400" />
-            <h2 className="text-sm font-bold text-[#0f172a]">Recent Users</h2>
+            <Users size={18} className="text-slate-400" />
+            <h2 className="text-sm font-bold text-[#0f172a]">Recent Customers</h2>
           </div>
           <div className="space-y-3">
-            {recentUsers.map(user => (
-              <div key={user.id} className="flex items-center justify-between p-3.5 rounded-xl border border-slate-50 hover:bg-slate-50/50 transition-colors">
-                <div>
-                  <h4 className="text-xs font-bold text-[#0f172a]">{user.name}</h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5">{user.email}</p>
+            {recentUsers.length === 0 ? (
+              <p className="text-xs text-slate-400 text-center py-4">No recent customers found</p>
+            ) : (
+              recentUsers.map(user => (
+                <div key={user._id} className="flex items-center justify-between p-3.5 rounded-xl border border-slate-50 hover:bg-slate-50/50 transition-colors">
+                  <div>
+                    <h4 className="text-xs font-bold text-[#0f172a]">{user.name}</h4>
+                    <p className="text-[11px] text-slate-400 mt-0.5">{user.email}</p>
+                  </div>
+                  <div className="text-right flex flex-col items-end gap-1">
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${user.isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                      {user.isActive ? '✓ Active' : '✕ Inactive'}
+                    </span>
+                    <span className="text-[10px] text-slate-400">
+                      {new Date(user.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-right flex flex-col items-end gap-1">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${user.status === 'Active' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-                    {user.status === 'Active' ? '✓ ' : '✕ '} {user.status}
-                  </span>
-                  <span className="text-[10px] text-slate-400">{user.date}</span>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
@@ -69,27 +128,37 @@ export default function Dashboard() {
             <h2 className="text-sm font-bold text-[#0f172a]">Recent Providers</h2>
           </div>
           <div className="space-y-3">
-            {recentProviders.map(provider => (
-              <div key={provider.id} className="flex items-center justify-between p-3.5 rounded-xl border border-slate-50 hover:bg-slate-50/50 transition-colors">
-                <div>
-                  <h4 className="text-xs font-bold text-[#0f172a]">{provider.name}</h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5">{provider.category}</p>
+            {recentProviders.length === 0 ? (
+              <p className="text-xs text-slate-400 text-center py-4">No recent providers found</p>
+            ) : (
+              recentProviders.map(provider => (
+                <div key={provider._id} className="flex items-center justify-between p-3.5 rounded-xl border border-slate-50 hover:bg-slate-50/50 transition-colors">
+                  <div>
+                    <h4 className="text-xs font-bold text-[#0f172a]">{provider.businessName}</h4>
+                    <p className="text-[11px] text-slate-400 mt-0.5">
+                      Owner: <span className="font-medium text-slate-600">{provider.userId?.name || 'N/A'}</span> • {provider.categoryId?.name || 'Category'}
+                    </p>
+                  </div>
+                  <div className="text-right flex flex-col items-end gap-1">
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize ${
+                      provider.verificationStatus === 'approved' 
+                        ? 'bg-emerald-50 text-emerald-600' 
+                        : provider.verificationStatus === 'pending' 
+                        ? 'bg-amber-50 text-amber-500' 
+                        : 'bg-rose-50 text-rose-600'
+                    }`}>
+                      {provider.verificationStatus}
+                    </span>
+                    <span className="text-[10px] text-slate-400">
+                      {new Date(provider.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
-                <div className="text-right flex flex-col items-end gap-1">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                    provider.status === 'Verified' ? 'bg-emerald-50 text-emerald-600' : provider.status === 'Pending' ? 'bg-amber-50 text-amber-500' : 'bg-rose-50 text-rose-600'
-                  }`}>
-                    {provider.status === 'Verified' ? '✓ ' : provider.status === 'Pending' ? '🕒 ' : '✕ '} {provider.status}
-                  </span>
-                  <span className="text-[10px] text-slate-400">{provider.date}</span>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
-
       </div>
-
     </div>
   );
 }

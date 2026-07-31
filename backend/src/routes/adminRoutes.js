@@ -33,11 +33,12 @@ router.put('/resolveReport/:id', resolveReport);
 router.delete('/deleteReport/:id', deleteReport);
 
 // setting routes
-const { getSystemSettings, updatePaymentAccounts, updateFeeConfig, updateContactDetails } = require('../controllers/admin/settingController');
+const {getDashboardStats, getSystemSettings, updatePaymentAccounts, updateFeeConfig, updateContactDetails } = require('../controllers/admin/settingController');
 router.get('/getSystemSettings', getSystemSettings);
 router.put('/updatePaymentAccounts', updatePaymentAccounts);
 router.put('/updateFeeConfig', updateFeeConfig);
 router.put('/updateContactDetails', updateContactDetails);
+router.get('/dashbaord-stats',getDashboardStats)
 
 // category
 const {getCategories , addCategory}  = require('../controllers/mutual/categoryController')
