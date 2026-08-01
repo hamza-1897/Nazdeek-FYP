@@ -1,6 +1,8 @@
 const userModel = require('../../models/usersModel');
 const otpModel = require('../../models/otpModel');
 const providerModel = require('../../models/providerModel');
+const categoryModel = require('../../models/categoryModel');
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/envConfig');
@@ -69,7 +71,8 @@ const userLogin = async (req, res) => {
     let providerInfo = null;
 
     if (user.role === 'provider') {
-      const providerDoc = await providerModel.findOne({ userId: user._id }).select('providerId providerImage businessName verificationStatus categoryId');
+      const providerDoc = await providerModel.findOne({ userId: user._id }).select('providerId providerImage businessName verificationStatus categoryId')
+      .populate('categoryId', 'name');
 
       if (!providerDoc) {
         providerStatus = 'unsubmitted';
