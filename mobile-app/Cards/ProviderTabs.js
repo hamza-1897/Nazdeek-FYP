@@ -26,7 +26,7 @@ const ProviderTabs = ({ activeTab, navigation }) => {
         icon="grid-outline" 
         label="Services" 
         active={activeTab === 'Services'} 
-        onPress={() => handleTabPress('serviceScreen')} 
+        onPress={() => handleTabPress('MyServicesProvider')} 
       />
       
       <TabItem 

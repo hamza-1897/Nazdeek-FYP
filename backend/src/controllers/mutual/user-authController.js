@@ -65,22 +65,22 @@ const userLogin = async (req, res) => {
       return res.status(403).json({ message: "User account is deactivated" });
     }
 
-    const providerStatus = null;
-    const providerInfo = null;
+    let providerStatus = null;
+    let providerInfo = null;
 
     if (user.role === 'provider') {
-      const providerDoc = await providerModel.findOne({ userId: user._id });
+      const providerDoc = await providerModel.findOne({ userId: user._id }).select('providerId providerImage businessName verificationStatus categoryId');
 
       if (!providerDoc) {
         providerStatus = 'unsubmitted';
       } else {
         providerStatus = providerDoc.verificationStatus;
-      
-    }
-    }
       if (providerStatus === 'approved' || providerStatus === 'rejected') {
     providerInfo = providerDoc;
   }
+    }
+    }
+      
 
     const accessToken = generateToken(user._id, user.role, res);
 
