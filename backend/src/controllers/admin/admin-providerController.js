@@ -229,7 +229,11 @@ const getProviderDetails = async (req, res) => {
             return res.status(404).json({ message: 'Provider not found' });
         }
 
-        res.status(200).json(provider);
+        res.status(200).json({
+            provider,
+            services: services || [],
+            reviews: reviews || []
+        });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
