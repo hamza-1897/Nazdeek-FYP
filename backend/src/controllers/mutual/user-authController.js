@@ -65,8 +65,8 @@ const userLogin = async (req, res) => {
       return res.status(403).json({ message: "User account is deactivated" });
     }
 
-    let providerStatus = null;
-    let providerInfo = null;
+    const providerStatus = null;
+    const providerInfo = null;
 
     if (user.role === 'provider') {
       const providerDoc = await providerModel.findOne({ userId: user._id });
@@ -75,11 +75,12 @@ const userLogin = async (req, res) => {
         providerStatus = 'unsubmitted';
       } else {
         providerStatus = providerDoc.verificationStatus;
-        if (providerStatus === 'approved' || providerStatus === 'rejected') {
+      
+    }
+    }
+      if (providerStatus === 'approved' || providerStatus === 'rejected') {
     providerInfo = providerDoc;
   }
-    }
-    }
 
     const accessToken = generateToken(user._id, user.role, res);
 
@@ -88,7 +89,6 @@ const userLogin = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      profileImage: user.profileImage || null,
       providerStatus,
       providerInfo, 
       message: "User logged in successfully",
@@ -102,6 +102,8 @@ const userLogin = async (req, res) => {
     });
   }
 };
+
+
 // User Logout
 const userLogout = async (req,res) => {
     res.clearCookie('jwt', { httpOnly: true, secure: false, sameSite: 'strict',path: "/" });

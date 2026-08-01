@@ -14,6 +14,7 @@ const CreateServiceScreen = ({ navigation }) => {
   const [serviceName, setServiceName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [priceType, setPriceType] = useState('fixed');
 
 const handleCreateService = async () => {
     if (!serviceName || !description || !price  || !imageUri) {
@@ -22,21 +23,18 @@ const handleCreateService = async () => {
     }
 
 
-    // 1. Khali FormData ka object banayein
     const formData = new FormData();
 
-    // 2. Saari text fields ko one-by-one append karein
     formData.append('providerId', providerInfo._id);
     formData.append('categoryId', providerInfo.categoryId._id);
     formData.append('serviceName', serviceName);
     formData.append('description', description);
     formData.append('price', parseFloat(price));
 
-    // 3. Image ko specialized tareeqe se append karein (yeh bohot zaroori hai!)
-    // Agarn aapke paas multiple images hain toh loop chalayein, abhi aik hai toh direct:
-    const filename = imageUri.split('/').pop(); // file ka naam nikalein
+
+    const filename = imageUri.split('/').pop(); 
     const match = /\.(\w+)$/.exec(filename);
-    const type = match ? `image/${match[1]}` : `image`; // file ki type (jpg/png)
+    const type = match ? `image/${match[1]}` : `image`; 
 
     formData.append('serviceImages', {
       uri: imageUri,

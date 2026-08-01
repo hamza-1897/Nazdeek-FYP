@@ -13,6 +13,11 @@ const serviceSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    priceType: {
+    type: String,
+    enum: ['fixed', 'hourly', 'negotiable'],
+    default: 'fixed'
+  },
     providerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Provider',
