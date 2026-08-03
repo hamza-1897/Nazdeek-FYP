@@ -11,7 +11,7 @@ const BookingSuccessScreen = ({ navigation }) => {
       
       <View className="w-full px-6 py-4">
         <TouchableOpacity 
-          onPress={() => navigation.navigate('AppTabs')}
+          onPress={() => navigation.replace('AppTabs')}
           className="w-11 h-11 border border-gray-100 rounded-full items-center justify-center bg-white"
         >
           <Ionicons name="arrow-back" size={24} color="#1a5ea1" />
@@ -32,7 +32,7 @@ const BookingSuccessScreen = ({ navigation }) => {
         </Text>
         
         <Text className="text-gray-500 text-center text-base leading-6">
-          Your Booking has been confirmed. You can check your booking on the Profile.
+          Your Booking has been Created Successfully. You can view your booking details in the "My Bookings" section.
         </Text>
       </View>
 

@@ -22,6 +22,7 @@ import AppTabs from '../Components/AppTabs';
 import serviceScreen from '../screens/serviceScreen'; 
 import ViewDetailScreen from '../screens/ServicesScrens/ViewDetailScreen';
 import BookServiceScreen from '../screens/ServicesScrens/BookServiceScreen';
+import BookingSummaryScreen from '../screens/ServicesScrens/BookingSummaryScreen';
 import BookingSuccessScreen from '../screens/ServicesScrens/BookingSuccessScreen';
 import BookingScreen from '../screens/bookingScreen';
 import CancelBookingScreen from '../screens/Bookings related/CancelBookingScreen';
@@ -72,6 +73,7 @@ const AuthNavigation = () => {
       <Stack.Screen name="serviceScreen" component={serviceScreen} />
       <Stack.Screen name="ViewDetail" component={ViewDetailScreen} />
       <Stack.Screen name="BookService" component={BookServiceScreen} />
+      <Stack.Screen name="BookingSummary" component={BookingSummaryScreen} />
       <Stack.Screen name="BookingSuccess" component={BookingSuccessScreen} />
       <Stack.Screen name="BookingScreen" component={BookingScreen} />
       <Stack.Screen name="CancelBooking" component={CancelBookingScreen} />

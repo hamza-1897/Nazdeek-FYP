@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { getBookingsByProvider } = require('../controllers/provider/bookingController');
 
 const bookingSchema = new mongoose.Schema({
     userId: {
@@ -31,6 +32,10 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         enum: ['pending', 'confirmed', 'cancelled'],
         default: 'pending'
+    },
+    bookingPrice: {
+        type: Number,
+        default: 0
     },
     description: {
         type: String,
