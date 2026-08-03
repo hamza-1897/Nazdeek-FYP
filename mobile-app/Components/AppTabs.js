@@ -19,14 +19,11 @@ const AppTabs = () => {
         headerShown: false,
         tabBarActiveTintColor: '#1a5ea1',
         tabBarInactiveTintColor: '#94a3b8',
-        tabBarStyle: {
-          position: 'absolute',
-          bottom: 20,
+        tabBarStyle: { 
           left: 15,
           right: 15,
           height: 70,
-          borderRadius: 25,
-          backgroundColor: '#ffffff',
+        backgroundColor: '#ffffff',
           elevation: 10,
           paddingBottom: 10,
         },
