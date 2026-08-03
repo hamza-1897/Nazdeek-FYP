@@ -10,11 +10,11 @@ const ActivityTab = ({ services = [], reviews = [] }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {services.map((service) => (
               <div key={service._id} className="p-4 bg-slate-50 border border-gray-100 rounded-lg">
-                <h4 className="font-bold text-gray-800 text-sm">{service.title}</h4>
+                <h4 className="font-bold text-gray-800 text-sm">{service.serviceName}</h4>
                 <p className="text-xs text-gray-500 mt-1">{service.description}</p>
                 <div className="mt-3 flex justify-between items-center text-xs">
                   <span className="font-bold text-[#0f3d2e]">PKR {service.price}</span>
-                  <span className="text-gray-400 bg-white px-2 py-0.5 rounded border">{service.category}</span>
+                  <span className="text-gray-400 bg-white px-2 py-0.5 rounded border">{service.categoryId.name}</span>
                 </div>
               </div>
             ))}

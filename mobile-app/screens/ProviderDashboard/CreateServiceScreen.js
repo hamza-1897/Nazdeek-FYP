@@ -1,108 +1,112 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar, Image, Alert } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar, Image, Alert, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker'; 
 import { createService } from '../../api/ProviderApi';
-import { useContext } from 'react';
-import {AuthContext} from '../../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 
 const CreateServiceScreen = ({ navigation }) => {
   const { providerInfo } = useContext(AuthContext);
-  const [category, setCategory] = useState('Select Category');
-  const [isCatOpen, setIsCatOpen] = useState(false);
-  const [imageUri, setImageUri] = useState(null); 
+
   const [serviceName, setServiceName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [priceType, setPriceType] = useState('fixed');
+  const [imageUri, setImageUri] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-const handleCreateService = async () => {
-    if (!serviceName || !description || !price  || !imageUri) {
-      Alert.alert("Missing Information", "Please fill in all fields before publishing.");
+
+
+  const pickImage = async () => {
+  const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+  if (!permissionResult.granted) {
+    Alert.alert("Permission Denied", "Gallery access is required to select an image.");
+    return;
+  }
+
+  const result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ['images'], 
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 0.8,
+  });
+
+  if (!result.canceled) {
+    setImageUri(result.assets[0].uri);
+  }
+};
+
+  const handleCreateService = async () => {
+    if (!serviceName.trim() || !description.trim() || !price || !imageUri) {
+      Alert.alert("Missing Information", "Please complete all fields and upload a banner image.");
       return;
     }
 
+    const providerId = providerInfo?._id;
+    const categoryId = providerInfo?.categoryId?._id || providerInfo?.categoryId;
 
-    // 1. Khali FormData ka object banayein
+    if (!providerId || !categoryId) {
+      Alert.alert("Error", "Provider details not found. Please log in again.");
+      return;
+    }
+
+    setLoading(true);
+
     const formData = new FormData();
+    formData.append('providerId', providerId);
+    formData.append('categoryId', categoryId);
+    formData.append('serviceName', serviceName.trim());
+    formData.append('description', description.trim());
+    formData.append('price', price);
+    formData.append('priceType', priceType);
 
-    // 2. Saari text fields ko one-by-one append karein
-    formData.append('providerId', providerInfo._id);
-    formData.append('categoryId', providerInfo.categoryId._id);
-    formData.append('serviceName', serviceName);
-    formData.append('description', description);
-    formData.append('price', parseFloat(price));
-
-    // 3. Image ko specialized tareeqe se append karein (yeh bohot zaroori hai!)
-    // Agarn aapke paas multiple images hain toh loop chalayein, abhi aik hai toh direct:
-    const filename = imageUri.split('/').pop(); // file ka naam nikalein
+    const filename = imageUri.split('/').pop();
     const match = /\.(\w+)$/.exec(filename);
-    const type = match ? `image/${match[1]}` : `image`; // file ki type (jpg/png)
+    const type = match ? `image/${match[1]}` : 'image/jpeg';
 
     formData.append('serviceImages', {
       uri: imageUri,
-      name: filename || 'service_image.jpg',
+      name: filename || 'service_banner.jpg',
       type: type,
     });
 
-
-    console.log("Creating service with FormData...");
-
     try {
       const response = await createService(formData);
-      console.log("Service created successfully:", response);
-      navigation.replace('ServicePublished');
+      if (response?.success) {
+        navigation.replace('ServicePublished');
+      } else {
+        Alert.alert("Notice", response?.message || "Service created successfully.");
+        navigation.replace('ServicePublished');
+      }
     } catch (error) {
-      console.error("Error creating service:", error);
-      Alert.alert("Error", "There was an issue creating your service. Please try again.");
-    }
-  };
- 
-  const pickImage = async () => {
-   
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      Alert.alert("Permission Denied", "You need to allow gallery access to upload a service image.");
-      return;
-    }
-
-    
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: 'images', 
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setImageUri(result.assets[0].uri); 
+      Alert.alert("Error", error?.response?.data?.message || "Failed to publish service. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      
-      <View className="px-6 py-4 flex-row items-center justify-between mt-8">
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color="black" />
+
+      <View className="px-6 py-4 flex-row items-center justify-between  border-b border-gray-100">
+        <TouchableOpacity onPress={() => navigation.goBack()} className="p-1">
+          <Ionicons name="chevron-back" size={24} color="#111827" />
         </TouchableOpacity>
-        <Text className="text-lg font-semibold text-gray-900">Create service</Text>
-        <View className="w-6" /> 
+        <Text className="text-lg font-bold text-gray-900">Create Service</Text>
+        <View className="w-6" />
       </View>
 
       <ScrollView className="flex-1 px-6 mt-4" showsVerticalScrollIndicator={false}>
-        
-        
         <View className="mb-6">
-          <Text className="text-gray-700 font-medium mb-2">Service Banner Image</Text>
-          
+          <Text className="text-gray-700 font-semibold mb-2">Service Image</Text>
           {imageUri ? (
-            <View className="relative w-full h-44 rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+            <View className="relative w-full h-44 rounded-2xl overflow-hidden border border-gray-200">
               <Image source={{ uri: imageUri }} className="w-full h-full" resizeMode="cover" />
               <TouchableOpacity 
                 onPress={pickImage}
-                className="absolute bottom-3 right-3 bg-[#1a5ea1] p-2 rounded-full shadow-md"
+                className="absolute bottom-3 right-3 bg-[#1a5ea1] p-2.5 rounded-full shadow-md"
               >
                 <Ionicons name="camera" size={18} color="white" />
               </TouchableOpacity>
@@ -110,64 +114,110 @@ const handleCreateService = async () => {
           ) : (
             <TouchableOpacity 
               onPress={pickImage}
-              className="w-full h-44 border-2 border-dashed border-gray-200 rounded-2xl justify-center items-center bg-gray-50/50"
+              className="w-full h-44 border-2 border-dashed border-gray-300 rounded-2xl justify-center items-center bg-gray-50"
             >
               <View className="bg-blue-50 p-3 rounded-full mb-2">
                 <Ionicons name="image-outline" size={26} color="#1a5ea1" />
               </View>
-              <Text className="text-gray-500 font-medium text-sm">Upload Service Photo</Text>
-              <Text className="text-gray-400 text-xs mt-0.5">Supports JPG, PNG (4:3)</Text>
+              <Text className="text-gray-600 font-medium text-sm">Upload Service Photo</Text>
+              <Text className="text-gray-400 text-xs mt-0.5">JPG, PNG (4:3 ratio)</Text>
             </TouchableOpacity>
           )}
         </View>
 
-      
-        <View className="mb-6">
-          <Text className="text-gray-700 font-medium mb-2">Service title</Text>
+        <View className="mb-5">
+          <Text className="text-gray-700 font-semibold mb-1">Service Title</Text>
           <TextInput 
-            placeholder="e.g. Deep House Cleaning"
-            className="border-b border-gray-200 py-2 text-base text-gray-900"
+            placeholder="e.g. Electrical Repair & Wiring"
+            className="border-b border-gray-300 py-2.5 text-base text-gray-900"
             placeholderTextColor="#9ca3af"
             value={serviceName}
             onChangeText={setServiceName}
           />
         </View>
 
-      
-        
+        <View className="mb-5">
+          <Text className="text-gray-700 font-semibold mb-2">Pricing Type</Text>
+          <View className="flex-row gap-3">
+            <TouchableOpacity 
+              onPress={() => setPriceType('fixed')}
+              className={`flex-1 py-3 rounded-xl border items-center ${
+                priceType === 'fixed' 
+                  ? 'bg-blue-50 border-[#1a5ea1]' 
+                  : 'bg-white border-gray-200'
+              }`}
+            >
+              <Text className={`font-semibold text-sm ${priceType === 'fixed' ? 'text-[#1a5ea1]' : 'text-gray-600'}`}>
+                Fixed Rate
+              </Text>
+            </TouchableOpacity>
 
-        <View className="mb-6">
-          <Text className="text-gray-700 font-medium mb-2">Description</Text>
-          <TextInput 
-            placeholder="Describe what's included..."
-            multiline
-            className="border-b border-gray-200 py-2 text-base text-gray-900"
-            placeholderTextColor="#9ca3af"
-            value={description}
-            onChangeText={setDescription}
-          />
+            <TouchableOpacity 
+              onPress={() => setPriceType('hourly')}
+              className={`flex-1 py-3 rounded-xl border items-center ${
+                priceType === 'hourly' 
+                  ? 'bg-blue-50 border-[#1a5ea1]' 
+                  : 'bg-white border-gray-200'
+              }`}
+            >
+              <Text className={`font-semibold text-sm ${priceType === 'hourly' ? 'text-[#1a5ea1]' : 'text-gray-600'}`}>
+                Hourly Rate
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              onPress={() => setPriceType('negotiable')}
+              className={`flex-1 py-3 rounded-xl border items-center ${
+                priceType === 'negotiable' 
+                  ? 'bg-blue-50 border-[#1a5ea1]' 
+                  : 'bg-white border-gray-200'
+              }`}
+            >
+              <Text className={`font-semibold text-sm ${priceType === 'negotiable' ? 'text-[#1a5ea1]' : 'text-gray-600'}`}>
+                Negotiable
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
-        <View className="mb-6">
-          <Text className="text-gray-700 font-medium mb-2">Base price (Rs)</Text>
+        <View className="mb-5">
+          <Text className="text-gray-700 font-semibold mb-1">
+            {priceType === 'hourly' ? 'Hourly Rate (Rs)' : 'Base Price (Rs)'}
+          </Text>
           <TextInput 
-            placeholder="2000"
+            placeholder="e.g. 1500"
             keyboardType="numeric"
-            className="border-b border-gray-200 py-2 text-base text-gray-900"
+            className="border-b border-gray-300 py-2.5 text-base text-gray-900"
             placeholderTextColor="#9ca3af"
             value={price}
             onChangeText={setPrice}
           />
         </View>
 
-       
-      
-      
+        <View className="mb-8">
+          <Text className="text-gray-700 font-semibold mb-1">Description</Text>
+          <TextInput 
+            placeholder="Specify what work and tools are included..."
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+            className="border border-gray-200 rounded-xl p-3 text-base text-gray-900 bg-gray-50/50 min-h-[100px]"
+            placeholderTextColor="#9ca3af"
+            value={description}
+            onChangeText={setDescription}
+          />
+        </View>
+
         <TouchableOpacity 
-          className="bg-[#1a5ea1] py-4 rounded-xl items-center mb-10 shadow-sm"
+          disabled={loading}
+          className={`bg-[#1a5ea1] py-4 rounded-xl items-center mb-10 shadow-sm ${loading ? 'opacity-70' : 'active:opacity-90'}`}
           onPress={handleCreateService}
         >
-          <Text className="text-white font-bold text-base">Publish service</Text>
+          {loading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text className="text-white font-bold text-base">Publish Service</Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </View>

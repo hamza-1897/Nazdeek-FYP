@@ -23,7 +23,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: 'customer'
   },
- 
+  profileImage: {
+    type: String,
+    default: null 
+  },
   phone:{
     type: String,
     required : true

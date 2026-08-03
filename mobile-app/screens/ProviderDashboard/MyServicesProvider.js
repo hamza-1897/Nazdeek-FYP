@@ -1,82 +1,146 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, Alert } from 'react-native';
-import { Ionicons, Feather } from '@expo/vector-icons';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { View, Text, TouchableOpacity, FlatList, StatusBar, Alert, TextInput } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
+
+import ProviderServiceCard from '../../Cards/ProviderServiceCard';
+import ProviderTabs from '../../Cards/ProviderTabs';
+import { getProviderServices } from '../../api/ProviderApi';
+import { AuthContext } from '../../context/AuthContext';
 
 const MyServicesProvider = ({ navigation }) => {
- 
-  const [services, setServices] = useState([
-    { id: '1', name: 'Deep Home Cleaning', price: '2500' },
-    { id: '2', name: 'Kitchen Deep Cleaning', price: '1500' },
-  ]);
+  const { providerInfo } = useContext(AuthContext);
+  const providerId = providerInfo?._id;
 
- 
-  const handleDelete = (id, name) => {
-    Alert.alert(
-      "Delete Service",
-      `Are you sure you want to delete "${name}"?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Delete", 
-          style: "destructive",
-          onPress: () => {
-            setServices(prev => prev.filter(service => service.id !== id));
-            Alert.alert("Deleted", "Service has been removed successfully.");
-          }
-        }
-      ]
-    );
+  const [services, setServices] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const fetchServices = async (id) => {
+    if (!id) {
+      console.log("Provider ID not available yet");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await getProviderServices(id);
+      
+      if (response && response.data) {
+        setServices(response.data);
+      } else if (response && response.services) {
+        setServices(response.services);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+      Alert.alert("Error", "Failed to fetch services. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return (
-    <View className="flex-1 bg-white">
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+  useFocusEffect(
+    useCallback(() => {
+      fetchServices(providerId);
+    }, [providerId])
+  );
 
-    
-      <View className="px-6 py-4 mt-8 flex-row items-center border-b border-gray-50">
-        <TouchableOpacity onPress={() => navigation.goBack()} className="mr-4">
-          <Ionicons name="chevron-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text className="text-xl font-semibold text-gray-900">My Services</Text>
+  const handleDelete = (id) => {
+    setServices((prev) => prev.filter((service) => service._id !== id));
+    Alert.alert("Deleted", "Service has been removed successfully.");
+  };
+
+  const handleEdit = (service) => {
+    navigation.navigate('EditServiceProvider', { service });
+  };
+
+  const filteredServices = services.filter((service) =>
+    (service?.serviceName || service?.name || '')
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <SafeAreaView className="flex-1 bg-slate-50">
+      <StatusBar barStyle="dark-content" backgroundColor="#f8fafc" />
+
+      <View className="flex-1">
+        
+        <View className="px-6 pt-3 pb-2 mt-3 flex-row justify-between items-center">
+          <View>
+            <Text className="text-2xl font-black text-slate-900 tracking-tight">My Services</Text>
+            <Text className="text-xs font-semibold text-slate-400 mt-0.5">
+              Manage your active service listings
+            </Text>
+          </View>
+
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('CreateServiceScreen')}
+            className="bg-[#1a5ea1] w-12 h-12 rounded-2xl items-center justify-center shadow-md shadow-blue-500/20"
+          >
+            <Ionicons name="add" size={26} color="white" />
+          </TouchableOpacity>
+        </View>
+
+        <View className="px-6 my-3">
+          <View className="bg-white flex-row items-center px-4 h-13 rounded-2xl border border-slate-100 shadow-sm">
+            <Ionicons name="search-outline" size={18} color="#94a3b8" />
+            <TextInput 
+              placeholder="Search my services..." 
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              className="ml-3 flex-1 text-slate-800 text-sm font-medium"
+            />
+            {searchQuery !== '' && (
+              <TouchableOpacity onPress={() => setSearchQuery('')}>
+                <Ionicons name="close-circle" size={18} color="#cbd5e1" />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+
+        <FlatList
+          data={filteredServices}
+          keyExtractor={(item) => item._id}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingTop: 8, paddingBottom: 24 }}
+          refreshing={loading}
+          onRefresh={() => fetchServices(providerId)}
+          renderItem={({ item }) => (
+            <ProviderServiceCard 
+              service={item}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          )}
+          ListEmptyComponent={() => (
+            <View className="flex-1 items-center justify-center pt-20 px-6">
+              <View className="w-20 h-20 bg-blue-50 rounded-full items-center justify-center mb-4">
+                <Ionicons name="grid-outline" size={36} color="#1a5ea1" />
+              </View>
+              <Text className="text-slate-800 font-bold text-lg">
+                {loading ? "Loading Services..." : "No Services Found"}
+              </Text>
+              <Text className="text-slate-400 text-xs text-center mt-1 px-8">
+                {searchQuery ? "No results match your search query." : "You haven't listed any services yet."}
+              </Text>
+              
+              {!searchQuery && !loading && (
+                <TouchableOpacity 
+                  onPress={() => navigation.navigate('CreateServiceScreen')}
+                  className="mt-5 bg-[#1a5ea1] px-5 py-3 rounded-2xl shadow-sm"
+                >
+                  <Text className="text-white font-bold text-xs">+ Create New Service</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+        />
       </View>
 
-
-      <ScrollView className="flex-1 px-6 mt-4" showsVerticalScrollIndicator={false}>
-        {services.length === 0 ? (
-          <View className="flex-1 items-center justify-center mt-20">
-            <Text className="text-gray-400 text-base">No services listed yet.</Text>
-          </View>
-        ) : (
-          services.map((item) => (
-            <View key={item.id} className="mb-4 p-4 rounded-2xl border border-gray-100 bg-gray-50/50 flex-row justify-between items-center">
-              <View>
-                <Text className="text-base font-bold text-gray-900">{item.name}</Text>
-                <Text className="text-[#1a5ea1] font-semibold text-sm mt-1">Rs. {item.price}</Text>
-              </View>
-
-             
-              <View className="flex-row gap-x-2">
-               
-                <TouchableOpacity 
-                  onPress={() => navigation.navigate('EditServiceProvider', { service: item })}
-                  className="bg-blue-50 p-2.5 rounded-xl border border-blue-100"
-                >
-                  <Feather name="edit-2" size={18} color="#1a5ea1" />
-                </TouchableOpacity>
-
-               
-                <TouchableOpacity 
-                  onPress={() => handleDelete(item.id, item.name)}
-                  className="bg-red-50 p-2.5 rounded-xl border border-red-100"
-                >
-                  <Feather name="trash-2" size={18} color="#ef4444" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))
-        )}
-      </ScrollView>
-    </View>
+      <ProviderTabs activeTab="Services" navigation={navigation} />
+    </SafeAreaView>
   );
 };
 

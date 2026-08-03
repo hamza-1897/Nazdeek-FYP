@@ -1,6 +1,8 @@
 const userModel = require('../../models/usersModel');
 const otpModel = require('../../models/otpModel');
 const providerModel = require('../../models/providerModel');
+const categoryModel = require('../../models/categoryModel');
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/envConfig');
@@ -69,17 +71,19 @@ const userLogin = async (req, res) => {
     let providerInfo = null;
 
     if (user.role === 'provider') {
-      const providerDoc = await providerModel.findOne({ userId: user._id });
+      const providerDoc = await providerModel.findOne({ userId: user._id }).select('providerId providerImage businessName verificationStatus categoryId')
+      .populate('categoryId', 'name');
 
       if (!providerDoc) {
         providerStatus = 'unsubmitted';
       } else {
         providerStatus = providerDoc.verificationStatus;
-        if (providerStatus === 'approved' || providerStatus === 'rejected') {
+      if (providerStatus === 'approved' || providerStatus === 'rejected') {
     providerInfo = providerDoc;
   }
     }
     }
+      
 
     const accessToken = generateToken(user._id, user.role, res);
 
@@ -88,7 +92,6 @@ const userLogin = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      profileImage: user.profileImage || null,
       providerStatus,
       providerInfo, 
       message: "User logged in successfully",
@@ -102,6 +105,8 @@ const userLogin = async (req, res) => {
     });
   }
 };
+
+
 // User Logout
 const userLogout = async (req,res) => {
     res.clearCookie('jwt', { httpOnly: true, secure: false, sameSite: 'strict',path: "/" });

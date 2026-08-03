@@ -18,11 +18,11 @@ const ProvProfile = ({ navigation }) => {
         
         <View className="bg-[#e6f0fa] items-center pt-14 pb-8 px-6 rounded-b-[32px]">
           <View className="w-20 h-20 bg-[#1a5ea1] rounded-full items-center justify-center shadow-sm mb-3">
-            <Image source={{ uri: userInfo?.profileImage }} className="w-20 h-20 rounded-full" />
+            <Image source={{ uri: providerInfo?.providerImage }} className="w-20 h-20 rounded-full" />
           </View>
           
           <Text className="text-xl font-bold text-gray-900">{providerInfo?.businessName}</Text>
-          <Text className="text-gray-500 text-xs mt-1">Verified provider · {providerInfo?.categoryId.name}</Text>
+          <Text className="text-gray-500 text-xs mt-1"> {providerInfo?.categoryId.name}</Text>
         </View>
 
       
