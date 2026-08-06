@@ -1,28 +1,6 @@
 import API from './axiosInstance';
 
-//dashboard stats
-export const getdashboard = async () => {
-    try {
-        const response = await API.get('/admin/dashbaord-stats');
-        return response.data;
-         }
-    catch (error) {
-        console.error("Error fetching  dashboard:", error);
-        throw error;
-    }
-}; 
 
-export const getAllUsers = async () => {
-    try {
-        const response = await API.get('/admin/getallusers');
-        console.log("Get All Users API response:", response.data);
-        return response.data;
-    }
-    catch (error) {
-        console.error("Error fetching all users:", error);
-        throw error;
-    }
-};
 
 export const adminLogin = async (email, password) => {
     try {
@@ -36,6 +14,59 @@ export const adminLogin = async (email, password) => {
 };
 
 
+//dashboard stats
+export const getdashboard = async () => {
+    try {
+        const response = await API.get('/admin/dashbaord-stats');
+        return response.data;
+         }
+    catch (error) {
+        console.error("Error fetching  dashboard:", error);
+        throw error;
+    }
+}; 
+
+// system settings APIs
+export const getSystemSettings = async () => {
+    try {
+        const response = await API.get('/admin/getSystemSettings');
+        console.log("Get System Settings API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching system settings:", error);
+        throw error;
+    }
+};
+
+export const updateContactDetails = async (contactDetails) => {
+  const response = await API.put(`/admin/updateContactDetails`, { contactDetails });
+  return response.data;
+};
+
+
+//user APIs
+export const getAllUsers = async () => {
+    try {
+        const response = await API.get('/admin/getallusers');
+        console.log("Get All Users API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching all users:", error);
+        throw error;
+    }
+};
+
+export const updateUserStatus = async (userId)=>{
+    const response = await API.put(`/admin/updateStatus`, { userId });
+  return response.data;
+}
+
+
+
+
+// provider APIs
 export const getAllProviders = async () => {
     try {
         const response = await API.get('/admin/getAllProviders');
@@ -48,6 +79,26 @@ export const getAllProviders = async () => {
     }
 };
 
+export const getProviderDetails = async (id) => {
+    try {
+        const response = await API.get(`/admin/getProviderDetails/${id}`);
+        console.log("Get Provider Details API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching provider details:", error);
+        throw error;
+    }
+};
+
+export const updateStatus = async (providerId, verificationStatus) => {
+   const response = await API.put(`/admin/updateProvider/${providerId}/status`, { verificationStatus });
+  return response.data;
+}; 
+
+
+
+// report APIs
 export const getAllReports = async () => {
     try {
         const response = await API.get('/admin/getAllReports');
@@ -82,60 +133,19 @@ export const deleteReport = async (id) => {
     }
 };
 
-export const getProviderDetails = async (id) => {
-    try {
-        const response = await API.get(`/admin/getProviderDetails/${id}`);
-        console.log("Get Provider Details API response:", response.data);
-        return response.data;
-    }
-    catch (error) {
-        console.error("Error fetching provider details:", error);
-        throw error;
-    }
-};
 
-//update provider 
-export const updateStatus = async (providerId, verificationStatus) => {
-   const response = await API.put(`/admin/updateProvider/${providerId}/status`, { verificationStatus });
-  return response.data;
-}; 
 
-// system settings APIs
-export const getSystemSettings = async () => {
-    try {
-        const response = await API.get('/admin/getSystemSettings');
-        console.log("Get System Settings API response:", response.data);
-        return response.data;
-    }
-    catch (error) {
-        console.error("Error fetching system settings:", error);
-        throw error;
-    }
-};
-
-export const updateContactDetails = async (contactDetails) => {
-  const response = await API.put(`/admin/updateContactDetails`, { contactDetails });
-  return response.data;
-};
-
-//  Pricing & Subscription Update
+// payment and fee configuration APIs
 export const updatePricingAndFees = async (feeConfig) => {
   const response = await API.put(`/admin/updateFeeConfig`, { feeConfig });
   return response.data;
 };
 
-// Payment Accounts Update
 export const updatePaymentAccounts = async (paymentAccounts) => {
   const response = await API.put(`/admin/updatePaymentAccounts`, { paymentAccounts });
   return response.data;
 };
 
-// update user status 
-export const updateUserStatus = async (userId)=>{
-    const response = await API.put(`/admin/updateStatus`, { userId });
-  return response.data;
-}
-// get all pending payments
 export const getPendingPayemnts = async () =>{
     try{
     const response= await API.get('/admin/pending-payments');
@@ -148,7 +158,6 @@ export const getPendingPayemnts = async () =>{
     } 
 }
 
-//  update pending payments status
 export const updatePayments = async (providerId, status) =>{
     try{
     const response= await API.put(`/admin/providers/${providerId}/update-payment`,{status});
@@ -160,3 +169,52 @@ export const updatePayments = async (providerId, status) =>{
         throw error;
     } 
 }
+
+// category APIs
+export const getAllCategories = async () => {
+    try {
+        const response = await API.get('/admin/getAllCategories');
+        console.log("Get All Categories API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching all categories:", error);
+        throw error;
+    }   
+};
+
+export const addCategory = async (formData) => {
+    try {
+        const response = await API.post('/admin/addCategory', formData);
+        console.log("Add Category API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error adding category:", error);
+        throw error;
+    }
+};
+
+export const editCategory = async (categoryId, formData) => {
+    try {
+        const response = await API.put(`/admin/editCategory/${categoryId}`, formData);
+        console.log("Edit Category API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error editing category:", error);
+        throw error;
+    }
+};
+
+export const deleteCategory = async (categoryId) => {
+    try {
+        const response = await API.delete(`/admin/deleteCategory/${categoryId}`);
+        console.log("Delete Category API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error deleting category:", error);
+        throw error;
+    }
+};

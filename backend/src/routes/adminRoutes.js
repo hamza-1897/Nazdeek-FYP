@@ -41,8 +41,10 @@ router.put('/updateContactDetails', updateContactDetails);
 router.get('/dashbaord-stats',getDashboardStats)
 
 // category
-const {getCategories , addCategory}  = require('../controllers/mutual/categoryController')
-router.get('/getAllCategory',getCategories);
-router.post('/addCategory',addCategory)
+const { getAllCategories, addCategory , editCategory , deleteCategory } = require('../controllers/admin/categoryController');
+router.get('/getAllCategories', getAllCategories);
+router.post('/addCategory', addCategory);
+router.put('/editCategory/:categoryId', editCategory);
+router.delete('/deleteCategory/:categoryId', deleteCategory);
 
 module.exports = router;
