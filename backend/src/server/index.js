@@ -33,7 +33,7 @@ app.use('/api/admin-auth', adminAuthRoutes);
 //app.use('/api/admin', authMiddleware, checkRole(['admin']), adminRoutes);
 app.use('/api/admin',  adminRoutes);
 app.use('/api/user-auth', userAuthRoutes);
-app.use('/api/user', userRoutes);
+app.use('/api/customer', userRoutes);
 app.use('/api/provider', providerRoutes);   
 
 

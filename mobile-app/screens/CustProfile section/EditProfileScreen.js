@@ -1,27 +1,26 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Image, StatusBar, Alert, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { Dropdown } from 'react-native-element-dropdown';
+import { AuthContext } from '../../context/AuthContext';
 
 const EditProfileScreen = ({ navigation }) => {
-  const [name, setName] = useState('Shamir Ali');
-  const [phone, setPhone] = useState('0300 1234567');
-  const [email] = useState('shamir.ali@example.com');
-  const [gender, setGender] = useState('Male');
-  const [address, setAddress] = useState('House #123, Street 5, Mandi Bahauddin'); 
-  const [profileImage, setProfileImage] = useState('https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400');
-  
+  const { userInfo } = useContext(AuthContext);
+
+  const [name, setName] = useState(userInfo?.name);
+  const [phone, setPhone] = useState(userInfo?.phone);
+  const [email] = useState(userInfo?.email );
+  const [address, setAddress] = useState(userInfo?.address || 'No address provided');
+  const [profileImage, setProfileImage] = useState(userInfo?.profileImage || 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png');
+
 
   const [isEditable, setIsEditable] = useState(false);
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const phoneInputRef = useRef(null);
 
-  const genderData = [
-    { label: 'Male', value: 'Male' },
-    { label: 'Female', value: 'Female' }
-  ];
+  
 
  
   const pickImage = async () => {
@@ -158,28 +157,6 @@ const EditProfileScreen = ({ navigation }) => {
             </View>
 
         
-            <View>
-              <Text className="text-gray-500 text-sm font-semibold mb-2 ml-1">Gender</Text>
-              <Dropdown
-                style={[
-                  styles.dropdown, 
-                  isEditable ? { borderColor: '#bfdbfe', backgroundColor: '#f8fafc' } : { borderColor: '#f3f4f6', backgroundColor: '#fafafa' }
-                ]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={[styles.selectedTextStyle, !isEditable && { color: '#9ca3af' }]}
-                data={genderData}
-                maxHeight={200}
-                labelField="label"
-                valueField="value"
-                placeholder="Select Gender"
-                value={gender}
-                disable={!isEditable}
-                onChange={item => setGender(item.value)}
-                renderRightIcon={() => (
-                  <Ionicons name="chevron-down" size={20} color={isEditable ? "#1a5ea1" : "#cbd5e1"} />
-                )}
-              />
-            </View>
 
            
             <View className="mb-6">

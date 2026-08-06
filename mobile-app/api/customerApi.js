@@ -2,7 +2,7 @@ import api from './axiosInstance';
 
 export const getAllServices = async () => {
     try {
-        const response = await api.get('/user/services');
+        const response = await api.get('/customer/services');
         console.log("Get All Services API response:", response.data);
         return response.data;
     }
@@ -14,7 +14,7 @@ export const getAllServices = async () => {
 
 export const getServiceById = async (serviceId) => {
     try {
-        const response = await api.get(`/user/services/${serviceId}`);
+        const response = await api.get(`/customer/services/${serviceId}`);
         console.log("Get Service by ID API response:", response.data);
         return response.data;
     }
@@ -24,9 +24,9 @@ export const getServiceById = async (serviceId) => {
     }
 };
 
-export const createBooking = async (bookingData) => {
+export const createBooking = async (apiPayload) => {
     try {
-        const response = await api.post('/user/book-service', bookingData);
+        const response = await api.post('/customer/book-service', apiPayload);
         console.log("Create Booking API response:", response.data);
         return response.data;
     }
@@ -38,7 +38,7 @@ export const createBooking = async (bookingData) => {
 
 export const getBookingsByUserId = async (userId) => {
     try {
-        const response = await api.get(`/user/my-bookings/${userId}`);
+        const response = await api.get(`/customer/my-bookings/${userId}`);
         console.log("Get Bookings by User ID API response:", response.data);
         return response.data;
     }

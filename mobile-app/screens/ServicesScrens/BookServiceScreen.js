@@ -1,123 +1,184 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, StatusBar, Platform } from 'react-native';
+import React, { useState, useContext } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StatusBar,
+  Platform,
+  Alert,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { AuthContext } from '../../context/AuthContext';
 
-const BookServiceScreen = ({ navigation }) => {
+const BookServiceScreen = ({ route, navigation }) => {
+  const { userInfo } = useContext(AuthContext);
+  const serviceData = route?.params?.serviceData ;
+  const [name, setName] = useState(`${userInfo?.name}`);
+  const [phone, setPhone] = useState(`${userInfo?.phone}`);
+  const [address, setAddress] = useState('');
+  const [requestDetails, setRequestDetails] = useState('');
+
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [dateText, setDateText] = useState('DD/MM/YYYY');
   const [timeText, setTimeText] = useState('00:00 AM');
 
-  
-  const onDateChange = (event, selectedDate) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      const currentDate = selectedDate;
-      setDate(currentDate);
-      let tempDate = new Date(currentDate);
-      let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+ const handleDateValueChange = (event, selectedDate) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+
+    if (event.type === 'set' && selectedDate) {
+      setDate(selectedDate);
+      let fDate = `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
       setDateText(fDate);
     }
   };
 
-  
   const onTimeChange = (event, selectedTime) => {
-    setShowTimePicker(false);
+    setShowTimePicker(Platform.OS === 'ios');
     if (selectedTime) {
-      let tempTime = new Date(selectedTime);
-      let hours = tempTime.getHours();
-      let minutes = tempTime.getMinutes();
+      let hours = selectedTime.getHours();
+      let minutes = selectedTime.getMinutes();
       let ampm = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12;
-      hours = hours ? hours : 12; 
-      let fTime = hours + ':' + (minutes < 10 ? '0' + minutes : minutes) + ' ' + ampm;
+      hours = hours % 12 || 12;
+      let fTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
       setTimeText(fTime);
     }
   };
 
+  const handleContinue = () => {
+  if (!name.trim() || !phone.trim() || !address.trim() || dateText === 'DD/MM/YYYY') {
+    Alert.alert('Required Fields', 'Please fill all mandatory fields (Name, Phone, Date, Address)');
+    return;
+  }
+
+  const formattedDate = date.toISOString();
+
+  const bookingPayload = {
+    serviceId: serviceData._id,
+    serviceName: serviceData.serviceName || serviceData.name,
+    serviceImage: serviceData.serviceImages?.[0],
+    providerId: serviceData.providerId?._id,
+    providerName: serviceData.providerId?.businessName || serviceData.providerId?.userId?.name || 'Verified Provider',
+    customerName: name,
+    customerPhone: phone,
+    bookingDate: formattedDate,
+    bookingTime: timeText,
+    bookingAddress: address,
+    description: requestDetails,
+    bookingPrice: serviceData.price ,
+  };
+
+  navigation.navigate('BookingSummary', { bookingPayload });
+};
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
-      
-     
-      <View className="px-6 py-4 flex-row items-center relative">
-        <TouchableOpacity 
+
+      <View className="px-6 py-4 flex-row items-center relative border-b border-gray-50">
+        <TouchableOpacity
           onPress={() => navigation.goBack()}
-          className="w-11 h-11 border border-gray-100 rounded-full items-center justify-center absolute left-6 z-10 bg-white"
+          className="w-10 h-10 border border-gray-100 rounded-full items-center justify-center absolute left-6 z-10 bg-white"
         >
-          <Ionicons name="arrow-back" size={24} color="#1a5ea1" />
+          <Ionicons name="arrow-back" size={22} color="#1a5ea1" />
         </TouchableOpacity>
         <View className="flex-1 items-center">
-          <Text className="text-xl font-bold text-gray-800">Book Services</Text>
+          <Text className="text-lg font-bold text-gray-800">Book Service</Text>
         </View>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} className="flex-1 px-6 pt-5">
-        <Text className="text-lg font-bold text-gray-800 mb-6">Customer Information</Text>
+      <ScrollView showsVerticalScrollIndicator={false} className="flex-1 px-6 pt-4">
+        
+        <View className="bg-slate-50 border border-slate-100 p-4 rounded-2xl mb-6 flex-row justify-between items-center">
+          <View className="flex-1 pr-3">
+            <Text className="text-xs font-bold text-[#1a5ea1] uppercase">Selected Service</Text>
+            <Text className="text-base font-bold text-gray-900 mt-0.5" numberOfLines={1}>
+              {serviceData?.serviceName || serviceData?.name}
+            </Text>
+            <Text className="text-xs text-gray-500 font-medium mt-0.5">
+              By {serviceData?.providerId?.businessName || 'Verified Provider'}
+            </Text>
+          </View>
+          <View className="items-end">
+            <Text className="text-xs text-gray-400 font-medium">Est. Price</Text>
+            <Text className="text-lg font-black text-[#1a5ea1]">
+              Rs. {serviceData?.price || '0'}
+            </Text>
+          </View>
+        </View>
 
-        <View className="gap-y-6">
+        <Text className="text-base font-bold text-gray-800 mb-4">Customer Details</Text>
+
+        <View className="gap-y-4">
           <View>
-            <Text className="text-gray-500 font-semibold mb-2 ml-1">Name</Text>
-            <TextInput 
-              placeholder="Enter your name" 
-              className="bg-gray-50 border border-gray-100 p-4 rounded-2xl text-gray-800 text-base" 
+            <Text className="text-gray-500 font-semibold mb-1.5 ml-1 text-sm">Full Name *</Text>
+            <TextInput
+              placeholder="Enter your name"
+              value={name}
+              onChangeText={setName}
+              className="bg-gray-50 border border-gray-100 p-3.5 rounded-2xl text-gray-800 text-base"
             />
           </View>
 
           <View>
-            <Text className="text-gray-500 font-semibold mb-2 ml-1">Phone Number</Text>
-            <View className="flex-row space-x-3">
-              <View className="bg-gray-50 border border-gray-100 px-4 rounded-2xl flex-row items-center">
-                <Text className="text-gray-800 font-medium">+92</Text>
+            <Text className="text-gray-500 font-semibold mb-1.5 ml-1 text-sm">Phone Number *</Text>
+            <View className="flex-row space-x-2">
+              <View className="bg-gray-50 border border-gray-100 px-3 rounded-2xl justify-center items-center">
+                <Text className="text-gray-800 font-bold">+92</Text>
               </View>
-              <TextInput 
-                placeholder="300 1234567" 
-                keyboardType="phone-pad" 
-                className="flex-1 bg-gray-50 border border-gray-100 p-4 rounded-2xl text-gray-800 text-base" 
+              <TextInput
+                placeholder="300 1234567"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+                maxLength={10}
+                className="flex-1 bg-gray-50 border border-gray-100 p-3.5 rounded-2xl text-gray-800 text-base"
               />
             </View>
           </View>
 
-          
-          <View className="flex-row space-x-4">
+          <View className="flex-row space-x-3">
             <View className="flex-1">
-              <Text className="text-gray-500 font-semibold mb-2 ml-1">Select Date</Text>
-              <TouchableOpacity 
-                className="bg-gray-50 border border-gray-100 p-4 rounded-2xl flex-row items-center justify-between"
+              <Text className="text-gray-500 font-semibold mb-1.5 ml-1 text-sm">Select Date *</Text>
+              <TouchableOpacity
+                className="bg-gray-50 border border-gray-100 p-3.5 rounded-2xl flex-row items-center justify-between"
                 onPress={() => setShowDatePicker(true)}
               >
-                <Text className={dateText === 'DD/MM/YYYY' ? "text-gray-400 text-base" : "text-gray-800 text-base"}>
+                <Text className={dateText === 'DD/MM/YYYY' ? "text-gray-400 text-sm font-medium" : "text-gray-800 text-sm font-semibold"}>
                   {dateText}
                 </Text>
-                <Ionicons name="calendar-outline" size={20} color="#1a5ea1" />
+                <Ionicons name="calendar-outline" size={18} color="#1a5ea1" />
               </TouchableOpacity>
             </View>
 
             <View className="flex-1">
-              <Text className="text-gray-500 font-semibold mb-2 ml-1">Select Time</Text>
-              <TouchableOpacity 
-                className="bg-gray-50 border border-gray-100 p-4 rounded-2xl flex-row items-center justify-between"
+              <Text className="text-gray-500 font-semibold mb-1.5 ml-1 text-sm">Select Time *</Text>
+              <TouchableOpacity
+                className="bg-gray-50 border border-gray-100 p-3.5 rounded-2xl flex-row items-center justify-between"
                 onPress={() => setShowTimePicker(true)}
               >
-                <Text className={timeText === '00:00 AM' ? "text-gray-400 text-base" : "text-gray-800 text-base"}>
+                <Text className={timeText === '00:00 AM' ? "text-gray-400 text-sm font-medium" : "text-gray-800 text-sm font-semibold"}>
                   {timeText}
                 </Text>
-                <Ionicons name="time-outline" size={20} color="#1a5ea1" />
+                <Ionicons name="time-outline" size={18} color="#1a5ea1" />
               </TouchableOpacity>
             </View>
           </View>
 
-          
           {showDatePicker && (
             <DateTimePicker
               value={date}
               mode="date"
               display="default"
-              onChange={onDateChange}
-              minimumDate={new Date()} // Past dates select nahi hon gi
+              onChange={handleDateValueChange}
+              minimumDate={new Date()}
             />
           )}
 
@@ -132,37 +193,41 @@ const BookServiceScreen = ({ navigation }) => {
           )}
 
           <View>
-            <Text className="text-gray-500 font-semibold mb-2 ml-1">Address</Text>
-            <View className="bg-gray-50 border border-gray-100 flex-row items-center px-4 rounded-2xl">
-              <Ionicons name="location-outline" size={20} color="#1a5ea1" />
-              <TextInput 
-                placeholder="Enter your street address" 
-                className="flex-1 p-4 text-gray-800 text-base"
+            <Text className="text-gray-500 font-semibold mb-1.5 ml-1 text-sm">Address *</Text>
+            <View className="bg-gray-50 border border-gray-100 flex-row items-center px-3.5 rounded-2xl">
+              <Ionicons name="location-outline" size={18} color="#1a5ea1" />
+              <TextInput
+                placeholder="House #, Street, Area"
+                value={address}
+                onChangeText={setAddress}
+                className="flex-1 p-3.5 text-gray-800 text-base"
               />
             </View>
           </View>
 
           <View>
-            <Text className="text-gray-500 font-semibold mb-2 ml-1">Request Detail</Text>
-            <TextInput 
-              placeholder="Tell us more about your service request..."
-              multiline={true} 
-              numberOfLines={5} 
-              textAlignVertical="top" 
-              className="bg-gray-50 border border-gray-100 p-4 rounded-3xl text-gray-800 h-40 text-base" 
+            <Text className="text-gray-500 font-semibold mb-1.5 ml-1 text-sm">Instructions / Request Detail</Text>
+            <TextInput
+              placeholder="E.g. Main gate bell is broken, call before reaching..."
+              value={requestDetails}
+              onChangeText={setRequestDetails}
+              multiline={true}
+              numberOfLines={4}
+              textAlignVertical="top"
+              className="bg-gray-50 border border-gray-100 p-3.5 rounded-2xl text-gray-800 h-28 text-base"
             />
           </View>
         </View>
-        
-        <View className="h-32" />
+
+        <View className="h-28" />
       </ScrollView>
 
-      <View className="absolute bottom-0 left-0 right-0 px-6 pb-10 pt-5 bg-white border-t border-gray-50">
-        <TouchableOpacity 
-          onPress={() => navigation.navigate('BookingSuccess')}
-          className="bg-[#1a5ea1] py-4 rounded-3xl items-center shadow-lg shadow-blue-300"
+      <View className="absolute bottom-0 left-0 right-0 px-6 pb-8 pt-4 bg-white border-t border-slate-100 shadow-md">
+        <TouchableOpacity
+          onPress={handleContinue}
+          className="bg-[#1a5ea1] py-4 rounded-2xl items-center shadow-md active:opacity-90"
         >
-          <Text className="text-white text-lg font-bold">Continue</Text>
+          <Text className="text-white text-base font-bold">Confirm & Continue</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -92,6 +92,7 @@ const userLogin = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      phone: user.phone,
       providerStatus,
       providerInfo, 
       message: "User logged in successfully",

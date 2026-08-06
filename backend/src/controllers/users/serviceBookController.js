@@ -4,18 +4,42 @@ const providerModel = require('../../models/providerModel');
 
 const createBooking = async (req, res) => {
     try {
-        const { userId, providerId, serviceId, customerName, customerPhone, bookingAddress, bookingDate, bookingTime, description } = req.body;
-
-        const alreadyBooked = await bookingModel.findOne({
+        const { 
             userId,
-            providerId,
-            serviceId,
-            status : { $nin: ['cancelled', 'completed'] }
-        });
-        if (alreadyBooked) {
-            return res.status(400).json({ message: 'You have already booked this service.' });
+            providerId, 
+            serviceId, 
+            customerName, 
+            customerPhone, 
+            bookingDate, 
+            bookingTime, 
+            bookingAddress, 
+            bookingPrice,
+            description 
+        } = req.body;
+
+//        const userId = req.user?._id ;
+
+        if (!userId || !providerId || !serviceId || !bookingDate || !bookingTime || !bookingAddress || !customerPhone) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'All required fields must be provided.' 
+            });
         }
-        const booking = await bookingModel.create({
+
+        const activeBooking = await bookingModel.findOne({
+            userId,
+            serviceId,
+            status: { $nin: ['cancelled', 'completed'] }
+        });
+
+        if (activeBooking) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'You already have an active booking for this service.' 
+            });
+        }
+
+        const newBooking = await bookingModel.create({
             userId,
             providerId,
             serviceId,
@@ -24,11 +48,22 @@ const createBooking = async (req, res) => {
             customerName,
             customerPhone,
             bookingAddress,
+            bookingPrice,
             description
         });
-        res.status(201).json(booking);
+
+        return res.status(201).json({
+            success: true,
+            message: 'Booking created successfully!',
+            booking: newBooking
+        });
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error in createBooking:', error);
+        return res.status(500).json({ 
+            success: false, 
+            message: error.message || 'Server Error while creating booking.' 
+        });
     }
 };
 

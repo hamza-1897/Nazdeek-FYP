@@ -3,58 +3,77 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const ServiceCard = ({ item, onPress }) => {
+  const imageUrl = item?.serviceImages?.[0] || item?.image || 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=500';
+  const categoryName = item?.categoryId?.name || item?.category || 'Service';
+  const providerName = item?.providerId?.businessName ;
+  const locationText = item?.providerId?.address || 'Location not available';
+  const rating = item?.rating || '4.9';
+
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
+      activeOpacity={0.9}
       onPress={onPress}
-      activeOpacity={0.95}
-      className="bg-white rounded-[22px] border border-gray-100 shadow-md shadow-gray-200/50 mb-3 mx-2 overflow-hidden"
+      className="bg-white rounded-3xl mb-4 mx-1 border border-slate-100 shadow-md shadow-slate-200/50 overflow-hidden"
     >
-      <View className="flex-row p-3 items-center">
-        
-        <View className="relative">
-          <Image 
-            source={{ 
-              uri: item?.serviceImages?.[0] || 'https://images.unsplash.com/photo-1581578731522-30d8d067469a?q=80&w=500' 
-            }} 
-            className="w-24 h-24 rounded-2xl"
-            resizeMode="cover"
-          />
-          {/* Floating Category Badge */}
-          <View className="absolute bottom-1 left-1 bg-black/60 px-2 py-0.5 rounded-md">
-            <Text className="text-white text-[9px] font-black uppercase tracking-wider">
-              {item?.serviceName?.toLowerCase().includes('cleaning') ? 'Cleaning' : 'Technician'}
+      <View className="relative w-full h-40 bg-slate-100">
+        <Image
+          source={{ uri: imageUrl }}
+          className="w-full h-full"
+          resizeMode="cover"
+        />
+
+        <View className="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full border border-white/40 shadow-xs">
+          <Text className="text-slate-900 text-[10px] font-extrabold uppercase tracking-wider">
+            {categoryName}
+          </Text>
+        </View>
+
+        <View className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-full flex-row items-center border border-white/20">
+          <Ionicons name="star" size={11} color="#f59e0b" />
+          <Text className="text-white text-xs font-bold ml-1">
+            {rating}
+          </Text>
+        </View>
+      </View>
+
+      <View className="p-4">
+        <View className="flex-row justify-between items-start mb-1.5">
+          <Text
+            numberOfLines={1}
+            className="text-lg font-black text-slate-900 flex-1 pr-2 capitalize"
+          >
+            {item?.serviceName || item?.name || 'Untitled Service'}
+          </Text>
+          <View className="items-end">
+            <Text className="text-xl font-black text-[#1a5ea1]">
+              Rs.{item?.price || '0'}
+            </Text>
+            <Text className="text-[10px] font-extrabold text-slate-400 uppercase -mt-1">
+              {item?.priceType || 'Fixed'}
             </Text>
           </View>
         </View>
 
-    
-        <View className="flex-1 ml-3.5 justify-between h-24 py-0.5">
-          
-          <View className="flex-row justify-between items-start w-full">
-            <Text className="text-gray-900 font-black text-base flex-1 pr-1.5 leading-tight" numberOfLines={2}>
-              {item?.serviceName || "Service Title"}
-            </Text>
-            <Text className="text-[#1a5ea1] font-black text-base whitespace-nowrap">
-              Rs.{item?.price || "0"}
-            </Text>
-          </View>
-
-          <View className="flex-row items-center bg-blue-50/40 border border-blue-100/20 px-2.5 py-0.5 rounded-xl self-start mt-0.5">
-            <Ionicons name="person-circle-sharp" size={14} color="#1a5ea1" />
-            <Text className="text-gray-700 text-xs font-bold ml-1.5" numberOfLines={1}>
-              {item?.providerId?.businessName || "Expert Partner"}
-            </Text>
-          </View>
-
-          <View className="flex-row items-center border-t border-gray-100/70 pt-1.5 mt-0.5">
-            <Ionicons name="location-sharp" size={13} color="#9ca3af" />
-            <Text className="text-gray-400 text-[11px] font-bold ml-1 capitalize" numberOfLines={1}>
-              {item?.providerId?.address || "Mandi Bahauddin"}
-            </Text>
-          </View>
-
+        <View className="flex-row items-center mb-3">
+          <Ionicons name="location-outline" size={14} color="#64748b" />
+          <Text numberOfLines={1} className="text-xs font-semibold text-slate-500 ml-1 capitalize">
+            {locationText}
+          </Text>
         </View>
 
+        <View className="flex-row items-center justify-between border-t border-slate-100 pt-3">
+          <View className="flex-1 mr-2">
+            <Text className="text-xs font-semibold text-slate-400">Provider</Text>
+            <Text numberOfLines={1} className="text-sm font-extrabold text-slate-900 mt-0.5">
+              {providerName}
+            </Text>
+          </View>
+
+          <View className="bg-[#1a5ea1] px-4 py-2.5 rounded-xl flex-row items-center shadow-sm shadow-blue-500/20">
+            <Text className="text-white text-xs font-bold mr-1">View Detail</Text>
+            <Ionicons name="arrow-forward" size={12} color="white" />
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );
