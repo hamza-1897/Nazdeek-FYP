@@ -7,7 +7,7 @@ const getBookingsByProvider = async (req, res) => {
     try {
         const { providerId } = req.params;
         const bookings = await bookingModel.find({ providerId })
-            .populate('userId', 'name email')
+            .populate('userId', 'name profileImage email')
             .populate('serviceId', 'serviceName price');
         res.status(200).json(bookings);
     } catch (error) {
