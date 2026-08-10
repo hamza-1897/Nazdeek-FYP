@@ -1,185 +1,144 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, Image, Alert, BackHandler } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useFocusEffect } from '@react-navigation/native';
+import ProviderBookingsCard from '../../Cards/ProviderBookingsCard';
+import ProviderTabs from '../../Cards/ProviderTabs';
 
 const ProvidersBooking = ({ navigation }) => {
-  const [activeTab, setActiveTab] = useState('Requests');
+  const [activeTab, setActiveTab] = useState('Active');
 
-  
-  const [requestsData, setRequestsData] = useState([
-    { id: 101, name: 'Ayesha Omar', service: 'Deep Home Cleaning', date: 'Apr 12, 4 PM', image: 'https://randomuser.me/api/portraits/women/3.jpg' },
-    { id: 102, name: 'Zain Ahmed', service: 'Electrician Service', date: 'Apr 14, 11 AM', image: 'https://randomuser.me/api/portraits/men/2.jpg' },
+  const [bookings, setBookings] = useState([
+    {
+      id: 1,
+      customerName: 'Ayesha Omar',
+      customerImage: 'https://randomuser.me/api/portraits/women/3.jpg',
+      serviceName: 'Deep Home Cleaning',
+      dateTime: 'Apr 12, 04:00 PM',
+      price: 'PKR 2,500',
+      address: 'Street 4, Sector F-7, Islamabad',
+      notes: 'Please bring your own cleaning chemical set.',
+      status: 'pending',
+    },
+    {
+      id: 2,
+      customerName: 'Zain Ahmed',
+      customerImage: 'https://randomuser.me/api/portraits/men/2.jpg',
+      serviceName: 'Electrician Service',
+      dateTime: 'Apr 14, 11:00 AM',
+      price: 'PKR 1,200',
+      address: 'House 12, Main Bazaar, Mandi Bahauddin',
+      notes: 'UPS wiring issue in upper portion.',
+      status: 'accepted',
+    },
+    {
+      id: 3,
+      customerName: 'Ali Raza',
+      customerImage: 'https://randomuser.me/api/portraits/men/1.jpg',
+      serviceName: 'AC Maintenance & Service',
+      dateTime: 'Mar 15, 10:00 AM',
+      price: 'PKR 3,000',
+      address: 'G-9/1, Near Park, Islamabad',
+      notes: 'Master bedroom inverter AC.',
+      status: 'completed',
+    },
   ]);
 
-  const [upcomingData, setUpcomingData] = useState([
-    { id: 1, name: 'Sara Khan', service: 'Deep Home Cleaning', date: 'Apr 8, 11 AM', image: 'https://randomuser.me/api/portraits/women/1.jpg' },
-    { id: 2, name: 'Fatima Noor', service: 'Deep Home Cleaning', date: 'Apr 10, 2 PM', image: 'https://randomuser.me/api/portraits/women/2.jpg' },
-  ]);
-
-  const [completedData, setCompletedData] = useState([
-    { id: 3, name: 'Ali Raza', service: 'Electrician Service', date: 'Mar 15, 10 AM', image: 'https://randomuser.me/api/portraits/men/1.jpg' },
-  ]);
-
-  
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'ProviderDashboard' }],
-        });
-        return true;
-      };
-
-      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () => subscription.remove();
-    }, [navigation])
-  );
-
- 
-  const handleAcceptRequest = (item) => {
-    Alert.alert("Request Accepted", `${item.name}'s booking has been moved to Upcoming.`, [
-      { text: "OK", onPress: () => {
-        setRequestsData(prev => prev.filter(i => i.id !== item.id));
-        setUpcomingData(prev => [...prev, item]);
-      }}
+  const handleAccept = (id) => {
+    Alert.alert('Accept Booking', 'Are you sure you want to accept this booking?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Accept',
+        onPress: () => {
+          setBookings((prev) =>
+            prev.map((item) => (item.id === id ? { ...item, status: 'accepted' } : item))
+          );
+        },
+      },
     ]);
   };
 
-
-  const handleRejectRequest = (item) => {
-    Alert.alert("Reject Request", "Are you sure you want to reject this booking?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Reject", style: "destructive", onPress: () => {
-        setRequestsData(prev => prev.filter(i => i.id !== item.id));
-      }}
+  const handleReject = (id) => {
+    Alert.alert('Reject Booking', 'Are you sure you want to reject this booking?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Reject',
+        style: 'destructive',
+        onPress: () => {
+          setBookings((prev) => prev.filter((item) => item.id !== id));
+        },
+      },
     ]);
   };
 
-  
-  const handleMarkDone = (item) => {
-    Alert.alert("Success", "Job marked as completed!", [
-      { text: "OK", onPress: () => {
-        setUpcomingData(prev => prev.filter(i => i.id !== item.id));
-        setCompletedData(prev => [...prev, item]);
-      }}
+  const handleComplete = (id) => {
+    Alert.alert('Complete Booking', 'Mark this booking as completed?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Complete',
+        onPress: () => {
+          setBookings((prev) =>
+            prev.map((item) => (item.id === id ? { ...item, status: 'completed' } : item))
+          );
+        },
+      },
     ]);
   };
 
-  const getCurrentData = () => {
-    if (activeTab === 'Requests') return requestsData;
-    if (activeTab === 'Upcoming') return upcomingData;
-    return completedData;
-  };
-
-  const currentData = getCurrentData();
+  const filteredBookings = bookings.filter((item) => {
+    if (activeTab === 'Active') {
+      return item.status === 'pending' || item.status === 'accepted';
+    }
+    return item.status === 'completed';
+  });
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      
-      <View className="px-6 py-4 mt-8 flex-row items-center border-b border-gray-50">
-        <TouchableOpacity 
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'ProviderDashboard' }],
-            });
-          }} 
-          className="mr-4"
-        >
-          <Ionicons name="chevron-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text className="text-xl font-semibold text-gray-900">My bookings</Text>
+      <View className="px-6 py-4  bg-white flex-row items-center justify-center border-b border-gray-100">
+        <Text className="text-xl font-bold text-gray-900 text-center">My Bookings</Text>
       </View>
 
-     
-      <View className="flex-row justify-around border-b border-gray-100">
-        {['Requests', 'Upcoming', 'Completed'].map((tab) => (
-          <TouchableOpacity 
+      <View className="flex-row bg-white border-b border-gray-200">
+        {['Active', 'Completed'].map((tab) => (
+          <TouchableOpacity
             key={tab}
             onPress={() => setActiveTab(tab)}
-            className={`py-3 flex-1 items-center ${activeTab === tab ? 'border-b-2 border-[#1a5ea1]' : ''}`}
+            className={`py-3 flex-1 items-center ${
+              activeTab === tab ? 'border-b-2 border-[#1a5ea1]' : ''
+            }`}
           >
-            <Text className={`font-semibold text-xs ${activeTab === tab ? 'text-[#1a5ea1]' : 'text-gray-400'}`}>
+            <Text
+              className={`font-semibold text-sm ${
+                activeTab === tab ? 'text-[#1a5ea1]' : 'text-gray-400'
+              }`}
+            >
               {tab}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-     
-      <ScrollView className="flex-1 px-6 mt-4" showsVerticalScrollIndicator={false}>
-        {currentData.length === 0 ? (
-          <View className="items-center justify-center mt-20">
+      <ScrollView className="flex-1 px-5 mt-4" showsVerticalScrollIndicator={false}>
+        {filteredBookings.length === 0 ? (
+          <View className="items-center justify-center mt-24">
             <Ionicons name="calendar-outline" size={48} color="#cbd5e1" />
-            <Text className="text-gray-400 mt-2 font-medium">No bookings found</Text>
+            <Text className="text-gray-400 mt-2 font-medium text-sm">No bookings found</Text>
           </View>
         ) : (
-          currentData.map((item) => (
-            <View 
-              key={item.id} 
-              className={`mb-3 p-3 rounded-2xl border ${
-                activeTab === 'Completed' ? 'bg-white border-gray-100' : 'bg-blue-50/50 border-blue-100'
-              }`}
-            >
-              <View className="flex-row items-center">
-                <Image source={{ uri: item.image }} className="w-10 h-10 rounded-full mr-3 border border-gray-100" />
-                <View className="flex-1">
-                  <View className="flex-row justify-between items-center">
-                    <Text className="text-[15px] font-bold text-gray-900">{item.name}</Text>
-                    <Text className="font-bold text-[9px] px-2 py-0.5 rounded-md bg-blue-100/60 text-[#1a5ea1]">
-                      {item.date}
-                    </Text>
-                  </View>
-                  <Text className="text-gray-500 text-[11px]">{item.service}</Text>
-                </View>
-              </View>
-
-              {/* Action Buttons based on Active Tab */}
-              {activeTab === 'Requests' && (
-                <View className="flex-row gap-2 mt-3 justify-end">
-                  <TouchableOpacity 
-                    onPress={() => handleRejectRequest(item)}
-                    className="border border-red-500 px-4 py-1.5 rounded-lg"
-                  >
-                    <Text className="text-red-500 font-bold text-[11px]">Reject</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity 
-                    onPress={() => handleAcceptRequest(item)}
-                    className="bg-[#1a5ea1] px-4 py-1.5 rounded-lg shadow-sm"
-                  >
-                    <Text className="text-white font-bold text-[11px]">Accept</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-
-              {activeTab === 'Upcoming' && (
-                <View className="flex-row gap-2 mt-3 justify-end">
-                  <TouchableOpacity className="border border-[#1a5ea1] px-4 py-1.5 rounded-lg">
-                    <Text className="text-[#1a5ea1] font-bold text-[11px]">Message</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity 
-                    className="bg-[#1a5ea1] px-4 py-1.5 rounded-lg shadow-sm" 
-                    onPress={() => handleMarkDone(item)}
-                  >
-                    <Text className="text-white font-bold text-[11px]">Mark done</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-
-              {activeTab === 'Completed' && (
-                <View className="flex-row items-center mt-2 pt-2 border-t border-gray-50">
-                  <Ionicons name="checkmark-done" size={14} color="#1a5ea1" />
-                  <Text className="text-[#1a5ea1] font-bold text-[10px] ml-1 uppercase">Job Completed</Text>
-                </View>
-              )}
-            </View>
+          filteredBookings.map((item) => (
+            <ProviderBookingsCard
+              key={item.id}
+              item={item}
+              onAccept={handleAccept}
+              onReject={handleReject}
+              onComplete={handleComplete}
+            />
           ))
         )}
       </ScrollView>
+
+      <ProviderTabs activeTab="Bookings" navigation={navigation} />
     </View>
   );
 };

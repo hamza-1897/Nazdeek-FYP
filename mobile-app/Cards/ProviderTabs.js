@@ -35,7 +35,12 @@ const ProviderTabs = ({ activeTab, navigation }) => {
         active={activeTab === 'Chat'} 
         onPress={() => handleTabPress('ChatScreen')} 
       />
-      
+       <TabItem 
+        icon="calendar-outline" 
+        label="Bookings" 
+        active={activeTab === 'Bookings'} 
+        onPress={() => handleTabPress('ProvidersBooking')} 
+      />
       <TabItem 
         icon="person-outline" 
         label="Profile" 

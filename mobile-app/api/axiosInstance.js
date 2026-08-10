@@ -6,10 +6,10 @@ import { useContext } from 'react';
 
 
 //LAPTOP IPADRESS
-const API_BASE_URL = 'http://10.230.226.200:3000/api'; 
+//const API_BASE_URL = 'http://10.230.226.200:3000/api'; 
 
 //OFFICE IPADRESS
-//const API_BASE_URL = 'http://192.168.1.15:3000/api';
+const API_BASE_URL = 'http://192.168.1.14:3000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
