@@ -1,47 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StatusBar, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ProviderBookingsCard from '../../Cards/ProviderBookingsCard';
 import ProviderTabs from '../../Cards/ProviderTabs';
+import { getBookingsByProvider } from '../../api/ProviderApi';
+import { AuthContext } from '../../context/AuthContext';
 
 const ProvidersBooking = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('Active');
+  const { providerInfo } = useContext(AuthContext);
+  const [bookings, setBookings] = useState([]);
 
-  const [bookings, setBookings] = useState([
-    {
-      id: 1,
-      customerName: 'Ayesha Omar',
-      customerImage: 'https://randomuser.me/api/portraits/women/3.jpg',
-      serviceName: 'Deep Home Cleaning',
-      dateTime: 'Apr 12, 04:00 PM',
-      price: 'PKR 2,500',
-      address: 'Street 4, Sector F-7, Islamabad',
-      notes: 'Please bring your own cleaning chemical set.',
-      status: 'pending',
-    },
-    {
-      id: 2,
-      customerName: 'Zain Ahmed',
-      customerImage: 'https://randomuser.me/api/portraits/men/2.jpg',
-      serviceName: 'Electrician Service',
-      dateTime: 'Apr 14, 11:00 AM',
-      price: 'PKR 1,200',
-      address: 'House 12, Main Bazaar, Mandi Bahauddin',
-      notes: 'UPS wiring issue in upper portion.',
-      status: 'accepted',
-    },
-    {
-      id: 3,
-      customerName: 'Ali Raza',
-      customerImage: 'https://randomuser.me/api/portraits/men/1.jpg',
-      serviceName: 'AC Maintenance & Service',
-      dateTime: 'Mar 15, 10:00 AM',
-      price: 'PKR 3,000',
-      address: 'G-9/1, Near Park, Islamabad',
-      notes: 'Master bedroom inverter AC.',
-      status: 'completed',
-    },
-  ]);
+  const fetchBookings = async () => {
+    try {
+      if (!providerInfo || !providerInfo._id) {
+        console.log('Provider ID is not available');
+        return;
+      }
+
+      const response = await getBookingsByProvider(providerInfo._id);
+      console.log('Bookings fetched:', response);
+      setBookings(response || []);
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookings();
+  }, [providerInfo]);
 
   const handleAccept = (id) => {
     Alert.alert('Accept Booking', 'Are you sure you want to accept this booking?', [
@@ -50,7 +37,7 @@ const ProvidersBooking = ({ navigation }) => {
         text: 'Accept',
         onPress: () => {
           setBookings((prev) =>
-            prev.map((item) => (item.id === id ? { ...item, status: 'accepted' } : item))
+            prev.map((item) => (item._id === id ? { ...item, status: 'accepted' } : item))
           );
         },
       },
@@ -64,7 +51,7 @@ const ProvidersBooking = ({ navigation }) => {
         text: 'Reject',
         style: 'destructive',
         onPress: () => {
-          setBookings((prev) => prev.filter((item) => item.id !== id));
+          setBookings((prev) => prev.filter((item) => item._id !== id));
         },
       },
     ]);
@@ -77,7 +64,7 @@ const ProvidersBooking = ({ navigation }) => {
         text: 'Complete',
         onPress: () => {
           setBookings((prev) =>
-            prev.map((item) => (item.id === id ? { ...item, status: 'completed' } : item))
+            prev.map((item) => (item._id === id ? { ...item, status: 'completed' } : item))
           );
         },
       },
@@ -86,16 +73,16 @@ const ProvidersBooking = ({ navigation }) => {
 
   const filteredBookings = bookings.filter((item) => {
     if (activeTab === 'Active') {
-      return item.status === 'pending' || item.status === 'accepted';
+      return item?.status === 'pending' || item?.status === 'accepted';
     }
-    return item.status === 'completed';
+    return item?.status === 'completed';
   });
 
   return (
     <View className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      <View className="px-6 py-4  bg-white flex-row items-center justify-center border-b border-gray-100">
+      <View className="px-6 py-4 bg-white flex-row items-center justify-center border-b border-gray-100">
         <Text className="text-xl font-bold text-gray-900 text-center">My Bookings</Text>
       </View>
 
@@ -126,9 +113,9 @@ const ProvidersBooking = ({ navigation }) => {
             <Text className="text-gray-400 mt-2 font-medium text-sm">No bookings found</Text>
           </View>
         ) : (
-          filteredBookings.map((item) => (
+          filteredBookings.map((item, index) => (
             <ProviderBookingsCard
-              key={item.id}
+              key={item?._id || `booking-${index}`}
               item={item}
               onAccept={handleAccept}
               onReject={handleReject}

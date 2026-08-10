@@ -54,3 +54,16 @@ export const getAllCategories = async ()=>{
         throw error;
     }
 }
+
+//booking apis
+export const getBookingsByProvider = async (providerId) => {
+    try {
+        const response = await api.get(`/provider/bookings/${providerId}`);
+        console.log("Get Bookings By Provider API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching bookings by provider:", error);
+        throw error;
+    }
+};
