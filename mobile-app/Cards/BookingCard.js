@@ -24,6 +24,9 @@ const BookingCard = ({
     const current = statusStr?.toLowerCase();
     if (current === 'completed') return { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-100' };
     if (current === 'cancelled') return { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-100' };
+    if (current === 'rejected') return { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-100' };
+    if (current === 'accepted') return { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-100' };
+    if (current === 'pending') return { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-100' };
     return { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-100' };
   };
 
@@ -106,7 +109,7 @@ const BookingCard = ({
       ) : null}
 
       <View className="flex-row justify-end mt-1.5">
-        {currentStatus !== 'cancelled' && currentStatus !== 'completed' && (
+        {currentStatus !== 'cancelled' && currentStatus !=='rejected' && currentStatus !== 'completed' && (
           <TouchableOpacity 
             onPress={() => navigation.navigate('CancelBooking')} 
             className="bg-rose-50 px-5 py-1.5 rounded-xl border border-rose-100 active:bg-rose-100"
@@ -114,6 +117,7 @@ const BookingCard = ({
             <Text className="text-rose-600 text-xs font-bold">Cancel Booking</Text>
           </TouchableOpacity>
         )}
+        
 
         {currentStatus === 'completed' && (
           <TouchableOpacity 
@@ -133,11 +137,16 @@ const BookingCard = ({
 
         {currentStatus === 'cancelled' && (
           <TouchableOpacity 
-            onPress={() => navigation.navigate('ServiceDetails', { serviceName, providerName, price })} // Apni screen state ke mutabiq link krlein
+            onPress={() => navigation.navigate('ServiceDetails', { serviceName, providerName, price })} 
             className="bg-blue-50 px-6 py-1.5 rounded-xl border border-blue-100 active:bg-blue-100"
           >
             <Text className="text-blue-600 text-xs font-bold">Rebook Service</Text>
           </TouchableOpacity>
+        )}
+
+        {currentStatus === 'rejected' && (
+         
+          <Text className="text-rose-500 text-center text-xs font-bold">Your Booking is Rejected.</Text>
         )}
       </View>
 

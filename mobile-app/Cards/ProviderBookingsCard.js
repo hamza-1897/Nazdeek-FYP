@@ -1,9 +1,14 @@
-import React from 'react';
+import {React, useState} from 'react';
 import { View, Text, TouchableOpacity, Image, Alert, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
+import {accessChat} from '../api/chatApi';
+import { useNavigation } from '@react-navigation/native';
 
-const ProviderBookingsCard = ({ item, onAccept, onReject, onComplete, navigation }) => {
+const ProviderBookingsCard = ({ item, onAccept, onReject, onComplete }) => {
+  const navigation = useNavigation();
+  const [loadingChat, setLoadingChat] = useState(false);
+
   const formattedDate = item?.bookingDate ? dayjs(item.bookingDate).format('DD MMM, YYYY') : '';
   const customerName = item?.customerName  || 'Customer';
   const customerPhone = item?.customerPhone || 'N/A';
@@ -19,15 +24,33 @@ const ProviderBookingsCard = ({ item, onAccept, onReject, onComplete, navigation
     }
   };
 
-  const handleChat = () => {
-    if (navigation) {
-      navigation.navigate('ChatScreen', {
-        bookingId: item?._id,
-        receiverId: item?.userId?._id,
-        receiverName: customerName,
+ const handleMessagePress = async () => {
+    try {
+      setLoadingChat(true);
+
+      const userId = item?.userId?._id ;
+      const userName = item.userId?.name ;
+      const userImage = item.userId?.profileImage || null;
+
+      const chatRoom = await accessChat({
+        userId: userId,
+        providerId: item?.providerId,
       });
-    } else {
-      Alert.alert('Chat', `Initiating chat with ${customerName}`);
+
+     navigation.navigate('ChatScreen', {
+        chatId: chatRoom._id,
+        senderId: item?.providerId,
+        senderModel: 'Provider',
+        receiverId: userId,
+        receiverModel: 'User',
+        receiverName: userName,
+        receiverImage: userImage,
+      });
+    } catch (error) {
+      console.error('Error opening chat:', error);
+      Alert.alert('Error', 'Chat room open nahi ho saka. Dobara try karein.');
+    } finally {
+      setLoadingChat(false);
     }
   };
 
@@ -50,6 +73,8 @@ const ProviderBookingsCard = ({ item, onAccept, onReject, onComplete, navigation
               ? 'bg-amber-100'
               : item?.status === 'accepted'
               ? 'bg-blue-100'
+              : item?.status === 'rejected'
+              ? 'bg-red-100'
               : 'bg-emerald-100'
           }`}
         >
@@ -59,6 +84,8 @@ const ProviderBookingsCard = ({ item, onAccept, onReject, onComplete, navigation
                 ? 'text-amber-700'
                 : item?.status === 'accepted'
                 ? 'text-[#1a5ea1]'
+                : item?.status === 'rejected'
+                ? 'text-red-700'
                 : 'text-emerald-700'
             }`}
           >
@@ -128,7 +155,7 @@ const ProviderBookingsCard = ({ item, onAccept, onReject, onComplete, navigation
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={handleChat}
+              onPress={handleMessagePress}
               className="border border-[#1a5ea1] px-4 py-2 rounded-xl flex-row items-center justify-center bg-blue-50/40"
             >
               <Ionicons name="chatbubble-ellipses-outline" size={16} color="#1a5ea1" />
@@ -146,10 +173,24 @@ const ProviderBookingsCard = ({ item, onAccept, onReject, onComplete, navigation
         </View>
       )}
 
+      {item?.status === 'cancelled' && (
+        <View className="flex-row items-center justify-center mt-1 pt-2 border-t border-gray-100">
+          <Ionicons name="checkmark-done-circle" size={16} color="#a40a0a" />
+          <Text className="text-emerald-600 font-bold text-xs ml-1.5">Cancelled</Text>
+        </View>
+      )}
+
       {item?.status === 'completed' && (
         <View className="flex-row items-center justify-center mt-1 pt-2 border-t border-gray-100">
           <Ionicons name="checkmark-done-circle" size={16} color="#059669" />
           <Text className="text-emerald-600 font-bold text-xs ml-1.5">Completed</Text>
+        </View>
+      )}
+
+      {item?.status === 'rejected' && (
+        <View className="flex-row items-center justify-center mt-1 pt-2 border-t border-gray-100">
+          <Ionicons name="close-circle" size={16} color="#dc2626" />
+          <Text className="text-red-600 font-bold text-xs ml-1.5">Rejected</Text>
         </View>
       )}
     </View>

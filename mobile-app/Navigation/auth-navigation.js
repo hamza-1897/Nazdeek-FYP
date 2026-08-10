@@ -33,6 +33,7 @@ import LeaveReviewScreen from '../screens/ServicesScrens/LeaveReviewScreen';
 import HelpCenterScreen from '../screens/CustProfile section/HelpCenterScreen';
 
 // --- PROVIDER FLOW SCREENS ---
+import ProviderTabNavigator from './ProviderTabNavigator';
 import ProviderDashboard from '../screens/ProviderDashboard';
 import CreateServiceScreen from '../screens/ProviderDashboard/CreateServiceScreen';
 import ServicePublishedScreen from '../screens/ProviderDashboard/ServicePublishedScreen';
@@ -45,6 +46,8 @@ import RatingsReviewsProvider from '../screens/ProviderDashboard/RatingsReviewsP
 import ReportScreen from '../screens/ProviderScreens/ReportScreen';
 
 // --- UTILITY / COMMON SCREENS ---
+import ChatScreen from '../screens/ChatScreen';
+import InboxScreen from '../screens/InboxScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 
 const Stack = createNativeStackNavigator();
@@ -84,6 +87,7 @@ const AuthNavigation = () => {
       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
 
       {/* 3. Provider Stack */}
+      <Stack.Screen name="ProviderTabNavigator" component={ProviderTabNavigator} />
       <Stack.Screen name="ProviderDashboard" component={ProviderDashboard} />
       <Stack.Screen name="CreateService" component={CreateServiceScreen} />
       <Stack.Screen name="ServicePublished" component={ServicePublishedScreen} />
@@ -97,6 +101,9 @@ const AuthNavigation = () => {
 
       {/* 4. Common / Notifications */}
       <Stack.Screen name="Notification" component={NotificationScreen} />
+      {/* 5. Chat */}
+      <Stack.Screen name="InboxScreen" component={InboxScreen} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
     </Stack.Navigator>
   );
 };

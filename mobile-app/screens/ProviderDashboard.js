@@ -18,7 +18,7 @@ const ProviderDashboard = ({ navigation }) => {
           <Text className="text-white text-2xl font-bold">{providerInfo?.businessName}</Text>
         </View>
         <TouchableOpacity className="w-12 h-12 bg-blue-400/30 rounded-full items-center justify-center border border-blue-300/50">
-          <Image source={{ uri: userInfo?.profileImage }} className="w-12 h-12 rounded-full" />
+          <Image source={{ uri: providerInfo?.providerImage }} className="w-12 h-12 rounded-full" />
         </TouchableOpacity>
       </View>
 
@@ -71,7 +71,7 @@ const ProviderDashboard = ({ navigation }) => {
         </TouchableOpacity>
       </ScrollView>
 
-      <ProviderTabs activeTab="Home" navigation={navigation} />
+   
     </View>
   );
 };

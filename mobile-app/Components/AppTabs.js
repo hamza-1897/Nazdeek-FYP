@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/homeScreen';
 import ServicesScreen from '../screens/serviceScreen';
-import ChatScreen from '../screens/chatScreen';
+import InboxScreen from '../screens/InboxScreen';
 import BookingsScreen from '../screens/bookingScreen';
 import ProfileScreen from '../screens/profileScreen';
 
@@ -41,7 +41,7 @@ const AppTabs = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Services" component={ServicesScreen} />
-      <Tab.Screen name="Chat" component={ChatScreen} />
+      <Tab.Screen name="Chat" component={InboxScreen} />
       <Tab.Screen name="Bookings" component={BookingsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

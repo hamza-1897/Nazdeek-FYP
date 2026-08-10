@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { ProviderTabNavigator } from '../Navigation/ProviderTabNavigator';
 
 import { AuthContext } from '../context/AuthContext';
 import { userLogin } from '../api/authApi';
@@ -54,7 +55,7 @@ const LoginScreen = ({ navigation }) => {
           } else if (status === 'pending') {
             navigation.replace('PendingApproval');
           } else if (status === 'approved') {
-            navigation.replace('ProviderDashboard');
+            navigation.replace('ProviderTabNavigator');
           } else {
             navigation.replace('ProviderSetup');
           }

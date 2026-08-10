@@ -3,13 +3,13 @@ const messageModel = require('../../models/messageModel');
 
 const accessChat = async (req, res) => {
   try {
-    const { customerId, providerId } = req.body;
+    const { userId, providerId } = req.body;
 
-    if (!customerId || !providerId) {
-      return res.status(400).json({ message: 'CustomerId and ProviderId are required' });
+    if (!userId || !providerId) {
+      return res.status(400).json({ message: 'UserId and ProviderId are required' });
     }
 
-    let chat = await chatModel.findOne({ customerId, providerId })
+    let chat = await chatModel.findOne({ customerId: userId, providerId })
       .populate('customerId', 'name profileImage ')
       .populate('providerId', 'name profileImage ');
 
@@ -18,7 +18,7 @@ const accessChat = async (req, res) => {
     }
 
     const newChat = await chatModel.create({
-      customerId,
+      customerId: userId,
       providerId,
     });
 
@@ -37,16 +37,16 @@ const fetchChats = async (req, res) => {
   try {
     const { id, role } = req.params; 
 
-    const query = role === 'user' ? { customerId: id } : { providerId: id };
+    const query = role === 'customer' ? { customerId: id } : { providerId: id };
 
     const chats = await chatModel.find(query)
       .populate('customerId', 'name profileImage')
       .populate('providerId', 'name profileImage')
       .sort({ updatedAt: -1 });
 
-    res.status(200).json(chats);
+   return res.status(200).json(chats);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
