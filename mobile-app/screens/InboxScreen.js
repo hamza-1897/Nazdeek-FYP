@@ -19,14 +19,13 @@ import { ProviderTabs } from '../Cards/ProviderTabs';
 const InboxScreen = ({ navigation, route }) => {
   const { userInfo, providerInfo } = useContext(AuthContext);
 
-  // Safe and clean user extraction
   const currentUserId =
     userInfo?.role === 'customer'
-      ? userInfo?._id
-      : providerInfo?._id || route.params?.currentUserId;
+      ? userInfo?.id
+      : providerInfo?._id ;
 
   const currentUserModel =
-    userInfo?.role === 'customer' || route.params?.currentUserModel === 'User'
+    userInfo?.role === 'customer' 
       ? 'User'
       : 'Provider';
 

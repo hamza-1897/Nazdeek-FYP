@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState,useContext ,useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,23 +7,28 @@ import {
   ActivityIndicator,
   ScrollView,
   StatusBar,
+  Alert,
   Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getServiceById } from '../../api/customerApi';
+import {accessChat} from '../../api/chatApi';
+import {AuthContext} from '../../context/AuthContext';
 
 const { width } = Dimensions.get('window');
 
 const ViewDetailScreen = ({ route, navigation }) => {
   const { serviceId } = route.params;
   const insets = useSafeAreaInsets();
-  
+  const { userInfo } = useContext(AuthContext);
+
   const [serviceData, setServiceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('About');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+
 
   useFocusEffect(
     useCallback(() => {
@@ -34,14 +39,48 @@ const ViewDetailScreen = ({ route, navigation }) => {
   const fetchServiceDetails = async () => {
     setLoading(true);
     try {
-      const response = await getServiceById(serviceId);
-      setServiceData(response.data);
+      const res = await getServiceById(serviceId);
+      const data = res?.data?.data || res?.data;
+      setServiceData(data);
     } catch (error) {
       console.error('Error fetching service details:', error);
     } finally {
       setLoading(false);
     }
   };
+
+
+   const currentUserId = userInfo?.id;
+
+  const currentUserModel = 'User';
+
+
+const handleChatPress = async () => {
+  try{
+    const providerId = serviceData?.providerId?._id;
+    const providerName = serviceData?.providerId?.businessName ;
+    const providerImage = serviceData?.providerId?.providerImage;
+
+    const chatRoom = await accessChat({
+      userId: currentUserId,
+      providerId: providerId,
+    });
+
+     navigation.navigate('ChatScreen', {
+        chatId: chatRoom._id,
+        senderId: currentUserId,
+        senderModel: currentUserModel,
+        receiverId: providerId,
+        receiverModel: 'Provider',
+        receiverName: providerName,
+        receiverImage: providerImage,
+      });
+
+  }catch(error){
+    console.error('Error opening chat:', error);
+    Alert.alert('Error', 'Chat room open nahi ho saka. Dobara try karein.');
+  }
+}
 
   const TABS = ['About', 'Reviews'];
 
@@ -226,7 +265,7 @@ const ViewDetailScreen = ({ route, navigation }) => {
                   <View className="flex-row space-x-3">
                     <TouchableOpacity
                       className="flex-1 bg-white h-11 rounded-xl flex-row items-center justify-center border border-slate-200 active:opacity-80"
-                      onPress={() => console.log('Open Chat')}
+                      onPress={handleChatPress}
                     >
                       <Ionicons name="chatbubble-ellipses-outline" size={16} color="#1a5ea1" />
                       <Text className="text-[#1a5ea1] font-bold text-xs ml-2">Chat</Text>
@@ -234,7 +273,7 @@ const ViewDetailScreen = ({ route, navigation }) => {
 
                     <TouchableOpacity
                       className="flex-1 bg-[#1a5ea1] h-11 rounded-xl flex-row items-center justify-center active:opacity-90 shadow-xs"
-                      onPress={() => navigation.navigate('ProviderProfile')}
+                      onPress={() => navigation.navigate('ProviderProfile', { providerId: serviceData?.providerId?._id })}
                     >
                       <Ionicons name="person-outline" size={15} color="white" />
                       <Text className="text-white font-bold text-xs ml-2">View Profile</Text>
