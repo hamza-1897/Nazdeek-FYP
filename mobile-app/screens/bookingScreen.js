@@ -49,7 +49,7 @@ const BookingScreen = ({ navigation, route }) => {
         return currentStatus === 'completed';
       }
       if (activeTab === 'Cancelled') {
-        return currentStatus === 'cancelled';
+        return currentStatus === 'cancelled' || currentStatus === 'rejected';
       }
       return false;
     });

@@ -139,7 +139,6 @@ const MyServicesProvider = ({ navigation }) => {
         />
       </View>
 
-      <ProviderTabs activeTab="Services" navigation={navigation} />
     </SafeAreaView>
   );
 };

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, StatusBar, Alert } from 'reac
 import { Ionicons } from '@expo/vector-icons';
 import ProviderBookingsCard from '../../Cards/ProviderBookingsCard';
 import ProviderTabs from '../../Cards/ProviderTabs';
-import { getBookingsByProvider } from '../../api/ProviderApi';
+import { getBookingsByProvider ,updateBookingStatus } from '../../api/ProviderApi';
 import { AuthContext } from '../../context/AuthContext';
 
 const ProvidersBooking = ({ navigation }) => {
@@ -30,42 +30,44 @@ const ProvidersBooking = ({ navigation }) => {
     fetchBookings();
   }, [providerInfo]);
 
-  const handleAccept = (id) => {
+  const handleAccept = async (id) => {
     Alert.alert('Accept Booking', 'Are you sure you want to accept this booking?', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Accept',
-        onPress: () => {
-          setBookings((prev) =>
-            prev.map((item) => (item._id === id ? { ...item, status: 'accepted' } : item))
-          );
+        onPress: async () => {
+          const res = await updateBookingStatus(id, 'accepted');
+          Alert.alert('Booking Accepted', 'The booking has been accepted successfully.');
+          fetchBookings();
         },
       },
     ]);
   };
 
-  const handleReject = (id) => {
+  const handleReject = async (id) => {
     Alert.alert('Reject Booking', 'Are you sure you want to reject this booking?', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Reject',
         style: 'destructive',
-        onPress: () => {
-          setBookings((prev) => prev.filter((item) => item._id !== id));
-        },
+        onPress: async () => {
+          const res = await updateBookingStatus(id, 'rejected');
+          Alert.alert('Booking Rejected', 'The booking has been rejected successfully.');
+          fetchBookings();
+        }
       },
     ]);
   };
 
-  const handleComplete = (id) => {
+  const handleComplete = async (id) => {
     Alert.alert('Complete Booking', 'Mark this booking as completed?', [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Complete',
-        onPress: () => {
-          setBookings((prev) =>
-            prev.map((item) => (item._id === id ? { ...item, status: 'completed' } : item))
-          );
+        onPress: async () => {
+        const res = await updateBookingStatus(id, 'completed');
+        Alert.alert('Booking Completed', 'The booking has been marked as completed.');
+        fetchBookings();
         },
       },
     ]);
@@ -75,7 +77,7 @@ const ProvidersBooking = ({ navigation }) => {
     if (activeTab === 'Active') {
       return item?.status === 'pending' || item?.status === 'accepted';
     }
-    return item?.status === 'completed';
+    return item?.status === 'completed' || item?.status === 'rejected' ;
   });
 
   return (
@@ -125,7 +127,6 @@ const ProvidersBooking = ({ navigation }) => {
         )}
       </ScrollView>
 
-      <ProviderTabs activeTab="Bookings" navigation={navigation} />
     </View>
   );
 };

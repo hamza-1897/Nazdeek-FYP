@@ -96,7 +96,6 @@ const ProvProfile = ({ navigation }) => {
       </ScrollView>
 
    
-      <ProviderTabs activeTab="Profile" navigation={navigation} />
     </View>
   );
 };

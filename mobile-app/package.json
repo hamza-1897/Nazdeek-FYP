@@ -33,7 +33,8 @@
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.25.2",
     "react-native-toastify-expo": "^1.1.1",
-    "react-native-web": "^0.21.2"
+    "react-native-web": "^0.21.2",
+    "socket.io-client": "^4.8.3"
   },
   "private": true,
   "devDependencies": {

@@ -67,3 +67,15 @@ export const getBookingsByProvider = async (providerId) => {
         throw error;
     }
 };
+
+export const updateBookingStatus = async (bookingId, status) => {
+    try {
+        const response = await api.put(`/provider/update-booking-status/${bookingId}`, { status });
+        console.log("Update Booking Status API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error updating booking status:", error);
+        throw error;
+    }
+};
