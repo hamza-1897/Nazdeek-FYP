@@ -1,5 +1,20 @@
 import api from './axiosInstance';
 
+
+export const updateProfile = async (customerId, data) => {
+  try {
+    const response = await api.post(`/customer/update-profile/${customerId}`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    throw error;
+  }
+};
+
 export const getAllServices = async () => {
     try {
         const response = await api.get('/customer/services');
