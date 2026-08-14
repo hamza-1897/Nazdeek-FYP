@@ -1,6 +1,8 @@
 const serviceModel = require('../../models/serviceModel');
 const bookingModel = require('../../models/bookingModel');
 const providerModel = require('../../models/providerModel');
+const notificationModel = require('../../models/notificationModel')
+const sendPushNotification = require('../../lib/sendPushNotification')
 
 const createBooking = async (req, res) => {
     try {
@@ -51,6 +53,27 @@ const createBooking = async (req, res) => {
             bookingPrice,
             description
         });
+
+        const provider = await providerModel.findById(providerId).populate("userId", "fcmToken");
+
+    if (provider) {
+      const title = "New Booking";
+      const body = "You have received a new booking request.";
+      const extraData = { bookingId: newBooking._id.toString(), type: "BOOKING" };
+
+      await notificationModel.create({
+        recipientId: provider._id,
+        recipientModel: "Provider",
+        title,
+        body,
+        type: "BOOKING",
+        data: extraData,
+      });
+        
+              if (provider?.userId?.fcmToken) {
+                await sendPushNotification(provider?.userId?.fcmToken, title, body, extraData);
+              }
+            }
 
         return res.status(201).json({
             success: true,

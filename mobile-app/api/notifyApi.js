@@ -4,6 +4,7 @@ import api from './axiosInstance';
 export const getNotificationsApi = async (recipientId) => {
   try {
     const response = await api.get(`/notifications/${recipientId}`);
+    console.log('notifications ' , response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching notifications:', error);
@@ -11,9 +12,9 @@ export const getNotificationsApi = async (recipientId) => {
   }
 };
 
-export const markNotificationAsReadApi = async (notificationId) => {
+export const markAllasRead = async (recipientId) => {
   try {
-    const response = await api.put(`/notifications/read/${notificationId}`);
+    const response = await api.put(`/notifications/read/${recipientId}`);
     return response.data;
   } catch (error) {
     console.error('Error marking as read:', error);
