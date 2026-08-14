@@ -15,7 +15,7 @@ import { socket } from '../services/socket';
 import ChatHeader from '../Components/ChatHeader';
 import MessageBubble from '../Components/MessageBubble';
 import MessageInput from '../Components/MessageInput';
-import {getAllMessages} from '../api/chatApi';
+import {getAllMessages , sendMessage} from '../api/chatApi';
 
 
 const ChatScreen = ({ route, navigation }) => {
@@ -65,7 +65,7 @@ const ChatScreen = ({ route, navigation }) => {
     }
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!inputText.trim()) return;
 
     const messageData = {
@@ -76,9 +76,27 @@ const ChatScreen = ({ route, navigation }) => {
       receiverModel,
       text: inputText.trim(),
     };
+    const tempMessage = {
+    ...messageData,
+    _id: Date.now().toString(),
+    createdAt: new Date().toISOString(),
+  };
 
-    socket.emit('send_message', messageData);
-    setInputText('');
+  setMessages((prevMessages) => [...prevMessages, tempMessage]);
+  setInputText('');
+  console.log("Sending Message Payload:", messageData);
+
+
+try {
+    const response = await sendMessage(messageData);
+
+    socket.emit('send_message', response || messageData);
+  } catch (error) {
+    console.error('Message send karne mein error:', error);
+    setMessages((prevMessages) =>
+      prevMessages.filter((msg) => msg._id !== tempMessage._id)
+    );
+  }
   };
 
   return (

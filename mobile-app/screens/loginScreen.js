@@ -40,6 +40,7 @@ const LoginScreen = ({ navigation }) => {
           email: data.email,
           role: data.role,
           phone: data.phone,
+          address : data.address,
           profileImage: data.profileImage || null,
           providerInfo: data.providerInfo || null,
           providerStatus: data.providerStatus || data.providerInfo?.verificationStatus || 'unsubmitted'

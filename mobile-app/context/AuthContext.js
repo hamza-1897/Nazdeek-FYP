@@ -66,6 +66,7 @@ export const AuthProvider = ({ children }) => {
         userToken, 
         userInfo, 
         providerInfo, 
+        setUserInfo,
         login, 
         logout, 
         updateProviderDetails,

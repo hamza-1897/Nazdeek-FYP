@@ -7,7 +7,6 @@ import { AuthContext } from '../context/AuthContext';
 const ProfileScreen = ({ navigation }) => {
   const { userInfo, logout } = useContext(AuthContext);
 
-  // Default avatar image in case user doesn't have a profile picture
   const defaultAvatar = 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png ';
   const profilePicUri = userInfo && userInfo.profileImage ? userInfo.profileImage : defaultAvatar;
   const userName = userInfo && userInfo.name ? userInfo.name : "Guest User";
