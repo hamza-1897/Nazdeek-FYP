@@ -32,7 +32,19 @@ const markAsRead = async (req, res) => {
   }
 };
 
+const clearAllNotifications = async (req, res) => {
+  try {
+    const { recipientId } = req.params;
+    await notificationModel.deleteMany({ recipientId });
+
+    return res.status(200).json({ message: 'All notifications cleared' });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getNotifications,
   markAsRead,
+  clearAllNotifications,
 };
