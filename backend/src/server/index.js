@@ -22,6 +22,7 @@ const userAuthRoutes = require('../routes/users-AuthRoutes');
 const userRoutes = require('../routes/userRoutes');
 const adminRoutes = require('../routes/adminRoutes');
 const chatRoutes = require('../routes/chatRoutes');
+const notificationRoutes = require('../routes/notificationRoutes');
 const { authMiddleware, checkRole } = require('../middleware/authMiddleware');
 const initSocket = require('../config/socket');
 
@@ -40,7 +41,7 @@ app.use('/api/user-auth', userAuthRoutes);
 app.use('/api/customer', userRoutes);
 app.use('/api/provider', providerRoutes);   
 app.use('/api/chat', chatRoutes);
-
+app.use('/api/notifications', notificationRoutes);
 
 const PORT = config.PORT;
 
