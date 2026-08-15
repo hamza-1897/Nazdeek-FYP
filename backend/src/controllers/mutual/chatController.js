@@ -42,6 +42,7 @@ const fetchChats = async (req, res) => {
     })
       .populate('customerId', 'name profileImage')
       .populate('providerId', 'businessName providerImage')
+      .populate('lastMessage')
       .sort({ updatedAt: -1 });
 
    return res.status(200).json(chats);
@@ -89,8 +90,7 @@ const sendMessage = async (req, res) => {
   chatId,
   { 
     $set: { 
-      lastMessage: message.text,
-      lastMessageTime: message.createdAt || new Date()
+      lastMessage: message._id,
     } 
   },
   { new: true }
@@ -103,10 +103,26 @@ const sendMessage = async (req, res) => {
   }
 };
 
+const markChatAsRead = async (req, res) => {
+  try {
+    const { chatId } = req.params;
+    const { userId } = req.body; 
+
+    await messageModel.updateMany(
+      { chatId, receiverId: userId, isRead: false },
+      { $set: { isRead: true } }
+    );
+
+    res.status(200).json({ message: 'Messages marked as read successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   accessChat,
   fetchChats,
   getMessages,
-  sendMessage
-
+  sendMessage,
+markChatAsRead
 };

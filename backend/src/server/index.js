@@ -45,6 +45,6 @@ app.use('/api/notifications', notificationRoutes);
 
 const PORT = config.PORT;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`server is running on port: ${PORT}`);
 });

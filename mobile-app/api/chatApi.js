@@ -49,3 +49,15 @@ export const sendMessage = async (apiPayload) => {
         throw error;
     }
 };
+
+export const markRead = async (chatId,userId)=>{
+try {
+     const response = await api.put(`/chat/markRead/${chatId}`, {userId});
+        console.log("Read Message API response:", response.data);
+        return response.data;
+    
+} catch (error) {
+    console.error("Error reading message:", error);
+        throw error;
+}
+}

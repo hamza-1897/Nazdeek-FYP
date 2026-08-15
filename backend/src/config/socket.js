@@ -5,41 +5,36 @@ const chatModel = require('../models/chatModel');
 const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: '*', 
+      origin: '*',
     },
   });
 
   io.on('connection', (socket) => {
-    console.log(' User Connected:', socket.id);
+    console.log('User Connected:', socket.id);
 
     socket.on('join_room', (chatId) => {
+      if (!chatId) return;
       socket.join(chatId);
-      console.log(`User joined Chat Room: ${chatId}`);
+      console.log(`User ${socket.id} joined Chat Room: ${chatId}`);
     });
 
-    socket.on('send_message', async (data) => {
+    socket.on('send_message', (savedMessage) => {
       try {
-        const { chatId, senderId, senderModel, receiverId, receiverModel, text } = data;
-
-        const newMessage = new messageModel({
-          chatId,
-          senderId,
-          senderModel,
-          receiverId,
-          receiverModel,
-          text,
-        });
-
-        const savedMessage = await newMessage.save();
-
-        await chatModel.findByIdAndUpdate(chatId, {
-          lastMessage: text,
-          lastMessageTime: Date.now(),
-        });
-
-        io.to(chatId).emit('receive_message', savedMessage);
+        const targetRoom = savedMessage.chatId || savedMessage.chat;
+        
+        if (targetRoom) {
+          io.to(targetRoom).emit('receive_message', savedMessage);
+          console.log(`Message emitted to room: ${targetRoom}`);
+        }
       } catch (error) {
         console.error('Error in send_message event:', error);
+      }
+    });
+
+    socket.on('leave_room', (chatId) => {
+      if (chatId) {
+        socket.leave(chatId);
+        console.log(`User ${socket.id} left Chat Room: ${chatId}`);
       }
     });
 
