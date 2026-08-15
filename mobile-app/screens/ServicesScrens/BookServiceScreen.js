@@ -16,9 +16,9 @@ import { AuthContext } from '../../context/AuthContext';
 
 const BookServiceScreen = ({ route, navigation }) => {
   const { userInfo } = useContext(AuthContext);
-  const serviceData = route?.params?.serviceData ;
-  const [name, setName] = useState(`${userInfo?.name}`);
-  const [phone, setPhone] = useState(`${userInfo?.phone}`);
+  const serviceData = route?.params?.serviceData;
+  const [name, setName] = useState(`${userInfo?.name || ''}`);
+  const [phone, setPhone] = useState(`${userInfo?.phone || ''}`);
   const [address, setAddress] = useState('');
   const [requestDetails, setRequestDetails] = useState('');
 
@@ -28,12 +28,12 @@ const BookServiceScreen = ({ route, navigation }) => {
   const [dateText, setDateText] = useState('DD/MM/YYYY');
   const [timeText, setTimeText] = useState('00:00 AM');
 
- const handleDateValueChange = (event, selectedDate) => {
+  const handleDateValueChange = (event, selectedDate) => {
     if (Platform.OS === 'android') {
       setShowDatePicker(false);
     }
 
-    if (event.type === 'set' && selectedDate) {
+    if (selectedDate instanceof Date && !isNaN(selectedDate)) {
       setDate(selectedDate);
       let fDate = `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
       setDateText(fDate);
@@ -41,8 +41,12 @@ const BookServiceScreen = ({ route, navigation }) => {
   };
 
   const onTimeChange = (event, selectedTime) => {
-    setShowTimePicker(Platform.OS === 'ios');
-    if (selectedTime) {
+    if (Platform.OS === 'android') {
+      setShowTimePicker(false);
+    }
+
+    if (selectedTime instanceof Date && !isNaN(selectedTime)) {
+      setDate(selectedTime);
       let hours = selectedTime.getHours();
       let minutes = selectedTime.getMinutes();
       let ampm = hours >= 12 ? 'PM' : 'AM';
@@ -53,30 +57,30 @@ const BookServiceScreen = ({ route, navigation }) => {
   };
 
   const handleContinue = () => {
-  if (!name.trim() || !phone.trim() || !address.trim() || dateText === 'DD/MM/YYYY') {
-    Alert.alert('Required Fields', 'Please fill all mandatory fields (Name, Phone, Date, Address)');
-    return;
-  }
+    if (!name.trim() || !phone.trim() || !address.trim() || dateText === 'DD/MM/YYYY') {
+      Alert.alert('Required Fields', 'Please fill all mandatory fields (Name, Phone, Date, Address)');
+      return;
+    }
 
-  const formattedDate = date.toISOString();
+    const formattedDate = date.toISOString();
 
-  const bookingPayload = {
-    serviceId: serviceData._id,
-    serviceName: serviceData.serviceName || serviceData.name,
-    serviceImage: serviceData.serviceImages?.[0],
-    providerId: serviceData.providerId?._id,
-    providerName: serviceData.providerId?.businessName || serviceData.providerId?.userId?.name || 'Verified Provider',
-    customerName: name,
-    customerPhone: phone,
-    bookingDate: formattedDate,
-    bookingTime: timeText,
-    bookingAddress: address,
-    description: requestDetails,
-    bookingPrice: serviceData.price ,
+    const bookingPayload = {
+      serviceId: serviceData._id,
+      serviceName: serviceData.serviceName || serviceData.name,
+      serviceImage: serviceData.serviceImages?.[0],
+      providerId: serviceData.providerId?._id,
+      providerName: serviceData.providerId?.businessName || serviceData.providerId?.userId?.name || 'Verified Provider',
+      customerName: name,
+      customerPhone: phone,
+      bookingDate: formattedDate,
+      bookingTime: timeText,
+      bookingAddress: address,
+      description: requestDetails,
+      bookingPrice: serviceData.price,
+    };
+
+    navigation.navigate('BookingSummary', { bookingPayload });
   };
-
-  navigation.navigate('BookingSummary', { bookingPayload });
-};
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -174,7 +178,7 @@ const BookServiceScreen = ({ route, navigation }) => {
 
           {showDatePicker && (
             <DateTimePicker
-              value={date}
+              value={date instanceof Date && !isNaN(date) ? date : new Date()}
               mode="date"
               display="default"
               onChange={handleDateValueChange}
@@ -184,7 +188,7 @@ const BookServiceScreen = ({ route, navigation }) => {
 
           {showTimePicker && (
             <DateTimePicker
-              value={date}
+              value={date instanceof Date && !isNaN(date) ? date : new Date()}
               mode="time"
               display="default"
               is24Hour={false}

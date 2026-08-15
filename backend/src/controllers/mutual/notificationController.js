@@ -16,17 +16,20 @@ const getNotifications = async (req, res) => {
 };
 
 
-const markAsRead = async (req, res) => {
+const markAllAsRead = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { recipientId } = req.params;
 
-    const updatedNotification = await notificationModel.findByIdAndUpdate(
-      id,
-      { isRead: true },
-      { new: true }
+    const result = await notificationModel.updateMany(
+      { recipientId, isRead: false }, 
+      { $set: { isRead: true } }     
     );
 
-    return res.status(200).json(updatedNotification);
+    return res.status(200).json({
+      success: true,
+      message: "All notifications marked as read",
+      modifiedCount: result.modifiedCount,
+    });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -45,6 +48,6 @@ const clearAllNotifications = async (req, res) => {
 
 module.exports = {
   getNotifications,
-  markAsRead,
+  markAllAsRead,
   clearAllNotifications,
 };

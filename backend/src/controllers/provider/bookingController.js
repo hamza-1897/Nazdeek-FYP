@@ -23,7 +23,6 @@ const getBookingsByProvider = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 const updateBookingStatus = async (req, res) => {
   try {
     const { bookingId } = req.params;
@@ -34,32 +33,32 @@ const updateBookingStatus = async (req, res) => {
     }
 
     const booking = await bookingModel
-      .findByIdAndUpdate(bookingId, { status }, { new: true })
+      .findByIdAndUpdate(bookingId, { status }, { returnDocument: 'after' })
       .populate('serviceId', 'serviceName');
 
     if (!booking) {
       return res.status(404).json({ message: 'Booking not found' });
     }
 
-    const user = await userModel.findById(booking.userId).select('name email pushToken');
+    const user = await userModel.findById(booking.userId).select('name email fcmToken');
 
     if (user) {
       const serviceTitle = booking.serviceId?.serviceName || 'Service';
       const title = 'Booking Status Updated';
-      const body = `Your booking for "${serviceTitle}" is  ${status.toLowerCase()}.`;
-      const extraData = { bookingId: booking._id, type: 'BOOKING' };
+      const body = `Your booking for "${serviceTitle}" is ${status.toLowerCase()}.`;
+      const extraData = { bookingId: booking._id.toString(), type: 'BOOKING' };
 
       await notificationModel.create({
         recipientId: user._id,
-        recipientModel: 'User',
+        recipientModel: 'Customer', 
         title,
         body,
         type: 'BOOKING',
         data: extraData,
       });
 
-      if (user.pushToken) {
-        await sendPushNotification(user.pushToken, title, body, extraData);
+      if (user.fcmToken) {
+        await sendPushNotification(user.fcmToken, title, body, extraData);
       }
     }
 
@@ -73,7 +72,6 @@ const updateBookingStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 module.exports = {
   getBookingsByProvider,
   updateBookingStatus,
