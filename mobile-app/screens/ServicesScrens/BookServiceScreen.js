@@ -28,7 +28,7 @@ const BookServiceScreen = ({ route, navigation }) => {
   const [dateText, setDateText] = useState('DD/MM/YYYY');
   const [timeText, setTimeText] = useState('00:00 AM');
 
-  const handleDateValueChange = (event, selectedDate) => {
+  const handleDateValueChange = (selectedDate) => {
     if (Platform.OS === 'android') {
       setShowDatePicker(false);
     }
@@ -40,7 +40,7 @@ const BookServiceScreen = ({ route, navigation }) => {
     }
   };
 
-  const onTimeChange = (event, selectedTime) => {
+  const onTimeChange = (selectedTime) => {
     if (Platform.OS === 'android') {
       setShowTimePicker(false);
     }
@@ -181,7 +181,8 @@ const BookServiceScreen = ({ route, navigation }) => {
               value={date instanceof Date && !isNaN(date) ? date : new Date()}
               mode="date"
               display="default"
-              onChange={handleDateValueChange}
+              onValueChange={(date) => handleDateValueChange(date)}
+              onDismiss={() => setShowDatePicker(false)}
               minimumDate={new Date()}
             />
           )}
@@ -192,7 +193,8 @@ const BookServiceScreen = ({ route, navigation }) => {
               mode="time"
               display="default"
               is24Hour={false}
-              onChange={onTimeChange}
+              onValueChange={(time) => onTimeChange(time)}
+              onDismiss={() => setShowTimePicker(false)}
             />
           )}
 

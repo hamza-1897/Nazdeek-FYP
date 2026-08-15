@@ -25,20 +25,23 @@ const NotificationScreen = ({ navigation }) => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const { userInfo } = useContext(AuthContext);
+  const { providerInfo, userInfo } = useContext(AuthContext);
 
-  const userId = userInfo?.id || userInfo?._id;
+  let userId ; 
+  if(userInfo?.role === 'provider'){
+     userId= providerInfo?._id;
+  }else{
+     userId = userInfo?.id;
+  }
+  
 const loadAndMarkNotifications = async () => {
   if (!userId) return;
 
   try {
-    // 1. Fetch API response
     const res = await getNotificationsApi(userId);
     
-    // Handle array structure correctly whether wrapped or direct
     const rawData = Array.isArray(res) ? res : (res?.notifications || res?.data || []);
 
-    // 2. Case-insensitive filter (BOOKING / booking / SYSTEM / system)
     const filtered = rawData.filter((item) => {
       const itemType = item?.type?.toLowerCase();
       return itemType === 'booking' || itemType === 'system';
@@ -46,7 +49,6 @@ const loadAndMarkNotifications = async () => {
 
     setNotifications(filtered);
 
-    // 3. Mark as read logic
     const hasUnread = filtered.some((item) => !item.isRead);
     if (hasUnread) {
       await markAllasRead(userId);

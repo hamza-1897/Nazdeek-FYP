@@ -93,7 +93,7 @@ const sendMessage = async (req, res) => {
       lastMessage: message._id,
     } 
   },
-  { new: true }
+  { returnDocument: 'after' }
 );
     
 

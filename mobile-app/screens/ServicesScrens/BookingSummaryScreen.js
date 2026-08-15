@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import dayjs from 'dayjs';
 import { AuthContext } from '../../context/AuthContext';
 import { createBooking } from '../../api/customerApi';
 
@@ -19,7 +20,14 @@ const BookingSummaryScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
   const { userInfo } = useContext(AuthContext);
 
- 
+  const formatDateWithDayjs = (dateVal) => {
+    if (!dateVal) return 'N/A';
+    
+    const formatted = dayjs(dateVal);
+    if (!formatted.isValid()) return String(dateVal);
+
+    return formatted.format('ddd, DD MMM YYYY');
+  };
 
   const handleConfirmBooking = async () => {
     setLoading(true);
@@ -37,15 +45,14 @@ const BookingSummaryScreen = ({ route, navigation }) => {
         description: bookingPayload.description,
       };
 
-        const response = await createBooking(apiPayload);
-        setLoading(false);
+      const response = await createBooking(apiPayload);
+      setLoading(false);
 
-
-       const createdBooking = response?.booking || response?.data?.booking;
+      const createdBooking = response?.booking || response?.data?.booking;
       console.log("Booking created successfully:", createdBooking);
-    if (createdBooking) {
-      navigation.replace('BookingSuccess');
-    }
+      if (createdBooking) {
+        navigation.replace('BookingSuccess');
+      }
 
     } catch (error) {
       setLoading(false);
@@ -120,7 +127,7 @@ const BookingSummaryScreen = ({ route, navigation }) => {
             <View className="flex-1">
               <Text className="text-xs text-slate-400 font-medium">Date & Slot</Text>
               <Text className="text-sm font-bold text-slate-800">
-                {bookingPayload?.bookingDate} at {bookingPayload?.bookingTime}
+                {formatDateWithDayjs(bookingPayload?.bookingDate)} at {bookingPayload?.bookingTime}
               </Text>
             </View>
           </View>
@@ -167,7 +174,6 @@ const BookingSummaryScreen = ({ route, navigation }) => {
             <Text className="text-sm text-slate-800 font-bold">Rs. {bookingPayload?.bookingPrice}</Text>
           </View>
 
-          
           <View className="h-[1px] bg-slate-100 my-2" />
 
           <View className="flex-row justify-between items-center pt-1">
