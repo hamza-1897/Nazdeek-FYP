@@ -46,7 +46,7 @@ import RatingsReviewsProvider from '../screens/ProviderDashboard/RatingsReviewsP
 import ReportScreen from '../screens/ProviderScreens/ReportScreen';
 
 // --- UTILITY / COMMON SCREENS ---
-import ChatScreen from '../screens/ChatScreen';
+import ChatScreen from '../screens/chatScreen';
 import InboxScreen from '../screens/InboxScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 

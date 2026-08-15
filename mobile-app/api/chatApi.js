@@ -37,3 +37,15 @@ export const fetchChats = async (id, role) => {
         throw error;
     }
 };
+
+export const sendMessage = async (apiPayload) => {
+    try {
+        const response = await api.post('/chat/sendMessage', apiPayload);
+        console.log("Send Message API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error sending message:", error);
+        throw error;
+    }
+};

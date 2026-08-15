@@ -74,8 +74,8 @@ const InboxScreen = ({ navigation, route }) => {
       currentUserModel: currentUserModel || 'User',
       receiverId: recipient?._id,
       receiverModel: currentUserModel === 'Provider' ? 'User' : 'Provider',
-      receiverName: recipient?.name || 'User',
-      receiverImage: recipient?.profileImage || null,
+      receiverName: recipient?.name || recipient?.businessName || 'User',
+      receiverImage: recipient?.profileImage || recipient?.providerImage ||null,
     });
   };
 

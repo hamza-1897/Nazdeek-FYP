@@ -3,14 +3,12 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import dayjs from 'dayjs';
 
 const ChatItem = ({ chat, currentUserId, onPress }) => {
-  // Determine if the current user is customer or provider
   const isCustomer = chat.customerId?._id === currentUserId;
 
-  // Opposite user info to display
   const recipient = isCustomer ? chat.providerId : chat.customerId;
 
-  const recipientName = recipient?.name || 'User';
-  const recipientImage = recipient?.profileImage || null;
+  const recipientName = recipient?.name || recipient?.businessName || 'User';
+  const recipientImage = recipient?.profileImage || recipient?.providerImage || null;
   const lastMessageText = chat.lastMessage || 'No messages yet';
   const formattedTime = chat.lastMessageTime
     ? dayjs(chat.lastMessageTime).format('hh:mm A')
@@ -22,7 +20,6 @@ const ChatItem = ({ chat, currentUserId, onPress }) => {
       activeOpacity={0.7}
       className="flex-row items-center px-4 py-3.5 bg-white border-b border-slate-100"
     >
-      {/* Profile Image */}
       <Image
         source={{
           uri:
@@ -34,7 +31,6 @@ const ChatItem = ({ chat, currentUserId, onPress }) => {
         className="w-12 h-12 rounded-full bg-slate-100"
       />
 
-      {/* Name and Last Message */}
       <View className="flex-1 ml-3.5 pr-2">
         <View className="flex-row justify-between items-center mb-1">
           <Text className="text-base font-bold text-slate-800" numberOfLines={1}>

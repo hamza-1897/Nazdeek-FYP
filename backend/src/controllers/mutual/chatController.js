@@ -37,11 +37,11 @@ const fetchChats = async (req, res) => {
   try {
     const { id, role } = req.params; 
 
-    const query = role === 'customer' ? { customerId: id } : { providerId: id };
-
-    const chats = await chatModel.find(query)
+    const chats = await chatModel.find({
+      $or: [{ customerId: id }, { providerId: id }]
+    })
       .populate('customerId', 'name profileImage')
-      .populate('providerId', 'name profileImage')
+      .populate('providerId', 'businessName providerImage')
       .sort({ updatedAt: -1 });
 
    return res.status(200).json(chats);
@@ -68,8 +68,45 @@ const getMessages = async (req, res) => {
   }
 };
 
+const sendMessage = async (req, res) => {
+  try {
+    const { chatId, senderId, senderModel, receiverId, receiverModel , text } = req.body;
+
+    if (!chatId || !senderId || !senderModel || !receiverId || !receiverModel || !text) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const message = await messageModel.create({
+      chatId,
+      senderId,
+      senderModel,
+      receiverId,
+      receiverModel,
+      text
+    });
+
+   const updatedChat = await chatModel.findByIdAndUpdate(
+  chatId,
+  { 
+    $set: { 
+      lastMessage: message.text,
+      lastMessageTime: message.createdAt || new Date()
+    } 
+  },
+  { new: true }
+);
+    
+
+    res.status(201).json(message);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   accessChat,
   fetchChats,
   getMessages,
+  sendMessage
+
 };

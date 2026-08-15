@@ -68,8 +68,8 @@ const handleChatPress = async () => {
 
      navigation.navigate('ChatScreen', {
         chatId: chatRoom._id,
-        senderId: currentUserId,
-        senderModel: currentUserModel,
+        currentUserId,
+        currentUserModel,
         receiverId: providerId,
         receiverModel: 'Provider',
         receiverName: providerName,
