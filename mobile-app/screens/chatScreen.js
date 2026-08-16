@@ -15,7 +15,7 @@ import { socket } from '../services/socket';
 import ChatHeader from '../Components/ChatHeader';
 import MessageBubble from '../Components/MessageBubble';
 import MessageInput from '../Components/MessageInput';
-import {getAllMessages , sendMessage} from '../api/chatApi';
+import {getAllMessages , sendMessage, markRead} from '../api/chatApi';
 
 
 const ChatScreen = ({ route, navigation }) => {
@@ -34,25 +34,43 @@ const ChatScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const flatListRef = useRef(null);
 
-  useEffect(() => {
-    if (!chatId) return;
+ useEffect(() => {
+  if (!chatId) return;
 
-    if (!socket.connected) socket.connect();
+  if (!socket.connected) {
+    socket.connect();
+  }
+
+  const onConnect = () => {
     socket.emit('join_room', chatId);
+  };
 
-    fetchMessages();
+  if (socket.connected) {
+    socket.emit('join_room', chatId);
+  } else {
+    socket.on('connect', onConnect);
+  }
 
-    const handleReceiveMessage = (newMessage) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    };
+  fetchMessages();
 
-    socket.on('receive_message', handleReceiveMessage);
+   markAsRead(chatId,currentUserId);
 
-    return () => {
-      socket.off('receive_message', handleReceiveMessage);
-    };
-  }, [chatId]);
+  const handleReceiveMessage = (newMessage) => {
+    if (newMessage.chatId === chatId || newMessage.chat === chatId) {
+      setMessages((prevMessages) => {
+        const exists = prevMessages.some((msg) => msg._id === newMessage._id);
+        return exists ? prevMessages : [...prevMessages, newMessage];
+      });
+    }
+  };
 
+  socket.on('receive_message', handleReceiveMessage);
+
+  return () => {
+    socket.off('connect', onConnect);
+    socket.off('receive_message', handleReceiveMessage);
+  };
+}, [chatId]);
   const fetchMessages = async () => {
     try {
       setLoading(true);
@@ -65,39 +83,63 @@ const ChatScreen = ({ route, navigation }) => {
     }
   };
 
-  const handleSend = async () => {
-    if (!inputText.trim()) return;
+  const markAsRead = async (chatId,userId)=>{
+    if (!chatId || !userId) {
+  return res.status(400).json({ message: 'chatId and userId are required' });
+}
+    try {
+      const response = await markRead(chatId,userId);
+      
+    } catch (error) {
+            console.error('Error read messages:', error);
 
-    const messageData = {
-      chatId,
-      senderId: currentUserId,
-      senderModel: currentUserModel,
-      receiverId,
-      receiverModel,
-      text: inputText.trim(),
-    };
-    const tempMessage = {
+    }
+  }
+
+ const handleSend = async () => {
+  if (!inputText.trim()) return;
+
+  const textToSend = inputText.trim();
+  const tempId = Date.now().toString();
+
+  const messageData = {
+    chatId,
+    senderId: currentUserId,
+    senderModel: currentUserModel,
+    receiverId,
+    receiverModel,
+    text: textToSend,
+  };
+
+  const tempMessage = {
     ...messageData,
-    _id: Date.now().toString(),
+    _id: tempId,
     createdAt: new Date().toISOString(),
   };
 
   setMessages((prevMessages) => [...prevMessages, tempMessage]);
   setInputText('');
-  console.log("Sending Message Payload:", messageData);
 
-
-try {
+  try {
     const response = await sendMessage(messageData);
 
-    socket.emit('send_message', response || messageData);
+    const savedMessage = response?.data || response?.message || response || messageData;
+
+    socket.emit('send_message', savedMessage);
+
+    if (savedMessage._id) {
+      setMessages((prev) =>
+        prev.map((msg) => (msg._id === tempId ? savedMessage : msg))
+      );
+    }
   } catch (error) {
-    console.error('Message send karne mein error:', error);
+    console.error('Message send error:', error);
+    
     setMessages((prevMessages) =>
-      prevMessages.filter((msg) => msg._id !== tempMessage._id)
+      prevMessages.filter((msg) => msg._id !== tempId)
     );
   }
-  };
+};
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">

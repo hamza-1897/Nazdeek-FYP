@@ -1,97 +1,131 @@
-import React from 'react';
-import { View, Text, ScrollView ,Image,TouchableOpacity, StatusBar } from 'react-native';
-import { Octicons } from '@expo/vector-icons';
-import ProviderTabs from '../Cards/ProviderTabs'; 
-import { useContext } from 'react';
-import {AuthContext} from '../context/AuthContext';
+import React, { useContext } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { Octicons, Ionicons } from '@expo/vector-icons';
+import { AuthContext } from '../context/AuthContext';
+import ProviderHeader from '../Components/ProviderHeader';
+import ProviderStatsCard from '../Cards/ProviderStatsCard';
+import SubscriptionBanner from '../Components/SubscriptionBanner';
 
 const ProviderDashboard = ({ navigation }) => {
-  const { providerInfo , userInfo} = useContext(AuthContext);
+  const { providerInfo } = useContext(AuthContext);
+
+  const stats = [
+    {
+      title: 'Active Bookings',
+      value: '5',
+      iconName: 'time-outline',
+      iconColor: '#2563eb',
+      bgColor: 'bg-blue-50',
+    },
+    {
+      title: 'Completed',
+      value: '18',
+      iconName: 'checkmark-done-outline',
+      iconColor: '#16a34a',
+      bgColor: 'bg-green-50',
+    },
+    {
+      title: 'Active Services' ,
+      value: '4',
+      iconName: 'construct-outline',
+      iconColor: '#9333ea',
+      bgColor: 'bg-purple-50',
+    },
+    {
+      title: 'Reviews',
+      value: '4.8',
+      iconName: 'star-outline',
+      iconColor: '#d97706',
+      bgColor: 'bg-amber-50',
+    },
+  ];
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-slate-50">
       <StatusBar barStyle="light-content" backgroundColor="#1a5ea1" />
 
-      <View className="bg-[#1a5ea1] px-6 pt-14 pb-8 rounded-b-[30px] flex-row justify-between items-center shadow-lg">
-        <View>
-          <Text className="text-blue-100 text-sm font-medium">Provider dashboard</Text>
-          <Text className="text-white text-2xl font-bold">{providerInfo?.businessName}</Text>
-        </View>
-        <TouchableOpacity className="w-12 h-12 bg-blue-400/30 rounded-full items-center justify-center border border-blue-300/50">
-          <Image source={{ uri: providerInfo?.providerImage }} className="w-12 h-12 rounded-full" />
-        </TouchableOpacity>
-      </View>
+      <ProviderHeader
+        providerInfo={providerInfo}
+        onNotificationPress={() => navigation.navigate('Notification')}
+        onProfilePress={() => navigation.navigate('ProfileScreen')}
+      />
 
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
-        className="flex-1 px-6"
-        contentContainerStyle={{ paddingBottom: 20 }}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        className="flex-1 px-5"
+        contentContainerStyle={{ paddingBottom: 30 }}
       >
-        <View className="flex-row flex-wrap justify-between mt-6">
-          <StatCard title="5" subtitle="Active bookings" bgColor="bg-blue-50" textColor="text-blue-600" />
-          <StatCard title="Rs 22k" subtitle="This month" bgColor="bg-green-50" textColor="text-green-600" />
-          <StatCard title="4.9" subtitle="Avg rating" bgColor="bg-orange-50" textColor="text-orange-600" />
-          <StatCard title="20" subtitle="Total bookings" bgColor="bg-gray-50" textColor="text-gray-800" />
+        <SubscriptionBanner
+          planType={providerInfo?.isPremium}
+          onPress={() => navigation.navigate('SubscriptionScreen')}
+        />
+
+        <Text className="text-slate-800 font-extrabold mt-6 mb-3 uppercase tracking-wider text-[11px]">
+          Business Overview
+        </Text>
+
+        <View className="flex-row flex-wrap justify-between">
+          {stats.map((stat, index) => (
+            <ProviderStatsCard key={index} {...stat} />
+          ))}
         </View>
 
-        <Text className="text-gray-800 font-bold mt-8 mb-4 uppercase tracking-wider text-[10px]">Quick Actions</Text>
+        <Text className="text-slate-800 font-extrabold mt-5 mb-3 uppercase tracking-wider text-[11px]">
+          Quick Actions
+        </Text>
+
         <View className="flex-row justify-between">
-          <ActionItem 
-            icon="diff-added" 
-            label="Add service" 
-            color="#1a5ea1" 
-            onPress={() => navigation.navigate('CreateService')} 
+          <ActionItem
+            icon="diff-added"
+            label="Add Service"
+            color="#1a5ea1"
+            onPress={() => navigation.navigate('CreateService')}
           />
-          <ActionItem 
-            icon="calendar" 
-            label="Bookings" 
-            color="#b45309" 
-            onPress={() => navigation.navigate('ProvidersBooking')} 
+          <ActionItem
+            icon="calendar"
+            label="Bookings"
+            color="#b45309"
+            onPress={() => navigation.navigate('ProvidersBooking')}
           />
         </View>
 
-        <Text className="text-gray-800 font-bold mt-8 mb-4 uppercase tracking-wider text-[10px]">
+        <Text className="text-slate-800 font-extrabold mt-6 mb-3 uppercase tracking-wider text-[11px]">
           Today's Bookings
         </Text>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           onPress={() => navigation.navigate('ProvidersBooking')}
-          className="bg-white border border-gray-100 rounded-2xl p-4 flex-row items-center shadow-sm mb-6"
+          activeOpacity={0.8}
+          className="bg-white border border-slate-100 rounded-2xl p-4 flex-row items-center shadow-sm mb-4"
         >
-          <View className="w-12 h-12 bg-blue-100 rounded-full items-center justify-center mr-4">
-            <Text className="text-[#1a5ea1] font-bold">SK</Text>
+          <View className="w-11 h-11 bg-blue-100 rounded-2xl items-center justify-center mr-3.5">
+            <Text className="text-[#1a5ea1] font-bold text-base">SK</Text>
           </View>
           <View className="flex-1">
-            <Text className="text-gray-900 font-bold text-base">Sara Khan</Text>
-            <Text className="text-gray-500 text-sm">Deep Home Cleaning · 11:00 AM</Text>
+            <Text className="text-slate-900 font-bold text-base">Sara Khan</Text>
+            <Text className="text-slate-500 text-xs mt-0.5">
+              Deep Home Cleaning · 11:00 AM
+            </Text>
           </View>
-          <View className="bg-blue-50 px-3 py-1 rounded-full">
+          <View className="bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100">
             <Text className="text-[#1a5ea1] text-xs font-bold">Upcoming</Text>
           </View>
         </TouchableOpacity>
       </ScrollView>
-
-   
     </View>
   );
 };
 
-const StatCard = ({ title, subtitle, bgColor, textColor }) => (
-  <View className={`${bgColor} w-[47%] p-5 rounded-2xl mb-4 items-center justify-center border border-white/50 shadow-sm`}>
-    <Text className={`${textColor} text-2xl font-bold`}>{title}</Text>
-    <Text className="text-gray-500 text-center text-[10px] mt-1 font-medium">{subtitle}</Text>
-  </View>
-);
-
 const ActionItem = ({ icon, label, color, onPress }) => (
-  <TouchableOpacity 
+  <TouchableOpacity
     onPress={onPress}
-    className="w-[48%] bg-white border border-gray-100 p-4 rounded-2xl mb-4 flex-row items-center shadow-sm active:bg-gray-50"
+    activeOpacity={0.8}
+    className="w-[48%] bg-white border border-slate-100 p-4 rounded-2xl flex-row items-center shadow-sm active:bg-slate-100"
   >
-    <View className="mr-3">
-      <Octicons name={icon} size={20} color={color} />
+    <View className="mr-3 w-9 h-9 bg-slate-50 rounded-xl items-center justify-center">
+      <Octicons name={icon} size={18} color={color} />
     </View>
-    <Text className="text-gray-700 font-semibold text-sm">{label}</Text>
+    <Text className="text-slate-800 font-bold text-sm">{label}</Text>
   </TouchableOpacity>
 );
 

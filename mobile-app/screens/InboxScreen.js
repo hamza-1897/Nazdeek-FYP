@@ -79,15 +79,17 @@ const InboxScreen = ({ navigation, route }) => {
     });
   };
 
-  const filteredChats = chats.filter((chat) => {
-    const isCustomer = chat.customerId?._id === currentUserId;
-    const recipient = isCustomer ? chat.providerId : chat.customerId;
-    const recipientName = recipient?.name?.toLowerCase() || '';
-    const lastMsg = chat.lastMessage?.toLowerCase() || '';
-    const query = searchQuery.toLowerCase().trim();
+ const filteredChats = chats.filter((chat) => {
+  const isCustomer = chat.customerId?._id === currentUserId;
+  const recipient = isCustomer ? chat.providerId : chat.customerId;
+  const recipientName =
+    recipient?.name?.toLowerCase() || recipient?.businessName?.toLowerCase() || '';
+  
+  const lastMsgText = chat.lastMessage?.text?.toLowerCase() || '';
+  const query = searchQuery.toLowerCase().trim();
 
-    return recipientName.includes(query) || lastMsg.includes(query);
-  });
+  return recipientName.includes(query) || lastMsgText.includes(query);
+});
 
   return (
     <SafeAreaView edges={['top', 'left', 'right']} className="flex-1 bg-slate-50">
