@@ -82,27 +82,38 @@ const getProviderById = async (req,res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 }
-
-
-// update provider status 
-const updateProvider = async (req,res) => {
+const updateProvider = async (req, res) => {
     try {
         const providerId = req.params.id;
-        const {verificationStatus} = req.body;
+        const { verificationStatus, accountRejectionReason } = req.body;
+
         const provider = await providerModel.findById(providerId);
-        if(!provider){
-            res.status(404).json({message : "provider not found"})
-        } 
-               
-            provider.verificationStatus = verificationStatus;
-            await provider.save();
-            res.status(200).json({message : `provider status updated to ${verificationStatus} successfully`});
-        
+        if (!provider) {
+            return res.status(404).json({ message: "Provider not found" });
+        }
+
+        provider.verificationStatus = verificationStatus;
+
+        if (verificationStatus === 'rejected') {
+            if (!accountRejectionReason || !accountRejectionReason.trim()) {
+                return res.status(400).json({ message: "Rejection reason is required when rejecting an account." });
+            }
+            provider.accountRejectionReason = accountRejectionReason.trim();
+        } else if (verificationStatus === 'approved') {
+            provider.accountRejectionReason = null;
+        }
+
+        await provider.save();
+
+        res.status(200).json({
+            message: `Provider status updated to ${verificationStatus} successfully`,
+            provider
+        });
+
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
-}
-
+};
 // approve payment
 const updatePayment = async (req, res) => {
   try {

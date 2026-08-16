@@ -44,6 +44,7 @@ import ProvProfile from '../screens/ProviderDashboard/ProvProfile';
 import EditProfileProvider from '../screens/ProviderDashboard/EditProfileProvider'; 
 import RatingsReviewsProvider from '../screens/ProviderDashboard/RatingsReviewsProvider';
 import ReportScreen from '../screens/ProviderScreens/ReportScreen';
+import AccountRejectedScreen  from '../screens/ProviderScreens/AccountRejectedScreen'
 
 // --- UTILITY / COMMON SCREENS ---
 import ChatScreen from '../screens/chatScreen';
@@ -98,6 +99,7 @@ const AuthNavigation = () => {
       <Stack.Screen name="EditProfileProvider" component={EditProfileProvider} />
       <Stack.Screen name="RatingsReviewsProvider" component={RatingsReviewsProvider} />
       <Stack.Screen name="ReportScreen" component={ReportScreen} />
+      <Stack.Screen name='AccountRejectedScreen' component={AccountRejectedScreen}/>
 
       {/* 4. Common / Notifications */}
       <Stack.Screen name="Notification" component={NotificationScreen} />

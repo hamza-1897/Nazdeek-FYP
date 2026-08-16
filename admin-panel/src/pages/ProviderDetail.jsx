@@ -56,20 +56,20 @@ const ProviderDetail = () => {
     }
   };
 
-  const handleBlock = async (providerId) => {
-    try {
-      const targetId = providerId || id;
-      const res = await updateStatus(targetId, 'rejected');
-            console.log(res)
+ const handleBlock = async (providerId, rejectionReason) => {
+  try {
+    const targetId = providerId || id;
+    const res = await updateStatus(targetId, 'rejected', rejectionReason);
+    console.log(res);
 
-        alert('Provider Rejected Successfully!');
-        await fetchProviderDetails(); 
-      
-    } catch (err) {
-      console.error("Block Error:", err);
-      alert(err?.response?.data?.message || err?.message || 'Error updating status');
-    }
-  };
+    alert('Provider Rejected Successfully!');
+    await fetchProviderDetails(); 
+    
+  } catch (err) {
+    console.error("Block Error:", err);
+    alert(err?.response?.data?.message || err?.message || 'Error updating status');
+  }
+};
 
   if (loading) {
     return (

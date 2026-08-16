@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const VerificationTab = ({ provider, onApprove, onBlock }) => {
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
+
   const profileImg = provider?.providerImage || provider?.userId?.profileImage || 'https://via.placeholder.com/150';
-  
   const status = (provider?.verificationStatus || provider?.status || 'pending').toLowerCase();
-  
   const regFeeStatus = (provider?.registrationFee || 'unpaid').toLowerCase();
   const isPremium = provider?.isPremium || false;
 
@@ -24,16 +25,23 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
   const isApproved = status === 'approved';
   const isRejected = status === 'rejected';
 
+  const handleConfirmReject = () => {
+    if (!rejectionReason.trim()) {
+      alert('Please enter a rejection reason.');
+      return;
+    }
+    // Passing providerId and accountRejectionReason to parent handler
+    onBlock && onBlock(provider?._id, rejectionReason);
+    setShowRejectModal(false);
+    setRejectionReason('');
+  };
+
   return (
     <div className="space-y-6">
+      {/* Profile Overview Box */}
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
-          <a 
-            href={profileImg} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="shrink-0"
-          >
+          <a href={profileImg} target="_blank" rel="noopener noreferrer" className="shrink-0">
             <img 
               src={profileImg} 
               alt="Provider Profile" 
@@ -96,6 +104,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         </div>
       </div>
 
+      {/* Verification Documents */}
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <h3 className="text-base font-bold text-gray-800 mb-4">Verification Documents</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -123,13 +132,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
             {provider?.workImages && provider.workImages.length > 0 ? (
               <div className="flex gap-2 flex-wrap">
                 {provider.workImages.map((imgUrl, index) => (
-                  <a 
-                    key={index} 
-                    href={imgUrl} 
-                    target="_blank" 
-                    rel="noreferrer" 
-                    className="inline-block"
-                  >
+                  <a key={index} href={imgUrl} target="_blank" rel="noreferrer" className="inline-block">
                     <img 
                       src={imgUrl} 
                       alt={`Work sample ${index + 1}`} 
@@ -145,26 +148,32 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         </div>
       </div>
 
+      {/* Verification Action Box */}
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h4 className="font-bold text-gray-800 text-sm">Verification Status Action</h4>
           <p className="text-xs text-gray-400 mt-0.5">
             Current status: <span className={`uppercase ${statusColors[status] || 'text-gray-600'}`}>{status}</span>
           </p>
+          {isRejected && provider?.accountRejectionReason && (
+            <p className="text-xs text-red-500 font-medium mt-1">
+              Reason: "{provider.accountRejectionReason}"
+            </p>
+          )}
         </div>
         
         <div className="flex gap-3">
           <button 
             type="button"
             disabled={isRejected}
-            onClick={() => onBlock && onBlock(provider?._id)}
+            onClick={() => setShowRejectModal(true)}
             className={`px-4 py-2 text-white text-xs font-semibold rounded-lg transition-all shadow-sm ${
               isRejected
                 ? 'bg-red-300 cursor-not-allowed opacity-60'
                 : 'bg-red-600 hover:bg-red-700 active:scale-95 cursor-pointer'
             }`}
           >
-            {isRejected ? 'Rejected / Blocked' : 'Reject / Block'}
+            {isRejected ? 'Rejected / Blocked' : 'Reject Provider'}
           </button>
 
           <button 
@@ -181,6 +190,41 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
           </button>
         </div>
       </div>
+
+      {/* Rejection Modal */}
+      {showRejectModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white p-6 rounded-2xl max-w-md w-full shadow-xl space-y-4">
+            <h3 className="text-lg font-bold text-gray-800">Reject Application</h3>
+            <p className="text-xs text-gray-500">
+              State the reason for rejection so the provider can rectify and re-upload documents.
+            </p>
+            <textarea
+              rows={4}
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              placeholder="e.g. CNIC photo is blurry, or work portfolio lacks genuine samples..."
+              className="w-full p-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+            />
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowRejectModal(false)}
+                className="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmReject}
+                className="px-4 py-2 text-xs font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700"
+              >
+                Confirm Rejection
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
