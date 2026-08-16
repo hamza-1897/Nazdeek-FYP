@@ -91,10 +91,13 @@ export const getProviderDetails = async (id) => {
     }
 };
 
-export const updateStatus = async (providerId, verificationStatus) => {
-   const response = await API.put(`/admin/updateProvider/${providerId}/status`, { verificationStatus });
+export const updateStatus = async (providerId, verificationStatus, rejectionReason) => {
+  const response = await API.put(`/admin/updateProvider/${providerId}/status`, { 
+    verificationStatus, 
+    accountRejectionReason: rejectionReason 
+  });
   return response.data;
-}; 
+};
 
 
 

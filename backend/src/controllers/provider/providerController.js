@@ -1,8 +1,6 @@
 const providerModel = require('../../models/providerModel'); 
 const userModel = require('../../models/usersModel');  
 
-
-
 const registerProvider = async (req, res) => {
   try {
     const { 
@@ -15,25 +13,51 @@ const registerProvider = async (req, res) => {
       experience 
     } = req.body;
 
-    const providerImage = req.files['providerImage'] 
+    const providerImage = req.files?.['providerImage'] 
       ? req.files['providerImage'][0].path 
       : null;
 
-    const cnicFront = req.files['cnicFront'] ? req.files['cnicFront'][0].path : null;
-    const cnicBack = req.files['cnicBack'] ? req.files['cnicBack'][0].path : null;
+    const cnicFront = req.files?.['cnicFront'] ? req.files['cnicFront'][0].path : null;
+    const cnicBack = req.files?.['cnicBack'] ? req.files['cnicBack'][0].path : null;
     
     const cnicImages = [];
     if (cnicFront) cnicImages.push(cnicFront);
     if (cnicBack) cnicImages.push(cnicBack);
 
-    const workImages = req.files['workImages'] 
+    const workImages = req.files?.['workImages'] 
       ? req.files['workImages'].map(f => f.path) 
       : [];
 
-    if (!businessName || !cnicNumber || !categoryId || !providerImage) {
+    let existingProvider = await providerModel.findOne({ userId });
+
+    if (!businessName || !cnicNumber || !categoryId || (!providerImage && !existingProvider?.providerImage)) {
       return res.status(400).json({ 
         success: false, 
         message: "Required fields or profile image missing." 
+      });
+    }
+
+    if (existingProvider) {
+      existingProvider.businessName = businessName;
+      existingProvider.description = description || existingProvider.description;
+      existingProvider.cnicNumber = cnicNumber;
+      existingProvider.address = address || existingProvider.address;
+      existingProvider.categoryId = categoryId;
+      existingProvider.experience = Number(experience) || existingProvider.experience;
+      
+      if (providerImage) existingProvider.providerImage = providerImage;
+      if (cnicImages.length > 0) existingProvider.cnicImages = cnicImages;
+      if (workImages.length > 0) existingProvider.workImages = workImages;
+
+      existingProvider.verificationStatus = 'pending';
+      existingProvider.accountRejectionReason = null;
+
+      await existingProvider.save();
+
+      return res.status(200).json({ 
+        success: true, 
+        message: "Application re-submitted successfully. Pending admin review.",
+        data: existingProvider 
       });
     }
 
@@ -49,26 +73,26 @@ const registerProvider = async (req, res) => {
       categoryId,
       experience: Number(experience) || 0,
       verificationStatus: 'pending',
+      accountRejectionReason: null
     });
 
     await newProvider.save();
 
-    res.status(201).json({ 
+    return res.status(201).json({ 
       success: true, 
-      message: "Application submit ho gayi hai. Admin verification ka intezar karein.",
+      message: "Application submitted successfully. Pending admin review.",
       data: newProvider 
     });
 
   } catch (error) {
     console.error("Provider Registration Error:", error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false, 
       message: "Server Error", 
       error: error.message 
     });
   }
 };
-
 // payment setup
 const submitPaymentSlip = async (req, res) => {
   try {

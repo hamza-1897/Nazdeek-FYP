@@ -51,7 +51,6 @@ const verifySignUPOTP = async (req,res) => {
 
     
 }
-
 // User Login Controller
 const userLogin = async (req, res) => {
   try {
@@ -71,19 +70,18 @@ const userLogin = async (req, res) => {
     let providerInfo = null;
 
     if (user.role === 'provider') {
-      const providerDoc = await providerModel.findOne({ userId: user._id }).select('providerId providerImage businessName isPremium verificationStatus categoryId')
-      .populate('categoryId', 'name');
+      const providerDoc = await providerModel
+        .findOne({ userId: user._id })
+        .select('providerId providerImage businessName isPremium verificationStatus accountRejectionReason categoryId')
+        .populate('categoryId', 'name');
 
       if (!providerDoc) {
         providerStatus = 'unsubmitted';
       } else {
         providerStatus = providerDoc.verificationStatus;
-      if (providerStatus === 'approved' || providerStatus === 'rejected') {
-    providerInfo = providerDoc;
-  }
+        providerInfo = providerDoc;
+      }
     }
-    }
-      
 
     const accessToken = generateToken(user._id, user.role, res);
 
@@ -94,9 +92,9 @@ const userLogin = async (req, res) => {
       role: user.role,
       phone: user.phone,
       address: user.address,
-      profileImage : user.profileImage,
+      profileImage: user.profileImage,
       providerStatus,
-      providerInfo, 
+      providerInfo,
       message: "User logged in successfully",
       accessToken
     });
@@ -108,7 +106,6 @@ const userLogin = async (req, res) => {
     });
   }
 };
-
 
 // User Logout
 const userLogout = async (req,res) => {

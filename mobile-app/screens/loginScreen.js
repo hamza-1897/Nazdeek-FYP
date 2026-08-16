@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { ProviderTabNavigator } from '../Navigation/ProviderTabNavigator';
 
 import { AuthContext } from '../context/AuthContext';
 import { userLogin } from '../api/authApi';
@@ -20,7 +19,7 @@ const LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const { login } = useContext(AuthContext);
+  const { login  } = useContext(AuthContext);
 
   const handleLogin = async () => {
     if (!email.trim() || !password) {
@@ -40,25 +39,26 @@ const LoginScreen = ({ navigation }) => {
           email: data.email,
           role: data.role,
           phone: data.phone,
-          address : data.address,
+          address: data.address,
           profileImage: data.profileImage || null,
           providerInfo: data.providerInfo || null,
-          providerStatus: data.providerStatus || data.providerInfo?.verificationStatus || 'unsubmitted'
+          providerStatus: data.providerStatus || data.providerInfo?.verificationStatus || 'unsubmitted',
+          accountRejectionReason: data.providerInfo?.accountRejectionReason || null
         };
 
         await login(data.accessToken, userObj);
 
         if (data.role === 'provider') {
           const status = userObj.providerStatus;
-
+        
           if (status === 'unsubmitted') {
             navigation.replace('ProviderSetup');
           } else if (status === 'pending') {
             navigation.replace('PendingApproval');
           } else if (status === 'approved') {
             navigation.replace('ProviderTabNavigator');
-          } else {
-            navigation.replace('ProviderSetup');
+          } else if (status === 'rejected') {
+            navigation.replace('AccountRejectedScreen', { providerData: userObj });
           }
         } else {
           navigation.replace('AppTabs');
@@ -75,7 +75,6 @@ const LoginScreen = ({ navigation }) => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <View className="px-6 pt-12">
-        
         <Text className="text-4xl font-bold text-[#1a5ea1] text-center italic mb-10">
           Nazdeek
         </Text>
@@ -137,7 +136,6 @@ const LoginScreen = ({ navigation }) => {
             <Text className="text-white text-lg font-bold">Login</Text>
           )}
         </TouchableOpacity>
-
 
         <View className="flex-row justify-center mt-20">
           <Text className="text-gray-500">Don't have an account? </Text>
