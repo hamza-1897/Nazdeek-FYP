@@ -62,3 +62,14 @@ export const getBookingsByUserId = async (userId) => {
         throw error;
     }
 };
+
+export const getProviderById = async (providerId)=>{
+    try {
+        const response  = await api.get(`/customer/provider/${providerId}`)
+         console.log("Get provider by ID API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching provider:", error);
+        throw error;
+    }
+}

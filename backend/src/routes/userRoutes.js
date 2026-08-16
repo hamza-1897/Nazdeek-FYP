@@ -7,9 +7,10 @@ router.post('/update-profile/:id', upload.single('profileImage'), updateUserProf
 
 router.get('/myprofile/:id', getUserProfile);
 // service routes
-const { getAllServices, getServiceById } = require('../controllers/users/userServiceController');
+const { getAllServices, getServiceById, getProviderbyId } = require('../controllers/users/userServiceController');
 router.get('/services', getAllServices);
-router.get('/services/:id', getServiceById);    
+router.get('/services/:id', getServiceById);  
+router.get('/provider/:providerId',getProviderbyId)  
 
 // booking routes
 const { createBooking, getBookingsbyUserId, cancelBooking, rebook } = require('../controllers/users/serviceBookController');

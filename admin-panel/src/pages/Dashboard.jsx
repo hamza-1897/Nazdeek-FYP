@@ -22,11 +22,11 @@ export default function Dashboard() {
         const res = await getdashboard();
         if (res?.data?.success) {
           setStats(res.data.stats || {});
-          setRecentUsers(res.data.recentUsers || []);
+          setRecentUsers(res.data.recentCustomers || []);
           setRecentProviders(res.data.recentProviders || []);
         } else if (res?.success) {
           setStats(res.stats || {});
-          setRecentUsers(res.recentUsers || []);
+          setRecentUsers(res.recentCustomers || []);
           setRecentProviders(res.recentProviders || []);
         }
       } catch (err) {
