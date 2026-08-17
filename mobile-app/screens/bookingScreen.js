@@ -112,6 +112,8 @@ const BookingScreen = ({ navigation, route }) => {
                   isReviewed={item.isReviewed}
                   onLeaveReview={() => navigation.navigate('LeaveReview', {
                     bookingId: item._id,
+                    serviceId:item.serviceId._id,
+                    providerId: item.providerId?._id,
                     providerName: item.providerId?.businessName,
                     serviceName: item.serviceId?.serviceName,
                     date: formattedDate
