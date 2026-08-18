@@ -1,37 +1,39 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, StatusBar, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import React, { useState, useContext } from 'react';
+import { 
+  View, Text, TouchableOpacity, TextInput, ScrollView, 
+  StatusBar, Alert, KeyboardAvoidingView, Platform, 
+  TouchableWithoutFeedback, Keyboard 
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { AuthContext } from '../../context/AuthContext';
+import { createReview } from '../../api/customerApi';
+
+const getRatingStatus = (stars) => {
+  switch (stars) {
+    case 1: return "Poor";
+    case 2: return "Fair";
+    case 3: return "Good";
+    case 4: return "Very Good";
+    case 5: return "Excellent";
+    default: return "Select Rating";
+  }
+};
 
 const LeaveReviewScreen = ({ navigation, route }) => {
-  const { bookingId, providerName, serviceName, date } = route.params || { 
-    bookingId: null,
-    providerName: 'Zara Khan', 
-    serviceName: 'Bridal Makeup', 
-    date: 'Mar 24'
-  };
+  const { providerId, bookingId, serviceId, providerName = 'Provider', serviceName = 'Service', date = '' } = route.params || {};
+  const { userInfo } = useContext(AuthContext);
 
- 
   const [rating, setRating] = useState(0); 
   const [reviewText, setReviewText] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const getInitials = (name) => {
-    if (!name) return 'ZK';
+    if (!name) return 'P';
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
-  const getRatingStatus = (score) => {
-    switch(score) {
-      case 1: return 'Poor';
-      case 2: return 'Fair';
-      case 3: return 'Good';
-      case 4: return 'Very good';
-      case 5: return 'Excellent';
-      default: return 'Tap stars to rate';
-    }
-  };
-
-  const handleSubmitReview = () => {
+  const handleSubmitReview = async () => {
     if (rating === 0) {
       Alert.alert("Required", "Please select a rating star before submitting.");
       return;
@@ -41,23 +43,28 @@ const LeaveReviewScreen = ({ navigation, route }) => {
       return;
     }
 
-    Alert.alert(
-      "Review Submitted",
-      "Thank you for your valuable feedback!",
-      [{ 
-        text: "OK", 
-        onPress: () => {
-          if (bookingId) {
-            navigation.navigate('AppTabs', {
-              screen: 'Bookings',
-              params: { reviewedBookingId: bookingId },
-            });
-          } else {
-            navigation.goBack();
-          }
-        } 
-      }]
-    );
+    const payload = {
+      providerId,
+      userId: userInfo?.id || userInfo?._id,
+      serviceId,
+      bookingId,
+      rating,
+      comment: reviewText.trim()
+    };
+
+
+    try {
+      console.log(payload)
+      setLoading(true);
+      await createReview(payload);
+      Alert.alert("Success", "Thank you! Your review has been submitted.", [
+        { text: "OK", onPress: () => navigation.goBack() }
+      ]);
+    } catch (error) {
+      Alert.alert("Error", error?.response?.data?.message || "Failed to submit review.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -71,8 +78,7 @@ const LeaveReviewScreen = ({ navigation, route }) => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View className="flex-1 px-6">
             
-           
-            <View className="py-4 flex-row items-center justify-between mb-6">
+            <View className="py-4 flex-row items-center justify-between mb-2">
               <TouchableOpacity onPress={() => navigation.goBack()} className="p-1">
                 <Ionicons name="chevron-back" size={24} color="black" />
               </TouchableOpacity>
@@ -80,13 +86,12 @@ const LeaveReviewScreen = ({ navigation, route }) => {
               <View className="w-6" />
             </View>
 
-           
             <ScrollView 
               showsVerticalScrollIndicator={false} 
               contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'space-between', paddingBottom: 24 }}
             >
               <View className="w-full items-center">
-               
+                
                 <View className="items-center mb-4 mt-2">
                   <View className="w-16 h-16 bg-blue-50 rounded-full items-center justify-center mb-3">
                     <Text className="text-[#1a5ea1] text-lg font-bold">
@@ -95,15 +100,13 @@ const LeaveReviewScreen = ({ navigation, route }) => {
                   </View>
                   
                   <Text className="text-xl font-bold text-gray-900">{providerName}</Text>
-                  <Text className="text-gray-400 text-sm mt-1">{serviceName} · {date}</Text>
+                  <Text className="text-gray-400 text-sm mt-1">{serviceName} {date ? `· ${date}` : ''}</Text>
                 </View>
 
-               
                 <View className="items-center my-6">
                   <Text className="text-gray-800 text-base font-medium mb-4">How was the service?</Text>
                   
-                 
-                  <View className="flex-row justify-center space-x-2 mb-2">
+                  <View className="flex-row justify-center gap-3 mb-2">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <TouchableOpacity key={star} onPress={() => setRating(star)}>
                         <Ionicons 
@@ -115,13 +118,11 @@ const LeaveReviewScreen = ({ navigation, route }) => {
                     ))}
                   </View>
                   
-                 
                   <Text className="text-[#f59e0b] font-medium mt-1">
                     {rating > 0 ? `${rating} / 5 — ${getRatingStatus(rating)}` : getRatingStatus(rating)}
                   </Text>
                 </View>
 
-                
                 <View className="w-full mt-4">
                   <Text className="text-gray-500 text-sm mb-2">Your review</Text>
                   <TextInput
@@ -138,9 +139,12 @@ const LeaveReviewScreen = ({ navigation, route }) => {
 
               <TouchableOpacity 
                 onPress={handleSubmitReview}
-                className="bg-[#1a5ea1] w-full py-4 rounded-none items-center mt-6"
+                disabled={loading}
+                className={`bg-[#1a5ea1] w-full py-4 rounded-xl items-center mt-6 ${loading ? 'opacity-50' : ''}`}
               >
-                <Text className="text-white text-base font-semibold">Submit review</Text>
+                <Text className="text-white text-base font-semibold">
+                  {loading ? 'Submitting...' : 'Submit review'}
+                </Text>
               </TouchableOpacity>
 
             </ScrollView>
