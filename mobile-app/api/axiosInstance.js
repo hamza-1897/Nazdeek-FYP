@@ -6,7 +6,7 @@ import { useContext } from 'react';
 
 
 //LAPTOP IPADRESS
-const API_BASE_URL = 'http://10.37.247.200:3000/api'; 
+const API_BASE_URL = 'https://nazdeek-fyp.onrender.com/api'; 
 
 //Malaika Laptop IPAdress
 //const API_BASE_URL = 'http://192.168.10.10:3000/api'; 
