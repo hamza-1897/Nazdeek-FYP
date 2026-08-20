@@ -2,15 +2,18 @@ const reviewModel = require('../../models/reviewModel');
 
 // create review
 const createReview = async (req, res) => {
+
   try {
-    const { providerId, userId, rating, comment } = req.body;
+    const { providerId, userId, serviceId,rating, comment } = req.body;
 
   
 
     const newReview = await reviewModel.create({
       providerId,
       userId,
-      rating,
+      serviceId,
+      bookingId,
+      rating ,
       comment
     });
 
@@ -33,7 +36,7 @@ const getProviderReviews = async (req, res) => {
       .populate('userId', 'name email')
       .sort({ createdAt: -1 });
 
-    res.status(200).json(reviews);
+    res.status(200).json({message:"succesfully reviews retrived",reviews});
 
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

@@ -36,6 +36,8 @@ router.put('/update-booking-status/:bookingId', updateBookingStatus);
 const { getProviderReviews } = require('../controllers/mutual/reviewController');
 router.get('/reviews/:providerId', getProviderReviews);
 
+
+
 //Category route
 const {getCategories} = require('../controllers/mutual/categoryController')
 router.get('/getAllCategory',getCategories)

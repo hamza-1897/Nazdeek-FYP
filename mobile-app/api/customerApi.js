@@ -73,3 +73,15 @@ export const getProviderById = async (providerId)=>{
         throw error;
     }
 }
+
+export const createReview = async (apiPayload)=>{
+
+    try {
+        const response = await api.post('/customer/create-review',apiPayload)
+         console.log("create review:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error creating  review:", error);
+        throw error;
+    }
+}
