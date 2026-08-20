@@ -4,7 +4,7 @@ const reviewModel = require('../../models/reviewModel');
 const createReview = async (req, res) => {
 
   try {
-    const { providerId, userId, serviceId,rating, comment } = req.body;
+    const { providerId, userId, serviceId, bookingId,rating, comment } = req.body;
 
   
 
