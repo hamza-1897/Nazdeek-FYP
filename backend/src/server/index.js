@@ -15,7 +15,7 @@ app.use(cookies());
 
 
 const config = require('../config/envConfig');
-const connectDB = require('../Config/dbConnection');
+const connectDB = require('../config/dbConnection');
 const adminAuthRoutes = require('../routes/admin-AuthRoutes');
 const providerRoutes = require('../routes/providerRoutes');
 const userAuthRoutes = require('../routes/users-AuthRoutes');
