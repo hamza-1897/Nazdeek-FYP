@@ -2,6 +2,7 @@ const serviceModel = require('../../models/serviceModel');
 const bookingModel = require('../../models/bookingModel');
 const providerModel = require('../../models/providerModel');
 const notificationModel = require('../../models/notificationModel')
+const reviewModel = require('../../models/reviewModel')
 const sendPushNotification = require('../../lib/sendPushNotification')
 
 const createBooking = async (req, res) => {
@@ -93,10 +94,28 @@ const createBooking = async (req, res) => {
 const getBookingsbyUserId = async (req, res) => {
     try {
         const { userId } = req.params;
-        const bookings = await bookingModel.find({ userId }).populate('serviceId', 'serviceName serviceImages price').populate('providerId', 'businessName');
 
+        const bookings = await bookingModel
+            .find({ userId })
+            .populate('serviceId', 'serviceName serviceImages price')
+            .populate('providerId', 'businessName')
+            .lean();
 
-        res.status(200).json(bookings);
+        const updatedBookings = await Promise.all(
+            bookings.map(async (booking) => {
+                const review = await reviewModel.findOne({
+                    userId,
+                    bookingId: booking._id
+                });
+
+                return {
+                    ...booking,
+                    isReviewed: !!review
+                };
+            })
+        );
+
+        res.status(200).json(updatedBookings);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

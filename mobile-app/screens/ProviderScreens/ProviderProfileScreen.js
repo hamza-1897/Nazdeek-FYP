@@ -143,7 +143,7 @@ const ProviderProfileScreen = ({ navigation, route }) => {
                 >
                   <View className="flex-row items-center justify-between mb-2">
                     <Text className="font-bold text-slate-800 text-sm">
-                      {rev?.customerId?.name || 'Customer'}
+                      {rev?.userId?.name || 'Customer'}
                     </Text>
                     <View className="flex-row items-center bg-amber-50 px-2 py-0.5 rounded-md">
                       <Ionicons name="star" size={12} color="#f59e0b" />
