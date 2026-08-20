@@ -34,6 +34,15 @@ app.get('/', (req, res) => {
     res.send('Nazdeek server is Running...');
 });
 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'Nazdeek FYP Backend is running smoothly',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime() // Server running time in seconds
+  });
+});
+
 app.use('/api/admin-auth', adminAuthRoutes);
 app.use('/api/admin', authMiddleware, checkRole(['admin']), adminRoutes);
 //app.use('/api/admin',  adminRoutes);
