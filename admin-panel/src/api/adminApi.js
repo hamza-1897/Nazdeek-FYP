@@ -13,7 +13,41 @@ export const adminLogin = async (email, password) => {
     }
 };
 
+//forgetPassword
+export const forgotOtp = async (email)=>{
+    try{
+        const response = await API.post('/admin-auth/forgotOtp', {email})
+     console.log("Admin forgotOTP API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error during admin forgot otp:", error);
+        throw error;
+    }
+}
 
+//verifyOTP 
+export const verifyOTP = async (email,otp) =>{
+    try{
+        const response = await API.post('/admin-auth/verifyOTP', {email,otp})
+     console.log("Admin verifyOTP API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error during admin verifyOTP :", error);
+        throw error;
+    }
+}
+
+// reset pssword
+export const resetPassword = async (email,password) =>{
+    try{
+        const response = await API.put('/admin-auth/update-password', {email,password})
+     console.log("Admin resetPassword API response:", response.data);
+        return response.data;
+    } catch (error) {  
+        console.error("Error during admin resetPassword :", error);
+        throw error;
+    }
+}
 //dashboard stats
 export const getdashboard = async () => {
     try {
