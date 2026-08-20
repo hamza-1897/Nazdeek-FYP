@@ -1,11 +1,11 @@
 const adminModel = require('../../models/adminModel')
+const otpModel = require('../../models/otpModel')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/envConfig');
 const {generateToken, generateNewAccessToken} = require('../../lib/generateToken');
 const checkPassword = require('../../lib/checkPass');
-
-
+const {forgotPasswordOTP} = require('../../lib/generateOTP')
 
 const registerAdmin = async (req,res) => {
     const {name , email , password} = req.body;
@@ -63,9 +63,56 @@ const refreshAccessToken = async (req,res) => {
 }
 
 
+// Forgot Password - OTP Generation
+const forgotOTP = async (req, res) => {
+
+ const {email} = req.body;
+    const user = await adminModel.findOne({email})
+
+    if(!user){
+        res.status(400).json({message : "user with this email does not exist"})
+    } else {
+       return  await forgotPasswordOTP(email, res)       
+  }
+}
+
+// Password Reset - OTP Verification
+const verifyForgotOTP = async (req,res) => {
+    const {email , otp} = req.body;
+    const otpEntry = await otpModel.findOne({email, otp});
+
+    if(!otpEntry){
+        res.status(400).json({message : "invalid OTP"})
+    } else {
+        await otpModel.deleteOne({email, otp});
+        res.status(200).json({message : "OTP verified successfully"})
+    }
+}
+
+const resetPassword = async (req,res) => {
+    const {email, password} = req.body;
+    const user = await adminModel.findOne({email})
+    if(!user){
+        res.status(400).json({message : "user with this email does not exist"})
+    } else {
+
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password,salt)
+    
+        user.password = hashPassword;
+        await user.save();
+        res.status(200).json({message : "password reset successfully"})
+    }
+}
+
+
+
 module.exports = {
     adminLogin ,
     registerAdmin ,
     refreshAccessToken  ,
-    adminLogout
+    adminLogout,
+    forgotOTP,
+    verifyForgotOTP,
+    resetPassword
 }
