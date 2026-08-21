@@ -1,33 +1,29 @@
-const nodemailer = require('nodemailer');
+const SibApiV3Sdk = require('@getbrevo/brevo');
 const config = require('../config/envConfig');
 
 const sendEmail = async (options) => {
-    const emailUser = config.Email_User || config.EMAIL_USER || process.env.EMAIL_USER;
-    const emailPass = config.Email_Pass || config.EMAIL_PASS || process.env.EMAIL_PASS;
+    const emailUser = config.Email_User || config.EMAIL_USER || process.env.EMAIL_USER ;
+    const brevoKey = process.env.BREVO_API ;
 
-    if (!emailUser || !emailPass) {
-        throw new Error("Email credentials missing in environment variables!");
+    let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+    let apiKey = apiInstance.authentications['apiKey'];
+    apiKey.apiKey = brevoKey;
+
+    let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
+    sendSmtpEmail.subject = options.subject;
+    sendSmtpEmail.htmlContent = `<p>${options.message}</p>`;
+    sendSmtpEmail.sender = { "name": "Nazdeek App", "email": emailUser };
+    sendSmtpEmail.to = [{ "email": options.email }];
+
+    try {
+        const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+        console.log('API Email Sent Successfully:', data);
+        return data;
+    } catch (error) {
+        console.error('Brevo API Error:', error.response ? error.response.body : error.message);
+        throw error;
     }
-
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: emailUser,
-            pass: emailPass,
-        },
-        tls: {
-            rejectUnauthorized: false 
-        }
-    });
-
-    const mailOptions = {
-        from: `Nazdeek App <${emailUser}>`,
-        to: options.email,
-        subject: options.subject,
-        text: options.message,
-    };
-
-    await transporter.sendMail(mailOptions);
 };
 
 module.exports = sendEmail;
