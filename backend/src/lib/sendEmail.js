@@ -10,10 +10,12 @@ const sendEmail = async (options) => {
     }
 
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp-relay.brevo.com',
+        port: 587,
+        secure: false, 
         auth: {
-            user: emailUser,
-            pass: emailPass,
+            user: process.env.BREVO_USER, 
+            pass: process.env.BREVO_PASS, 
         },
         tls: {
             rejectUnauthorized: false 
