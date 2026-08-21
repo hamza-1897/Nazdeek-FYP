@@ -4,13 +4,12 @@ const config = require('../config/envConfig');
 const sendEmail = async (options) => {
     
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
+        host: 'smtp-relay.brevo.com',
+        port: 587,
+        secure: false, 
         auth: {
-            user: config.Email_User,
-            pass: config.Email_Pass,
+            user: process.env.BREVO_USER, 
+            pass: process.env.BREVO_PASS, 
         },
     });
 
