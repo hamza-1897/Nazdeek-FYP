@@ -1,24 +1,32 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { View, Text, StatusBar, Animated, Easing } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { AuthContext } from '../context/AuthContext';
 
 const SplashScreen = ({ navigation }) => {
+  const { userToken, isLoading } = useContext(AuthContext);
   const progressAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.timing(progressAnimation, {
       toValue: 1,
-      duration: 4000,
+      duration: 3000,
       easing: Easing.linear,
       useNativeDriver: false,
     }).start();
 
     const timer = setTimeout(() => {
-      navigation.replace('Login'); 
-    }, 4000);
+      if (!isLoading) {
+        if (userToken) {
+          navigation.replace('AppTabs'); 
+        } else {
+          navigation.replace('Login');
+        }
+      }
+    }, 3000);
 
     return () => clearTimeout(timer);
-  }, [navigation]);
+  }, [navigation, userToken, isLoading]);
 
   const progressWidth = progressAnimation.interpolate({
     inputRange: [0, 1],
@@ -30,7 +38,6 @@ const SplashScreen = ({ navigation }) => {
       <StatusBar barStyle="light-content" backgroundColor="#0a2f5c" />
       
       <View className="flex-1 items-center justify-center">
-       
         <View className="flex-row items-center justify-center">
           <Text className="text-white text-5xl font-extrabold tracking-tighter">N</Text>
           <View className="mx-[-1px]" style={{ transform: [{ scaleY: 1.25 }] }}>
@@ -39,7 +46,6 @@ const SplashScreen = ({ navigation }) => {
           <Text className="text-white text-5xl font-extrabold tracking-tighter">ZDEEK</Text>
         </View>
 
-        
         <Text className="text-gray-300 text-xs font-medium mt-3 tracking-widest uppercase">
           Your Local Service Expert
         </Text>

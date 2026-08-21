@@ -7,15 +7,18 @@ const http = require('http');
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: 'http://localhost:5173', 
-    credentials: true 
+    origin: [
+      'https://nazdeek-admin.vercel.app', 
+      'http://localhost:5173'
+    ],
+    credentials: true
 }));
 app.use(cookies());
 
 
 
 const config = require('../config/envConfig');
-const connectDB = require('../Config/dbConnection');
+const connectDB = require('../config/dbConnection');
 const adminAuthRoutes = require('../routes/admin-AuthRoutes');
 const providerRoutes = require('../routes/providerRoutes');
 const userAuthRoutes = require('../routes/users-AuthRoutes');
@@ -32,6 +35,15 @@ const server = http.createServer(app);
 
 app.get('/', (req, res) => {
     res.send('Nazdeek server is Running...');
+});
+
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'Nazdeek FYP Backend is running smoothly',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime() // Server running time in seconds
+  });
 });
 
 app.use('/api/admin-auth', adminAuthRoutes);

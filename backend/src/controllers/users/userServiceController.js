@@ -26,13 +26,24 @@ const getServiceById = async (req, res) => {
 
     const service = await serviceModel
       .findById(id)
-      .populate('providerId', 'businessName  address providerImage')
-      .populate('categoryId', 'name');;
+      .populate('providerId', 'businessName address providerImage')
+      .populate('categoryId', 'name');
+
     if (!service) {
       return res.status(404).json({ success: false, message: "Service not found" });
     }
 
-    res.status(200).json({ success: true, data: service });
+    const reviews = await reviewModel
+      .find({ serviceId: id })
+      .populate('userId', 'name profileImage');
+
+    res.status(200).json({
+      success: true,
+      data: {
+        ...service.toObject(),
+        reviews
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: "Server Error", error: error.message });
   }

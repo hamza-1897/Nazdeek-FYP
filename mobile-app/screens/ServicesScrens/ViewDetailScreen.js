@@ -121,6 +121,8 @@ const ViewDetailScreen = ({ route, navigation }) => {
     ? serviceData.serviceImages
     : ['https://images.unsplash.com/photo-1581578731522-30d8d067469a?q=80&w=600'];
 
+  const reviewsList = serviceData?.reviews || [];
+
   return (
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
@@ -191,10 +193,10 @@ const ViewDetailScreen = ({ route, navigation }) => {
             <View className="flex-row items-center bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-100">
               <Ionicons name="star" size={13} color="#f59e0b" />
               <Text className="text-amber-900 font-extrabold text-xs ml-1">
-                {serviceData?.rating || '4.8'}
+                {serviceData?.rating || '0.0'}
               </Text>
               <Text className="text-amber-700/70 text-xs font-medium ml-1">
-                ({serviceData?.reviewsCount || '120'})
+                ({reviewsList.length})
               </Text>
             </View>
           </View>
@@ -295,21 +297,66 @@ const ViewDetailScreen = ({ route, navigation }) => {
           )}
 
           {activeTab === 'Reviews' && (
-            <View className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-              <View className="flex-row items-center mb-2">
-                <View className="flex-row mr-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Ionicons key={i} name="star" size={14} color="#f59e0b" />
-                  ))}
+            <View className="space-y-3">
+              {reviewsList.length > 0 ? (
+                reviewsList.map((review, index) => {
+                  const userName = review?.userId?.name || 'Anonymous User';
+                  const userPic =
+                    review?.userId?.profileImage ||
+                    'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=150';
+                  const ratingVal = Number(review?.rating) || 5;
+
+                  return (
+                    <View
+                      key={review?._id || index}
+                      className="bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-3"
+                    >
+                      <View className="flex-row items-center justify-between mb-3">
+                        <View className="flex-row items-center flex-1">
+                          <Image
+                            source={{ uri: userPic }}
+                            className="w-10 h-10 rounded-full bg-slate-200 border border-slate-200"
+                            resizeMode="cover"
+                          />
+                          <View className="ml-3 flex-1">
+                            <Text
+                              className="font-bold text-slate-800 text-sm capitalize"
+                              numberOfLines={1}
+                            >
+                              {userName}
+                            </Text>
+                          </View>
+                        </View>
+
+                        <View className="flex-row items-center bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
+                          <Ionicons name="star" size={12} color="#f59e0b" />
+                          <Text className="text-amber-900 font-bold text-xs ml-1">
+                            {ratingVal}
+                          </Text>
+                        </View>
+                      </View>
+
+                      {review?.comment ? (
+                        <Text className="text-slate-600 font-normal text-xs leading-5 italic">
+                          "{review.comment}"
+                        </Text>
+                      ) : (
+                        <Text className="text-slate-400 font-normal text-xs italic">
+                          No comment provided.
+                        </Text>
+                      )}
+                    </View>
+                  );
+                })
+              ) : (
+                <View className="bg-slate-50 p-6 rounded-2xl border border-slate-100 items-center justify-center">
+                  <Ionicons name="chatbox-ellipses-outline" size={32} color="#94a3b8" />
+                  <Text className="text-slate-500 font-bold text-sm mt-2">No Reviews Yet</Text>
+                  <Text className="text-slate-400 text-xs text-center mt-1">
+                    Be the first one to review this service!
+                  </Text>
                 </View>
-                <Text className="font-bold text-slate-800 text-xs">Excellent Work!</Text>
-              </View>
-              <Text className="text-slate-600 font-normal text-xs leading-5 italic">
-                "Service quality was top notch. Arrived right on time and solved the issue cleanly."
-              </Text>
-              <Text className="text-slate-400 font-semibold text-[10px] uppercase tracking-wider mt-3">
-                - Verified Customer
-              </Text>
+              )}
             </View>
           )}
         </View>

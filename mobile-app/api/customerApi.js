@@ -85,3 +85,15 @@ export const createReview = async (apiPayload)=>{
         throw error;
     }
 }
+
+export const createReport = async (apiPayload)=>{
+
+    try {
+        const response = await api.post('/customer/create-report',apiPayload)
+         console.log("create Report:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error creating  Report:", error);
+        throw error;
+    }
+}
