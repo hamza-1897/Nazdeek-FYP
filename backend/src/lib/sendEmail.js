@@ -1,27 +1,35 @@
-const SibApiV3Sdk = require('@getbrevo/brevo');
+const axios = require('axios');
 const config = require('../config/envConfig');
 
 const sendEmail = async (options) => {
-    const emailUser = config.Email_User || config.EMAIL_USER || process.env.EMAIL_USER ;
-    const brevoKey = process.env.BREVO_API ;
+    const brevoApiKey = process.env.BREVO_API || config.BREVO_API;
 
-    let apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-    let apiKey = apiInstance.authentications['apiKey'];
-    apiKey.apiKey = brevoKey;
+    if (!brevoApiKey) {
+        throw new Error("BREVO_API key is missing in environment variables!");
+    }
 
-    let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-
-    sendSmtpEmail.subject = options.subject;
-    sendSmtpEmail.htmlContent = `<p>${options.message}</p>`;
-    sendSmtpEmail.sender = { "name": "Nazdeek App", "email": emailUser };
-    sendSmtpEmail.to = [{ "email": options.email }];
+    const payload = {
+        sender: {
+            name: "Nazdeek App",
+            email: "nazdeek.application@gmail.com" 
+        },
+        to: [{ email: options.email }],
+        subject: options.subject,
+        htmlContent: `<p>${options.message}</p>`
+    };
 
     try {
-        const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
-        console.log('API Email Sent Successfully:', data);
-        return data;
+        const response = await axios.post('https://api.brevo.com/v3/smtp/email', payload, {
+            headers: {
+                'accept': 'application/json',
+                'api-key': brevoApiKey,
+                'content-type': 'application/json'
+            }
+        });
+        console.log('✅ Brevo Email Sent Successfully:', response.data);
+        return response.data;
     } catch (error) {
-        console.error('Brevo API Error:', error.response ? error.response.body : error.message);
+        console.error('❌ Brevo API Error:', error.response ? JSON.stringify(error.response.data) : error.message);
         throw error;
     }
 };
