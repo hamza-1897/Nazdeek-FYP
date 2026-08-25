@@ -1,5 +1,6 @@
 const providerModel = require('../../models/providerModel'); 
 const userModel = require('../../models/usersModel');  
+const settingModel = require('../../models/settingModel');
 
 const registerProvider = async (req, res) => {
   try {
@@ -93,6 +94,39 @@ const registerProvider = async (req, res) => {
     });
   }
 };
+
+const getPaymentDetails = async (req, res) => {
+  try {
+    const settings = await settingModel.findOne();
+
+    if (!settings) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "System settings not found" 
+      });
+    }
+
+    const registrationFeeAmount = settings?.feeConfig?.registrationFee ;
+    const isRegistrationFree = settings?.feeConfig?.isRegistrationFree ;
+    const activePaymentAccounts = settings?.paymentAccounts?.filter(acc => acc.isActive) || [];
+
+    return res.status(200).json({
+      success: true,
+      registrationFeeAmount,
+      isRegistrationFree,
+      activePaymentAccounts
+    });
+
+  } catch (error) {
+    console.error("Fetch Payment Details Error:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Internal server error while fetching payment details" 
+    });
+  }
+};
+
+
 // payment setup
 const submitPaymentSlip = async (req, res) => {
   try {
@@ -128,4 +162,4 @@ const submitPaymentSlip = async (req, res) => {
 };
 
 
-module.exports = { registerProvider , submitPaymentSlip };
+module.exports = { registerProvider , getPaymentDetails,submitPaymentSlip };

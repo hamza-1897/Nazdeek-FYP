@@ -79,3 +79,30 @@ export const updateBookingStatus = async (bookingId, status) => {
         throw error;
     }
 };
+
+export const getPaymentDetails = async () =>{
+     try {
+        const response = await api.get('/provider/payment');
+        console.log("get payment detail  API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error get payment detail :", error);
+        throw error;
+    }
+}
+
+export const uploadPayment = async (formData) => {
+  try {
+    const response = await api.post('/provider/submit-payment', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log("submit payment detail API response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error submit payment detail :", error);
+    throw error;
+  }
+};

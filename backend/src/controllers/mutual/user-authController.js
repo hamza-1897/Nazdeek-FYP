@@ -2,6 +2,7 @@ const userModel = require('../../models/usersModel');
 const otpModel = require('../../models/otpModel');
 const providerModel = require('../../models/providerModel');
 const categoryModel = require('../../models/categoryModel');
+const settingModel = require('../../models/settingModel'); 
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -51,7 +52,8 @@ const verifySignUPOTP = async (req,res) => {
 
     
 }
-// User Login Controller
+
+
 const userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -69,10 +71,13 @@ const userLogin = async (req, res) => {
     let providerStatus = null;
     let providerInfo = null;
 
+    const settings = await settingModel.findOne();
+    const isRegistrationFree = settings?.feeConfig?.isRegistrationFree ?? false;
+
     if (user.role === 'provider') {
       const providerDoc = await providerModel
         .findOne({ userId: user._id })
-        .select('providerId providerImage businessName isPremium verificationStatus accountRejectionReason categoryId')
+        .select('providerId providerImage businessName isPremium verificationStatus accountRejectionReason categoryId registrationFee')
         .populate('categoryId', 'name');
 
       if (!providerDoc) {
@@ -95,6 +100,7 @@ const userLogin = async (req, res) => {
       profileImage: user.profileImage,
       providerStatus,
       providerInfo,
+      isRegistrationFree, 
       message: "User logged in successfully",
       accessToken
     });
