@@ -45,7 +45,8 @@ import EditProfileProvider from '../screens/ProviderDashboard/EditProfileProvide
 import RatingsReviewsProvider from '../screens/ProviderDashboard/RatingsReviewsProvider';
 import ReportScreen from '../screens/ProviderScreens/ReportScreen';
 import AccountRejectedScreen  from '../screens/ProviderScreens/AccountRejectedScreen'
-
+import PaymentUploadScreen from '../screens/ProviderScreens/PaymentUploadScreen';
+import PaymentStatusScreen from '../screens/ProviderScreens/PaymentStatusScreen';
 // --- UTILITY / COMMON SCREENS ---
 import ChatScreen from '../screens/chatScreen';
 import InboxScreen from '../screens/InboxScreen';
@@ -100,7 +101,8 @@ const AuthNavigation = () => {
       <Stack.Screen name="RatingsReviewsProvider" component={RatingsReviewsProvider} />
       <Stack.Screen name="ReportScreen" component={ReportScreen} />
       <Stack.Screen name='AccountRejectedScreen' component={AccountRejectedScreen}/>
-
+      <Stack.Screen name="PaymentUploadScreen" component={PaymentUploadScreen} />
+      <Stack.Screen name="PaymentStatusScreen" component={PaymentStatusScreen} />
       {/* 4. Common / Notifications */}
       <Stack.Screen name="Notification" component={NotificationScreen} />
       {/* 5. Chat */}
