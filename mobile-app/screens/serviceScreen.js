@@ -47,17 +47,29 @@ const ServicesScreen = ({ navigation }) => {
     { id: 'technician', name: 'Technician', icon: 'tools', type: 'mc' },
   ];
 
-  // Dynamic Filtering based on Category Pills & Search Bar Text
   const filteredServices = useMemo(() => {
     return services.filter((item) => {
+      const itemCategoryName =
+        item?.categoryId?.name ||
+        item?.category?.name ||
+        item?.category ||
+        '';
+
+      const selected = selectedCategory.toLowerCase();
+      const currentCat = itemCategoryName.toLowerCase();
+
       const matchesCategory =
         selectedCategory === 'All' ||
-        item?.categoryId?.name?.toLowerCase() === selectedCategory.toLowerCase() ||
-        item?.category?.toLowerCase() === selectedCategory.toLowerCase();
+        currentCat === selected ||
+        currentCat.includes(selected) ||
+        selected.includes(currentCat);
 
+      const query = searchQuery.toLowerCase().trim();
       const matchesSearch =
-        item?.serviceName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item?.description?.toLowerCase().includes(searchQuery.toLowerCase());
+        !query ||
+        item?.serviceName?.toLowerCase().includes(query) ||
+        item?.description?.toLowerCase().includes(query) ||
+        currentCat.includes(query);
 
       return matchesCategory && matchesSearch;
     });
@@ -67,14 +79,12 @@ const ServicesScreen = ({ navigation }) => {
     <SafeAreaView className="flex-1 bg-slate-50">
       <StatusBar barStyle="dark-content" backgroundColor="#f8fafc" />
 
-      {/* Top Header Section (Centered Title) */}
       <View className="px-5 pt-3 pb-2 flex-row justify-center items-center border-b border-slate-100 bg-white shadow-xs">
         <Text className="text-slate-900 text-lg font-black tracking-wide text-center">
           Popular Services
         </Text>
       </View>
 
-      {/* Clean Full-Width Search Bar */}
       <View className="px-5 pt-4 pb-2">
         <View className="bg-white flex-row items-center px-4 h-12 rounded-2xl border border-slate-200/80 shadow-xs">
           <Ionicons name="search-outline" size={18} color="#94a3b8" />
@@ -93,7 +103,6 @@ const ServicesScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Category Horizontal Pills */}
       <View className="my-1">
         <CategoryPills
           categories={categories}
@@ -102,7 +111,6 @@ const ServicesScreen = ({ navigation }) => {
         />
       </View>
 
-      {/* Services Content List */}
       {loading ? (
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color="#1a5ea1" />
@@ -123,7 +131,7 @@ const ServicesScreen = ({ navigation }) => {
               />
             </View>
           )}
-          keyExtractor={(item) => item._id || item.id}
+          keyExtractor={(item, index) => item._id || item.id || index.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 110, paddingTop: 6 }}
           ListEmptyComponent={() => (

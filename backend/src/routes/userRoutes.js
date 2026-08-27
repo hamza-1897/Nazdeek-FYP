@@ -29,5 +29,7 @@ router.post('/create-report', createReport);
 const { createReview } = require('../controllers/mutual/reviewController');
 router.post('/create-review', createReview);
 
+const {getPublicSettings} = require('../controllers/mutual/supportController')
+router.get('/getSupportDetails',getPublicSettings)
 
 module.exports = router;

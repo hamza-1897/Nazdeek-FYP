@@ -12,34 +12,45 @@ const CreateServiceScreen = ({ navigation }) => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [priceType, setPriceType] = useState('fixed');
-  const [imageUri, setImageUri] = useState(null);
+  const [images, setImages] = useState([]); // Up to 3 image URIs
   const [loading, setLoading] = useState(false);
 
+  // Pick multiple images (Max 3) - Simple selection without cropping
+  const pickImages = async () => {
+    if (images.length >= 3) {
+      Alert.alert("Limit Reached", "You can only select up to 3 images.");
+      return;
+    }
 
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      Alert.alert("Permission Denied", "Gallery access is required to select images.");
+      return;
+    }
 
-  const pickImage = async () => {
-  const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const remainingSlots = 3 - images.length;
 
-  if (!permissionResult.granted) {
-    Alert.alert("Permission Denied", "Gallery access is required to select an image.");
-    return;
-  }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'], 
+      allowsMultipleSelection: true,
+      selectionLimit: remainingSlots,
+      quality: 0.8,
+    });
 
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ['images'], 
-    allowsEditing: true,
-    aspect: [4, 3],
-    quality: 0.8,
-  });
+    if (!result.canceled) {
+      const selectedUris = result.assets.map((asset) => asset.uri);
+      setImages((prev) => [...prev, ...selectedUris].slice(0, 3));
+    }
+  };
 
-  if (!result.canceled) {
-    setImageUri(result.assets[0].uri);
-  }
-};
+  // Remove single image from array
+  const removeImage = (indexToRemove) => {
+    setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
 
   const handleCreateService = async () => {
-    if (!serviceName.trim() || !description.trim() || !price || !imageUri) {
-      Alert.alert("Missing Information", "Please complete all fields and upload a banner image.");
+    if (!serviceName.trim() || !description.trim() || !price || images.length === 0) {
+      Alert.alert("Missing Information", "Please complete all fields and upload at least one image.");
       return;
     }
 
@@ -61,14 +72,16 @@ const CreateServiceScreen = ({ navigation }) => {
     formData.append('price', price);
     formData.append('priceType', priceType);
 
-    const filename = imageUri.split('/').pop();
-    const match = /\.(\w+)$/.exec(filename);
-    const type = match ? `image/${match[1]}` : 'image/jpeg';
+    images.forEach((imgUri, index) => {
+      const filename = imgUri.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : 'image/jpeg';
 
-    formData.append('serviceImages', {
-      uri: imageUri,
-      name: filename || 'service_banner.jpg',
-      type: type,
+      formData.append('serviceImages', {
+        uri: imgUri,
+        name: filename || `service_${index}.jpg`,
+        type: type,
+      });
     });
 
     try {
@@ -90,7 +103,8 @@ const CreateServiceScreen = ({ navigation }) => {
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      <View className="px-6 py-4 flex-row items-center justify-between  border-b border-gray-100">
+      {/* Header */}
+      <View className="px-6 py-4 flex-row items-center justify-between border-b border-gray-100">
         <TouchableOpacity onPress={() => navigation.goBack()} className="p-1">
           <Ionicons name="chevron-back" size={24} color="#111827" />
         </TouchableOpacity>
@@ -99,32 +113,47 @@ const CreateServiceScreen = ({ navigation }) => {
       </View>
 
       <ScrollView className="flex-1 px-6 mt-4" showsVerticalScrollIndicator={false}>
+        
+        {/* Images Picker Section */}
         <View className="mb-6">
-          <Text className="text-gray-700 font-semibold mb-2">Service Image</Text>
-          {imageUri ? (
-            <View className="relative w-full h-44 rounded-2xl overflow-hidden border border-gray-200">
-              <Image source={{ uri: imageUri }} className="w-full h-full" resizeMode="cover" />
-              <TouchableOpacity 
-                onPress={pickImage}
-                className="absolute bottom-3 right-3 bg-[#1a5ea1] p-2.5 rounded-full shadow-md"
-              >
-                <Ionicons name="camera" size={18} color="white" />
+          <View className="flex-row justify-between items-center mb-2">
+            <Text className="text-gray-700 font-semibold">Service Images ({images.length}/3)</Text>
+            {images.length < 3 && (
+              <TouchableOpacity onPress={pickImages} className="flex-row items-center">
+                <Ionicons name="add-circle" size={18} color="#1a5ea1" />
+                <Text className="text-[#1a5ea1] text-xs font-bold ml-1">Add Image</Text>
               </TouchableOpacity>
-            </View>
-          ) : (
-            <TouchableOpacity 
-              onPress={pickImage}
-              className="w-full h-44 border-2 border-dashed border-gray-300 rounded-2xl justify-center items-center bg-gray-50"
-            >
-              <View className="bg-blue-50 p-3 rounded-full mb-2">
-                <Ionicons name="image-outline" size={26} color="#1a5ea1" />
+            )}
+          </View>
+
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row py-1">
+            {images.map((uri, index) => (
+              <View key={index} className="relative mr-3 w-28 h-28 rounded-2xl overflow-hidden border border-gray-200 bg-gray-50">
+                <Image source={{ uri }} className="w-full h-full" resizeMode="cover" />
+                <TouchableOpacity 
+                  onPress={() => removeImage(index)}
+                  className="absolute top-1 right-1 bg-red-500 p-1 rounded-full shadow-sm"
+                >
+                  <Ionicons name="close" size={14} color="white" />
+                </TouchableOpacity>
               </View>
-              <Text className="text-gray-600 font-medium text-sm">Upload Service Photo</Text>
-              <Text className="text-gray-400 text-xs mt-0.5">JPG, PNG (4:3 ratio)</Text>
-            </TouchableOpacity>
-          )}
+            ))}
+
+            {images.length < 3 && (
+              <TouchableOpacity 
+                onPress={pickImages}
+                className="w-28 h-28 rounded-2xl border-2 border-dashed border-gray-300 justify-center items-center bg-gray-50"
+              >
+                <View className="bg-blue-50 p-2 rounded-full mb-1">
+                  <Ionicons name="camera-outline" size={22} color="#1a5ea1" />
+                </View>
+                <Text className="text-gray-500 font-medium text-xs">Upload</Text>
+              </TouchableOpacity>
+            )}
+          </ScrollView>
         </View>
 
+        {/* Title */}
         <View className="mb-5">
           <Text className="text-gray-700 font-semibold mb-1">Service Title</Text>
           <TextInput 
@@ -136,6 +165,7 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
+        {/* Pricing Type */}
         <View className="mb-5">
           <Text className="text-gray-700 font-semibold mb-2">Pricing Type</Text>
           <View className="flex-row gap-3">
@@ -180,6 +210,7 @@ const CreateServiceScreen = ({ navigation }) => {
           </View>
         </View>
 
+        {/* Price */}
         <View className="mb-5">
           <Text className="text-gray-700 font-semibold mb-1">
             {priceType === 'hourly' ? 'Hourly Rate (Rs)' : 'Base Price (Rs)'}
@@ -194,6 +225,7 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
+        {/* Description */}
         <View className="mb-8">
           <Text className="text-gray-700 font-semibold mb-1">Description</Text>
           <TextInput 
@@ -208,6 +240,7 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
+        {/* Submit Button */}
         <TouchableOpacity 
           disabled={loading}
           className={`bg-[#1a5ea1] py-4 rounded-xl items-center mb-10 shadow-sm ${loading ? 'opacity-70' : 'active:opacity-90'}`}

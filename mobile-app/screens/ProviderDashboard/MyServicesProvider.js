@@ -6,12 +6,12 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import ProviderServiceCard from '../../Cards/ProviderServiceCard';
 import ProviderTabs from '../../Cards/ProviderTabs';
-import { getProviderServices } from '../../api/ProviderApi';
+import { getProviderServices, deleteService } from '../../api/ProviderApi';
 import { AuthContext } from '../../context/AuthContext';
 
 const MyServicesProvider = ({ navigation }) => {
   const { providerInfo } = useContext(AuthContext);
-  const providerId = providerInfo?._id;
+  const providerId = providerInfo?._id || providerInfo?.id;
 
   const [services, setServices] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,8 +47,34 @@ const MyServicesProvider = ({ navigation }) => {
   );
 
   const handleDelete = (id) => {
-    setServices((prev) => prev.filter((service) => service._id !== id));
-    Alert.alert("Deleted", "Service has been removed successfully.");
+    Alert.alert(
+      "Delete Service",
+      "Are you sure you want to delete this service?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setLoading(true);
+              const res = await deleteService(id);
+              if (res?.success) {
+                setServices((prev) => prev.filter((service) => service._id !== id));
+                Alert.alert("Success", "Service has been removed successfully.");
+              } else {
+                Alert.alert("Notice", res?.message || "Failed to delete service.");
+              }
+            } catch (error) {
+              console.error("Error deleting service:", error);
+              Alert.alert("Error", error?.response?.data?.message || "Failed to delete service.");
+            } finally {
+              setLoading(false);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleEdit = (service) => {
@@ -76,7 +102,7 @@ const MyServicesProvider = ({ navigation }) => {
           </View>
 
           <TouchableOpacity 
-            onPress={() => navigation.navigate('CreateServiceScreen')}
+            onPress={() => navigation.navigate('CreateService')}
             className="bg-[#1a5ea1] w-12 h-12 rounded-2xl items-center justify-center shadow-md shadow-blue-500/20"
           >
             <Ionicons name="add" size={26} color="white" />
@@ -128,7 +154,7 @@ const MyServicesProvider = ({ navigation }) => {
               
               {!searchQuery && !loading && (
                 <TouchableOpacity 
-                  onPress={() => navigation.navigate('CreateServiceScreen')}
+                  onPress={() => navigation.navigate('CreateService')}
                   className="mt-5 bg-[#1a5ea1] px-5 py-3 rounded-2xl shadow-sm"
                 >
                   <Text className="text-white font-bold text-xs">+ Create New Service</Text>
