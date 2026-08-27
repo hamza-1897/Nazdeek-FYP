@@ -78,44 +78,41 @@ const getServicesByProvider = async (req, res) => {
 const editService = async (req, res) => {
   try {
     const { serviceId } = req.params;
-    const { 
-      serviceName, 
-      description,
-      price,
-      priceType,
-      categoryId
-    } = req.body;
+    const { serviceName, description, price, priceType, serviceImages } = req.body;
 
     const files = req.files || [];
-    let updateData = { 
-      serviceName, 
-      description, 
-      price, 
-      priceType, 
-      categoryId 
-    };
+    
+    if (!serviceId) {
+      return res.status(400).json({ success: false, message: 'Service ID is required' });
+    }
+
+    const updateFields = {};
+    if (serviceName !== undefined) updateFields.serviceName = serviceName;
+    if (description !== undefined) updateFields.description = description;
+    if (price !== undefined) updateFields.price = price;
+    if (priceType !== undefined) updateFields.priceType = priceType;
+    
 
     if (files.length > 0) {
-      updateData.serviceImages = files.map(file => file.path);
+      updateFields.serviceImages = files.map(file => file.path);
+    } else if (serviceImages !== undefined) {
+      updateFields.serviceImages = Array.isArray(serviceImages) ? serviceImages : [serviceImages];
     }
 
     const updatedService = await serviceModel.findByIdAndUpdate(
       serviceId,
-      updateData,
-      { new: true }
+      { $set: updateFields },
+      { returnDocument: 'after' }
     );
-    
+
     if (!updatedService) {
-      return res.status(404).json({ 
-        success: false, 
-        message: "Service not found" 
-      });
+      return res.status(404).json({ success: false, message: 'Service not found' });
     }
 
-    return res.status(200).json({ 
-      success: true, 
-      message: "Service updated successfully.",
-      data: updatedService 
+    return res.status(200).json({
+      success: true,
+      message: 'Service updated successfully',
+      data: updatedService,
     });
   } catch (error) {
     console.error("Error in editService:", error);

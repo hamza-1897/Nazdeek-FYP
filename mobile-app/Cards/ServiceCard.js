@@ -7,7 +7,7 @@ const ServiceCard = ({ item, onPress }) => {
   const categoryName = item?.categoryId?.name || item?.category || 'Service';
   const providerName = item?.providerId?.businessName ;
   const locationText = item?.providerId?.address || 'Location not available';
-  const rating = item?.rating || '4.9';
+  
 
   return (
     <TouchableOpacity
@@ -28,12 +28,6 @@ const ServiceCard = ({ item, onPress }) => {
           </Text>
         </View>
 
-        <View className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-full flex-row items-center border border-white/20">
-          <Ionicons name="star" size={11} color="#f59e0b" />
-          <Text className="text-white text-xs font-bold ml-1">
-            {rating}
-          </Text>
-        </View>
       </View>
 
       <View className="p-4">

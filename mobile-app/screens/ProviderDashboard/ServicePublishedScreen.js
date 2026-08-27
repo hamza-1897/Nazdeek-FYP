@@ -29,7 +29,7 @@ const ServicePublishedScreen = ({ navigation }) => {
           onPress={() => {
             navigation.reset({
               index: 0,
-              routes: [{ name: 'ProviderDashboard' }],
+              routes: [{ name: 'ProviderTabNavigator' }],
             });
           }} 
         >

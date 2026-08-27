@@ -97,3 +97,14 @@ export const createReport = async (apiPayload)=>{
         throw error;
     }
 }
+
+export const getSupportDetails = async ()=>{
+    try {
+        const response = await api.get('/customer/getSupportDetails')
+         console.log("fetching contact:", response.data);
+        return response.data;
+    } catch (error) {
+         console.error("Error  fetching contact :", error);
+        throw error;
+    }
+}

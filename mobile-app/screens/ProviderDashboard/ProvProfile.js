@@ -26,20 +26,7 @@ const ProvProfile = ({ navigation }) => {
         </View>
 
       
-        <View className="flex-row justify-around items-center my-6 px-4">
-          <View className="items-center">
-            <Text className="text-xl font-bold text-[#1a5ea1]">4.9</Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Rating</Text>
-          </View>
-          <View className="items-center">
-            <Text className="text-xl font-bold text-[#1a5ea1]">20</Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Bookings</Text>
-          </View>
-          <View className="items-center">
-            <Text className="text-xl font-bold text-[#1a5ea1]">2</Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Services</Text>
-          </View>
-        </View>
+      
 
         <View className="px-6 mt-2 gap-y-3">
           
@@ -79,6 +66,17 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
+        
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('HelpCenter')}
+            className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
+          >
+            <View className="w-9 h-9 bg-green-50 rounded-lg items-center justify-center mr-4">
+              <Feather name="phone" size={18} color="#22c55e" />
+            </View>
+            <Text className="flex-1 text-base font-medium text-gray-800">Help Center</Text>
+            <Ionicons name="chevron-forward" size={18} color="black" />
+          </TouchableOpacity>
        
           <TouchableOpacity 
             onPress={() => {
