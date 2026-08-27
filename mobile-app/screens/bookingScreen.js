@@ -1,10 +1,10 @@
-import React, { useState, useContext,useCallback, useEffect } from 'react';
-import { View, Text, ScrollView, StatusBar, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState, useContext, useCallback } from 'react';
+import { View, Text, ScrollView, StatusBar, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import{isFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import BookingCard from '../Cards/BookingCard';
-import { getBookingsByUserId } from '../api/customerApi';
+import { getBookingsByUserId, cancelBooking } from '../api/customerApi'; 
 import { AuthContext } from '../context/AuthContext';
 
 const BookingScreen = ({ navigation, route }) => {
@@ -28,11 +28,38 @@ const BookingScreen = ({ navigation, route }) => {
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, [userInfo]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchBookings();
+    }, [userInfo])
+  );
 
- 
+  const handleCancelBooking = (bookingId) => {
+    Alert.alert(
+      "Cancel Booking",
+      "Are you sure you want to cancel this booking?",
+      [
+        { text: "No", style: "cancel" },
+        {
+          text: "Yes, Cancel",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setIsLoading(true);
+              await cancelBooking(bookingId);
+              Alert.alert("Success", "Booking has been cancelled successfully.");
+              fetchBookings(); 
+            } catch (error) {
+              console.log("Cancel Error:", error);
+              Alert.alert("Error", error.response?.data?.message || "Failed to cancel booking.");
+            } finally {
+              setIsLoading(false);
+            }
+          }
+        }
+      ]
+    );
+  };
 
   const TABS = ['Upcoming', 'Completed', 'Cancelled'];
 
@@ -110,9 +137,10 @@ const BookingScreen = ({ navigation, route }) => {
                   customerPhone={item.customerPhone || "N/A"}
                   status={item.status}
                   isReviewed={item.isReviewed}
+                  onCancel={() => handleCancelBooking(item._id)} 
                   onLeaveReview={() => navigation.navigate('LeaveReview', {
                     bookingId: item._id,
-                    serviceId:item.serviceId._id,
+                    serviceId: item.serviceId?._id,
                     providerId: item.providerId?._id,
                     providerName: item.providerId?.businessName,
                     serviceName: item.serviceId?.serviceName,

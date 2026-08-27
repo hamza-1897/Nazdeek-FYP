@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useContext } from 'react';
 import { View, Text, StatusBar, Animated, Easing } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '../context/AuthContext';
+import { getMe } from '../api/authApi';
+import { handleProviderRouting } from '../Navigation/handleProviderRouting';
 
 const SplashScreen = ({ navigation }) => {
-  const { userToken, isLoading } = useContext(AuthContext);
+  const { userToken, updateUserState } = useContext(AuthContext);
   const progressAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -15,18 +17,62 @@ const SplashScreen = ({ navigation }) => {
       useNativeDriver: false,
     }).start();
 
-    const timer = setTimeout(() => {
-      if (!isLoading) {
-        if (userToken) {
-          navigation.replace('AppTabs'); 
-        } else {
-          navigation.replace('Login');
+    const checkStatusAndNavigate = async () => {
+      try {
+        console.log(userToken);
+        if (!userToken) {
+          return navigation.replace('Login');
         }
+
+        const data = await getMe();
+
+        if (data && data.role) {
+          if (updateUserState) {
+            const userObj = {
+              id: data._id,
+              name: data.name,
+              email: data.email,
+              role: data.role,
+              phone: data.phone,
+              address: data.address,
+              profileImage: data.profileImage || null,
+              providerInfo: data.providerInfo || null,
+              providerStatus: data.providerStatus || data.providerInfo?.verificationStatus || 'unsubmitted',
+              accountRejectionReason: data.providerInfo?.accountRejectionReason || null
+            };
+            updateUserState(userObj);
+          }
+
+          if (data.role === 'customer') {
+            return navigation.replace('AppTabs');
+          }
+
+          if (data.role === 'provider') {
+            const verificationStatus = data.providerStatus || 'unsubmitted';
+            const registrationFee = data.providerInfo?.registrationFee || 'unpaid';
+            const isRegistrationFree = data.isRegistrationFree ?? false;
+
+            return handleProviderRouting(
+              navigation, 
+              verificationStatus, 
+              registrationFee, 
+              isRegistrationFree
+            );
+          }
+        }
+
+        navigation.replace('Login');
+      } catch (error) {
+        navigation.replace('Login');
       }
+    };
+
+    const timer = setTimeout(() => {
+      checkStatusAndNavigate();
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [navigation, userToken, isLoading]);
+  }, [navigation, userToken]);
 
   const progressWidth = progressAnimation.interpolate({
     inputRange: [0, 1],

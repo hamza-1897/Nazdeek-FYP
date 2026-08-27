@@ -36,11 +36,14 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     try {
       const data = await userLogin(email, password);
-      console.log("Login successful:", data);
+      console.log("Login successful response:", data);
 
-      if (data.accessToken) {
+      // Verify token presence
+      const token = data?.accessToken;
+
+      if (token) {
         const userObj = {
-          id: data._id,
+          id: data._id || data.id,
           name: data.name,
           email: data.email,
           role: data.role,
@@ -52,7 +55,9 @@ const LoginScreen = ({ navigation }) => {
           accountRejectionReason: data.providerInfo?.accountRejectionReason || null
         };
 
-        await login(data.accessToken, userObj);
+        await login(token, userObj);
+
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         if (data.role === 'provider') {
           const verificationStatus = data.providerStatus || 'unsubmitted';
@@ -63,6 +68,8 @@ const LoginScreen = ({ navigation }) => {
         } else {
           navigation.replace('AppTabs');
         }
+      } else {
+        Alert.alert("Login Failed", "AccessToken missing in server response.");
       }
     } catch (error) {
       console.log("Login error:", error);
@@ -96,7 +103,6 @@ const LoginScreen = ({ navigation }) => {
                 Log in to your account to continue
               </Text>
 
-              {/* Email Input */}
               <View className="mb-5">
                 <Text className="text-sm font-bold mb-2 text-gray-800">Email</Text>
                 <TextInput
@@ -109,7 +115,6 @@ const LoginScreen = ({ navigation }) => {
                 />
               </View>
 
-              {/* Password Input */}
               <View className="mb-5">
                 <Text className="text-sm font-bold mb-2 text-gray-800">Password</Text>
                 <View className="flex-row items-center border border-gray-300 rounded-lg pr-4 bg-gray-50">
@@ -130,7 +135,6 @@ const LoginScreen = ({ navigation }) => {
                 </View>
               </View>
 
-              {/* Forgot Password Link */}
               <TouchableOpacity 
                 className="self-end mb-8"
                 onPress={() => navigation.navigate('ForgotPassword')}
@@ -138,7 +142,6 @@ const LoginScreen = ({ navigation }) => {
                 <Text className="text-[#1a5ea1] underline font-bold">Forgot Password?</Text>
               </TouchableOpacity>
 
-              {/* Login Button */}
               <TouchableOpacity 
                 className="bg-[#1a5ea1] p-4 rounded-lg items-center mb-4 flex-row justify-center"
                 onPress={handleLogin}
@@ -151,7 +154,6 @@ const LoginScreen = ({ navigation }) => {
                 )}
               </TouchableOpacity>
 
-              {/* Signup Link */}
               <View className="flex-row justify-center mt-12">
                 <Text className="text-gray-500">Don't have an account? </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
