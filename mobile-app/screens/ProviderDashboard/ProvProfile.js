@@ -66,6 +66,17 @@ const ProvProfile = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={18} color="black" />
           </TouchableOpacity>
 
+        
+          <TouchableOpacity 
+            onPress={() => navigation.navigate('HelpCenter')}
+            className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
+          >
+            <View className="w-9 h-9 bg-green-50 rounded-lg items-center justify-center mr-4">
+              <Feather name="phone" size={18} color="#22c55e" />
+            </View>
+            <Text className="flex-1 text-base font-medium text-gray-800">Help Center</Text>
+            <Ionicons name="chevron-forward" size={18} color="black" />
+          </TouchableOpacity>
        
           <TouchableOpacity 
             onPress={() => {
