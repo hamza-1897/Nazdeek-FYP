@@ -33,6 +33,33 @@ export const createService = async (formData) => {
     }
 };
 
+export const editService = async (serviceId,formData)=>{
+   try {
+        const response = await api.put(`/provider/edit-service/${serviceId}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+        console.log("edit Service API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error editing service:", error);
+        throw error;
+    }
+}
+
+
+export const deleteService = async (serviceId,formData)=>{
+   try {
+        const response = await api.delete(`/provider/delete-service/${serviceId}`)
+        console.log("edit Service API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error editing service:", error);
+        throw error;
+    }
+}
+
 export const getProviderServices = async (providerId) => {
     try {
         const response = await api.get(`/provider/services/${providerId}`);

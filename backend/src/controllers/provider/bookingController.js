@@ -1,6 +1,7 @@
 const userModel = require('../../models/usersModel');
 const providerModel = require('../../models/providerModel');
 const bookingModel = require('../../models/bookingModel');
+const serviceModel = require('../../models/serviceModel');
 const notificationModel = require('../../models/notificationModel');
 const sendPushNotification = require('../../lib/sendPushNotification');
 
@@ -23,6 +24,7 @@ const getBookingsByProvider = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 const updateBookingStatus = async (req, res) => {
   try {
     const { bookingId } = req.params;
@@ -72,7 +74,10 @@ const updateBookingStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
 module.exports = {
   getBookingsByProvider,
   updateBookingStatus,
+
 };

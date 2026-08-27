@@ -7,7 +7,7 @@ export const CategoryPills = ({ categories, selectedCategory, onSelectCategory }
     <View className="mb-5">
       <View className="flex-row justify-between items-center px-5 mb-3">
         <Text className="text-slate-900 font-bold text-base">Categories</Text>
-        <Text className="text-[#1a5ea1] text-xs font-bold">Scope: 3 Services</Text>
+        
       </View>
 
       <ScrollView
