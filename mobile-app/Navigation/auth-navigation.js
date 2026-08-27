@@ -47,6 +47,7 @@ import ReportScreen from '../screens/ProviderScreens/ReportScreen';
 import AccountRejectedScreen  from '../screens/ProviderScreens/AccountRejectedScreen'
 import PaymentUploadScreen from '../screens/ProviderScreens/PaymentUploadScreen';
 import PaymentStatusScreen from '../screens/ProviderScreens/PaymentStatusScreen';
+import SelectPlanScreen from '../screens/ProviderScreens/SelectPlanScreen';
 // --- UTILITY / COMMON SCREENS ---
 import ChatScreen from '../screens/chatScreen';
 import InboxScreen from '../screens/InboxScreen';
@@ -103,6 +104,7 @@ const AuthNavigation = () => {
       <Stack.Screen name='AccountRejectedScreen' component={AccountRejectedScreen}/>
       <Stack.Screen name="PaymentUploadScreen" component={PaymentUploadScreen} />
       <Stack.Screen name="PaymentStatusScreen" component={PaymentStatusScreen} />
+      <Stack.Screen name="SelectPlanScreen" component={SelectPlanScreen}/>
       {/* 4. Common / Notifications */}
       <Stack.Screen name="Notification" component={NotificationScreen} />
       {/* 5. Chat */}

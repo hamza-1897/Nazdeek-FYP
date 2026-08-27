@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PaymentCard from '../components/common/PaymentCard';
-import { getPendingPayemnts ,updatePayments} from '../api/adminApi';
+import { getPendingPayemnts, updatePayments } from '../api/adminApi';
 
 const PendingPaymentsList = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [processingId, setProcessingId] = useState(null);
 
   const fetchPendingList = async () => {
     try {
@@ -13,7 +14,7 @@ const PendingPaymentsList = () => {
       setError(null);
       const response = await getPendingPayemnts();
       
-      const data = response?.data?.pendingPayments || response?.data || response;
+      const data = response?.data?.data || response?.data || response;
       setRequests(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error fetching pending payments:", err);
@@ -28,37 +29,35 @@ const PendingPaymentsList = () => {
   }, []);
 
   const handleApprove = async (id) => {
-  try {
-    const res = await updatePayments(id, 'approve');
+    try {
+      setProcessingId(id);
+      const res = await updatePayments(id, { status: 'approve' });
 
-    if (res?.success || res?.status === 200) {
-      setRequests((prev) => prev.filter((item) => item._id !== id));
-      
-      alert("Payment approved successfully!");
+      if (res?.success || res?.status === 200) {
+        setRequests((prev) => prev.filter((item) => item._id !== id));
+      }
+    } catch (error) {
+      console.error("Error approving payment:", error);
+      alert(error?.response?.data?.message || "Failed to approve payment.");
+    } finally {
+      setProcessingId(null);
     }
-  } catch (error) {
-    console.error("Error approving payment:", error);
-    alert(error?.response?.data?.message || "Failed to approve payment.");
-  }
-};
+  };
 
-const handleReject = async (id) => {
-  try {
-    const res = await updatePayments(id, 'reject');
+  const handleReject = async (id) => {
+    try {
+      setProcessingId(id);
+      const res = await updatePayments(id, { status: 'reject' });
 
-    if (res?.success || res?.status === 200) {
-      setRequests((prev) => prev.filter((item) => item._id !== id));
-      
-    alert("Payment rejected successfully!");
+      if (res?.success || res?.status === 200) {
+        setRequests((prev) => prev.filter((item) => item._id !== id));
+      }
+    } catch (error) {
+      console.error("Error rejecting payment:", error);
+      alert(error?.response?.data?.message || "Failed to reject payment.");
+    } finally {
+      setProcessingId(null);
     }
-  } catch (error) {
-    console.error("Error rejecting payment:", error);
-    alert(error?.response?.data?.message || "Failed to reject payment.");
-  }
-};
-
-  const handleViewDetails = (id) => {
-    console.log("View Details for ID:", id);
   };
 
   if (loading) {
@@ -106,9 +105,9 @@ const handleReject = async (id) => {
             <PaymentCard
               key={item._id}
               data={item}
+              isProcessing={processingId === item._id}
               onApprove={handleApprove}
               onReject={handleReject}
-              onViewDetails={handleViewDetails}
             />
           ))}
         </div>

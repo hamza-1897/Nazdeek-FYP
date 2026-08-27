@@ -44,4 +44,7 @@ router.get('/reviews/:providerId', getProviderReviews);
 const {getCategories} = require('../controllers/mutual/categoryController')
 router.get('/getAllCategory',getCategories)
 
+const {getPremiumPlans} = require('../controllers/mutual/supportController')
+router.get('/getPremiumPlans',getPremiumPlans);
+
 module.exports = router;

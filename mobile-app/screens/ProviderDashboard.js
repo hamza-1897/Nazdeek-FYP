@@ -57,7 +57,7 @@ const ProviderDashboard = ({ navigation }) => {
       >
         <SubscriptionBanner
           planType={providerInfo?.isPremium}
-          onPress={() => navigation.navigate('SubscriptionScreen')}
+          onPress={() => navigation.navigate('SelectPlanScreen')}
         />
 
         <Text className="text-slate-800 font-extrabold mt-6 mb-3 uppercase tracking-wider text-[11px]">

@@ -130,34 +130,45 @@ const getPaymentDetails = async (req, res) => {
 // payment setup
 const submitPaymentSlip = async (req, res) => {
   try {
-    const { providerId, paymentType  } = req.body;
-    const provider = await providerModel.findById(providerId);
+    const { providerId, paymentType, planId, planTitle } = req.body;
 
+    if (!req.file || !req.file.path) {
+      return res.status(400).json({ success: false, message: 'Payment slip image is required.' });
+    }
+
+    const provider = await providerModel.findById(providerId);
     if (!provider) {
       return res.status(404).json({ success: false, message: 'Provider profile not found.' });
     }
-    const paymentSlipUrl = req.file.path;
 
+    let targetPaymentType = (paymentType === 'subscription' || paymentType === 'premium') ? 'premium' : 'registration';
+
+    
     provider.paymentDetails = {
-      paymentType,
-      paymentSlip: paymentSlipUrl,
+      paymentType: targetPaymentType,
+      paymentSlip: req.file.path,
       submittedAt: new Date()
     };
 
-    if (paymentType === 'registration') {
+    if (targetPaymentType === 'registration') {
       provider.registrationFee = 'pending_approval';
+    } else if (targetPaymentType === 'premium') {
+      provider.subscriptionDetails.planId = planId || 'monthly';
+      provider.subscriptionDetails.planTitle = planTitle || 'Monthly Plan';
+      provider.subscriptionDetails.status = 'pending_approval';
     }
 
     await provider.save();
 
     return res.status(200).json({
       success: true,
-      message: `${paymentType} payment slip submitted successfully. Waiting for admin verification.`,
+      message: `${targetPaymentType} payment slip submitted successfully.`,
       data: provider
     });
-    } catch (error) {
+
+  } catch (error) {
     console.error('Submit Payment Slip Error:', error);
-    return res.status(500).json({ success: false, message: 'Server error while submitting payment slip.' });
+    return res.status(500).json({ success: false, message: 'Server error.', error: error.message });
   }
 };
 

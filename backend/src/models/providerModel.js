@@ -81,7 +81,22 @@ const providerSchema = new mongoose.Schema({
     enum: ['unpaid', 'paid', 'pending_approval'], 
     default: 'unpaid' 
   },
-  
+  subscriptionDetails: {
+    planId: { 
+      type: String, 
+      enum: ['monthly', 'quarterly', 'yearly', null], 
+      default: null 
+    },
+    planTitle: { type: String, default: null },
+    amount: { type: Number, default: 0 },
+    status: { 
+      type: String, 
+      enum: ['none', 'pending_approval', 'active', 'expired', 'rejected'], 
+      default: 'none' 
+    },
+    activatedAt: { type: Date, default: null },
+    expiresAt: { type: Date, default: null }
+  },
   createdAt: {
     type: Date,
     default: Date.now

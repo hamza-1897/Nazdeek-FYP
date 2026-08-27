@@ -118,7 +118,7 @@ const updateProvider = async (req, res) => {
 const updatePayment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status } = req.body; 
 
     const provider = await providerModel.findById(id);
     if (!provider) {
@@ -127,23 +127,40 @@ const updatePayment = async (req, res) => {
 
     const paymentType = provider.paymentDetails?.paymentType;
 
-    if(status === 'approve'){
-    if (paymentType === 'registration') {
-      provider.registrationFee = 'paid';
-    } 
-    else if (paymentType === 'premium') {
-      provider.isPremium = true;
-    }
-}else if (status === 'reject'){
-     if (paymentType === 'registration') {
-      provider.registrationFee = 'unpaid';
-    } 
-    else if (paymentType === 'premium') {
-      provider.isPremium = false;
-    }
-}
+    if (status === 'approve') {
+      if (paymentType === 'registration') {
+        provider.registrationFee = 'paid';
+      } else if (paymentType === 'premium') {
+        
+        const planId = provider.subscriptionDetails?.planId || 'monthly';
+        const now = new Date();
+        let expiryDate = new Date();
 
-provider.paymentDetails = {
+        if (planId === 'monthly') {
+          expiryDate.setMonth(now.getMonth() + 1);
+        } else if (planId === 'quarterly') {
+          expiryDate.setMonth(now.getMonth() + 3);
+        } else if (planId === 'yearly') {
+          expiryDate.setFullYear(now.getFullYear() + 1);
+        }
+
+        
+        provider.isPremium = true;
+        provider.subscriptionDetails.status = 'active';
+        provider.subscriptionDetails.activatedAt = now;
+        provider.subscriptionDetails.expiresAt = expiryDate;
+      }
+    } else if (status === 'reject') {
+      if (paymentType === 'registration') {
+        provider.registrationFee = 'unpaid';
+      } else if (paymentType === 'premium') {
+        provider.isPremium = false;
+        provider.subscriptionDetails.status = 'rejected';
+      }
+    }
+
+   
+    provider.paymentDetails = {
       paymentType: null,
       paymentSlip: null,
       submittedAt: null
@@ -151,15 +168,19 @@ provider.paymentDetails = {
 
     await provider.save();
 
-  return res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: `Provider ${paymentType} payment has been ${status === 'approve' ? 'approved' : 'rejected'} successfully!`,
+      message: `Provider ${paymentType || 'payment'} request has been ${status === 'approve' ? 'approved' : 'rejected'} successfully!`,
       data: provider
     });
 
   } catch (error) {
     console.error('Approve Payment Error:', error);
-    return res.status(500).json({ success: false, message: 'Server error approving payment.' });
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Server error updating payment status.',
+      error: error.message 
+    });
   }
 };
 
@@ -167,8 +188,9 @@ const getPendingPaymentRequests = async (req, res) => {
   try {
     const pendingProviders = await providerModel.find({
       'paymentDetails.paymentSlip': { $ne: null }
-    }).select('businessName categoryId providerImage registrationFee isPremium paymentDetails createdAt')
-      .populate('userId', 'name email phone ')
+    })
+      .select('businessName categoryId providerImage registrationFee isPremium paymentDetails subscriptionDetails createdAt')
+      .populate('userId', 'name email phone')
       .populate('categoryId', 'name');
 
     return res.status(200).json({
@@ -180,7 +202,8 @@ const getPendingPaymentRequests = async (req, res) => {
     console.error('Get Pending Payments Error:', error);
     return res.status(500).json({ 
       success: false, 
-      message: 'Server error while fetching pending payments.' 
+      message: 'Server error while fetching pending payments.',
+      error: error.message 
     });
   }
 };
