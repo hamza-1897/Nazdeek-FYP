@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (token, userData) => {
     setUserToken(token);
     setUserInfo(userData);
-    setProviderInfo(userData.providerInfo || null);
+    setProviderInfo(userData?.providerInfo || null);
 
     await SecureStore.setItemAsync('userToken', token);
     await SecureStore.setItemAsync('userData', JSON.stringify(userData));
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     const updatedUser = {
       ...userInfo,
       providerInfo: newProviderInfo,
-      providerStatus: newStatus
+      providerStatus: newStatus,
     };
     setUserInfo(updatedUser);
     setProviderInfo(newProviderInfo);

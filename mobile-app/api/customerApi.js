@@ -63,6 +63,22 @@ export const getBookingsByUserId = async (userId) => {
     }
 };
 
+export const cancelBooking = async (bookingId)=>{
+    try {
+         const response = await api.put(`/customer/cancel-booking/${bookingId}`);
+        console.log("cancel booking API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error canceling bookings:", error);
+        throw error;
+    }
+}
+
+export const rebookService = async (bookingId, payload) => {
+  const response = await API.patch(`/customer/rebook/${bookingId}`, payload);
+  return response.data;
+};
+
 export const getProviderById = async (providerId)=>{
     try {
         const response  = await api.get(`/customer/provider/${providerId}`)

@@ -16,7 +16,9 @@ const BookingCard = ({
   customerPhone,
   status = "Pending",
   isReviewed,
-  onLeaveReview
+  onCancel,
+  onLeaveReview,
+  fullBookingData // Optional: Agar poora item parent se aa raha ho
 }) => {
   const navigation = useNavigation();
 
@@ -32,6 +34,33 @@ const BookingCard = ({
 
   const statusStyle = getStatusStyles(status);
   const currentStatus = status?.toLowerCase();
+
+  // Rebook Action Function
+  const handleRebook = () => {
+    // Agar parent component se fullBookingData paas ho raha hai to wo use karein, warna fallback object create karein
+    const previousBooking = fullBookingData || {
+      customerName,
+      customerPhone,
+      bookingAddress,
+      description,
+      price,
+      serviceId: fullBookingData?.serviceId || { serviceName, price, serviceImages: [imageUri] },
+      providerId: fullBookingData?.providerId || { businessName: providerName }
+    };
+
+    const serviceData = fullBookingData?.serviceId || {
+      serviceName,
+      price,
+      serviceImages: [imageUri],
+      providerId: fullBookingData?.providerId || { businessName: providerName }
+    };
+
+    navigation.navigate('BookService', { 
+      serviceData: serviceData, 
+      previousBooking: previousBooking,        
+      isRebook: true 
+    });
+  };
 
   return (
     <View className="bg-white rounded-2xl p-4 mb-5 border border-slate-100 shadow-md shadow-slate-300/60 elevation-3">
@@ -76,29 +105,31 @@ const BookingCard = ({
           <Text className="text-slate-600 text-xs ml-1.5 font-semibold">{bookingTime}</Text>
         </View>
       </View>
-    <View className="bg-slate-50/50 border border-slate-100 rounded-xl p-3 mb-3">
-  <View className="flex-row items-center justify-between mb-1.5">
-    <View className="flex-row items-center flex-1">
-      <Ionicons name="person-outline" size={13} color="#475569" />
-      <Text className="text-slate-700 text-xs font-semibold ml-1.5" numberOfLines={1}>
-        {customerName || "For Myself"}
-      </Text>
-    </View>
-    <View className="flex-row items-center flex-1 justify-end">
-      <Ionicons name="call-outline" size={13} color="#475569" />
-      <Text className="text-slate-600 text-xs ml-1.5 font-medium">
-        {customerPhone}
-      </Text>
-    </View>
-  </View>
-  
-  <View className="flex-row items-start mt-0.5">
-    <Ionicons name="location-outline" size={14} color="#e11d48" className="mt-0.5" />
-    <Text className="text-slate-600 text-xs ml-1.5 flex-1 leading-normal" numberOfLines={2}>
-      {bookingAddress || "No Address Provided"}
-    </Text>
-  </View>
-</View>
+
+      <View className="bg-slate-50/50 border border-slate-100 rounded-xl p-3 mb-3">
+        <View className="flex-row items-center justify-between mb-1.5">
+          <View className="flex-row items-center flex-1">
+            <Ionicons name="person-outline" size={13} color="#475569" />
+            <Text className="text-slate-700 text-xs font-semibold ml-1.5" numberOfLines={1}>
+              {customerName || "For Myself"}
+            </Text>
+          </View>
+          <View className="flex-row items-center flex-1 justify-end">
+            <Ionicons name="call-outline" size={13} color="#475569" />
+            <Text className="text-slate-600 text-xs ml-1.5 font-medium">
+              {customerPhone}
+            </Text>
+          </View>
+        </View>
+        
+        <View className="flex-row items-start mt-0.5">
+          <Ionicons name="location-outline" size={14} color="#e11d48" className="mt-0.5" />
+          <Text className="text-slate-600 text-xs ml-1.5 flex-1 leading-normal" numberOfLines={2}>
+            {bookingAddress || "No Address Provided"}
+          </Text>
+        </View>
+      </View>
+
       {description ? (
         <View className="bg-slate-50/70 rounded-xl p-2.5 mb-2">
           <Text className="text-slate-400 text-[10px] font-bold uppercase tracking-wider mb-0.5">Your Note:</Text>
@@ -109,16 +140,15 @@ const BookingCard = ({
       ) : null}
 
       <View className="flex-row justify-end mt-1.5">
-        {currentStatus !== 'cancelled' && currentStatus !=='rejected' && currentStatus !== 'completed' && (
+        {currentStatus !== 'cancelled' && currentStatus !== 'rejected' && currentStatus !== 'completed' && (
           <TouchableOpacity 
-            onPress={() => navigation.navigate('CancelBooking')} 
+            onPress={onCancel} 
             className="bg-rose-50 px-5 py-1.5 rounded-xl border border-rose-100 active:bg-rose-100"
           >
             <Text className="text-rose-600 text-xs font-bold">Cancel Booking</Text>
           </TouchableOpacity>
         )}
         
-
         {currentStatus === 'completed' && (
           <TouchableOpacity 
             onPress={onLeaveReview}
@@ -137,7 +167,7 @@ const BookingCard = ({
 
         {currentStatus === 'cancelled' && (
           <TouchableOpacity 
-            onPress={() => navigation.navigate('ServiceDetails', { serviceName, providerName, price })} 
+            onPress={handleRebook} 
             className="bg-blue-50 px-6 py-1.5 rounded-xl border border-blue-100 active:bg-blue-100"
           >
             <Text className="text-blue-600 text-xs font-bold">Rebook Service</Text>
@@ -145,7 +175,6 @@ const BookingCard = ({
         )}
 
         {currentStatus === 'rejected' && (
-         
           <Text className="text-rose-500 text-center text-xs font-bold">Your Booking is Rejected.</Text>
         )}
       </View>

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   Text,
@@ -16,7 +16,11 @@ import { AuthContext } from '../../context/AuthContext';
 
 const BookServiceScreen = ({ route, navigation }) => {
   const { userInfo } = useContext(AuthContext);
+  
   const serviceData = route?.params?.serviceData;
+  const previousBooking = route?.params?.previousBooking;
+  const isRebook = route?.params?.isRebook || false;
+
   const [name, setName] = useState(`${userInfo?.name || ''}`);
   const [phone, setPhone] = useState(`${userInfo?.phone || ''}`);
   const [address, setAddress] = useState('');
@@ -28,59 +32,88 @@ const BookServiceScreen = ({ route, navigation }) => {
   const [dateText, setDateText] = useState('DD/MM/YYYY');
   const [timeText, setTimeText] = useState('00:00 AM');
 
-  const handleDateValueChange = (selectedDate) => {
+  useEffect(() => {
+    if (isRebook && previousBooking) {
+      if (previousBooking.customerName) setName(previousBooking.customerName);
+      if (previousBooking.customerPhone) setPhone(previousBooking.customerPhone);
+      if (previousBooking.bookingAddress) setAddress(previousBooking.bookingAddress);
+      if (previousBooking.description) setRequestDetails(previousBooking.description);
+    }
+  }, [isRebook, previousBooking]);
+
+  // Unified Date Change Handler
+  const handleDateChange = (event, selectedDate) => {
+    // Android dialog close karna required hai
     if (Platform.OS === 'android') {
       setShowDatePicker(false);
     }
 
-    if (selectedDate instanceof Date && !isNaN(selectedDate)) {
+    // User ne "Cancel" dabaya ho to exit ho jaye
+    if (event?.type === 'dismissed') return;
+
+    if (selectedDate) {
       setDate(selectedDate);
-      let fDate = `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
-      setDateText(fDate);
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const year = selectedDate.getFullYear();
+      setDateText(`${day}/${month}/${year}`);
     }
   };
 
-  const onTimeChange = (selectedTime) => {
+  // Unified Time Change Handler
+  const handleTimeChange = (event, selectedTime) => {
     if (Platform.OS === 'android') {
       setShowTimePicker(false);
     }
 
-    if (selectedTime instanceof Date && !isNaN(selectedTime)) {
-      setDate(selectedTime);
+    if (event?.type === 'dismissed') return;
+
+    if (selectedTime) {
+      const updatedDate = new Date(date);
+      updatedDate.setHours(selectedTime.getHours());
+      updatedDate.setMinutes(selectedTime.getMinutes());
+      setDate(updatedDate);
+
       let hours = selectedTime.getHours();
       let minutes = selectedTime.getMinutes();
-      let ampm = hours >= 12 ? 'PM' : 'AM';
+      const ampm = hours >= 12 ? 'PM' : 'AM';
       hours = hours % 12 || 12;
-      let fTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes} ${ampm}`;
-      setTimeText(fTime);
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      setTimeText(`${hours}:${formattedMinutes} ${ampm}`);
     }
   };
 
   const handleContinue = () => {
-    if (!name.trim() || !phone.trim() || !address.trim() || dateText === 'DD/MM/YYYY') {
-      Alert.alert('Required Fields', 'Please fill all mandatory fields (Name, Phone, Date, Address)');
-      return;
-    }
+  if (!name.trim() || !phone.trim() || !address.trim() || dateText === 'DD/MM/YYYY') {
+    Alert.alert('Required Fields', 'Please fill all mandatory fields (Name, Phone, Date, Address)');
+    return;
+  }
 
-    const formattedDate = date.toISOString();
-
-    const bookingPayload = {
-      serviceId: serviceData._id,
-      serviceName: serviceData.serviceName || serviceData.name,
-      serviceImage: serviceData.serviceImages?.[0],
-      providerId: serviceData.providerId?._id,
-      providerName: serviceData.providerId?.businessName || serviceData.providerId?.userId?.name || 'Verified Provider',
-      customerName: name,
-      customerPhone: phone,
-      bookingDate: formattedDate,
-      bookingTime: timeText,
-      bookingAddress: address,
-      description: requestDetails,
-      bookingPrice: serviceData.price,
-    };
-
-    navigation.navigate('BookingSummary', { bookingPayload });
+  const bookingPayload = {
+    isRebook: isRebook,
+    // Agar rebook hai to previousBooking ki ID pass hogi
+    bookingId: previousBooking?._id,
+    
+    // Nayi booking ke liye Required IDs
+    serviceId: serviceData?._id || previousBooking?.serviceId?._id || previousBooking?.serviceId,
+    providerId: serviceData?.providerId?._id || previousBooking?.providerId?._id || previousBooking?.providerId,
+    
+    // UI Display Data
+    serviceName: serviceData?.serviceName || serviceData?.name || previousBooking?.serviceName || previousBooking?.serviceId?.serviceName,
+    providerName: serviceData?.providerId?.businessName || previousBooking?.providerName || 'Verified Provider',
+    serviceImage: serviceData?.serviceImages?.[0] || previousBooking?.serviceImage || previousBooking?.serviceId?.serviceImages?.[0],
+    
+    customerName: name,
+    customerPhone: phone,
+    bookingDate: date.toISOString(),
+    bookingTime: timeText,
+    bookingAddress: address,
+    description: requestDetails,
+    bookingPrice: serviceData?.price || previousBooking?.bookingPrice || previousBooking?.price || 0,
   };
+
+  navigation.navigate('BookingSummary', { bookingPayload });
+};
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -94,7 +127,9 @@ const BookServiceScreen = ({ route, navigation }) => {
           <Ionicons name="arrow-back" size={22} color="#1a5ea1" />
         </TouchableOpacity>
         <View className="flex-1 items-center">
-          <Text className="text-lg font-bold text-gray-800">Book Service</Text>
+          <Text className="text-lg font-bold text-gray-800">
+            {isRebook ? 'Rebook Service' : 'Book Service'}
+          </Text>
         </View>
       </View>
 
@@ -104,16 +139,16 @@ const BookServiceScreen = ({ route, navigation }) => {
           <View className="flex-1 pr-3">
             <Text className="text-xs font-bold text-[#1a5ea1] uppercase">Selected Service</Text>
             <Text className="text-base font-bold text-gray-900 mt-0.5" numberOfLines={1}>
-              {serviceData?.serviceName || serviceData?.name}
+              {serviceData?.serviceName || serviceData?.name || previousBooking?.serviceId?.serviceName}
             </Text>
             <Text className="text-xs text-gray-500 font-medium mt-0.5">
-              By {serviceData?.providerId?.businessName || 'Verified Provider'}
+              By {serviceData?.providerId?.businessName || previousBooking?.providerId?.businessName || 'Verified Provider'}
             </Text>
           </View>
           <View className="items-end">
             <Text className="text-xs text-gray-400 font-medium">Est. Price</Text>
             <Text className="text-lg font-black text-[#1a5ea1]">
-              Rs. {serviceData?.price || '0'}
+              Rs. {serviceData?.price || previousBooking?.price || '0'}
             </Text>
           </View>
         </View>
@@ -134,15 +169,12 @@ const BookServiceScreen = ({ route, navigation }) => {
           <View>
             <Text className="text-gray-500 font-semibold mb-1.5 ml-1 text-sm">Phone Number *</Text>
             <View className="flex-row space-x-2">
-              <View className="bg-gray-50 border border-gray-100 px-3 rounded-2xl justify-center items-center">
-                <Text className="text-gray-800 font-bold">+92</Text>
-              </View>
               <TextInput
                 placeholder="300 1234567"
                 value={phone}
                 onChangeText={setPhone}
                 keyboardType="phone-pad"
-                maxLength={10}
+                maxLength={11}
                 className="flex-1 bg-gray-50 border border-gray-100 p-3.5 rounded-2xl text-gray-800 text-base"
               />
             </View>
@@ -178,23 +210,21 @@ const BookServiceScreen = ({ route, navigation }) => {
 
           {showDatePicker && (
             <DateTimePicker
-              value={date instanceof Date && !isNaN(date) ? date : new Date()}
+              value={date}
               mode="date"
-              display="default"
-              onValueChange={(date) => handleDateValueChange(date)}
-              onDismiss={() => setShowDatePicker(false)}
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={handleDateChange}
               minimumDate={new Date()}
             />
           )}
 
           {showTimePicker && (
             <DateTimePicker
-              value={date instanceof Date && !isNaN(date) ? date : new Date()}
+              value={date}
               mode="time"
-              display="default"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               is24Hour={false}
-              onValueChange={(time) => onTimeChange(time)}
-              onDismiss={() => setShowTimePicker(false)}
+              onChange={handleTimeChange}
             />
           )}
 

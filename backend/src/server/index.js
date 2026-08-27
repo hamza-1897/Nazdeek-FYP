@@ -50,10 +50,10 @@ app.use('/api/admin-auth', adminAuthRoutes);
 app.use('/api/admin', authMiddleware, checkRole(['admin']), adminRoutes);
 //app.use('/api/admin',  adminRoutes);
 app.use('/api/user-auth', userAuthRoutes);
-app.use('/api/customer', userRoutes);
+app.use('/api/customer',authMiddleware, userRoutes);
 app.use('/api/provider', providerRoutes);   
-app.use('/api/chat', chatRoutes);
-app.use('/api/notifications', notificationRoutes);
+app.use('/api/chat',authMiddleware, chatRoutes);
+app.use('/api/notifications',authMiddleware, notificationRoutes);
 
 const PORT = config.PORT;
 

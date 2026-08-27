@@ -6,6 +6,8 @@ const upload = require('../config/cloudinary');
 router.post('/update-profile/:id', upload.single('profileImage'), updateUserProfile);
 
 router.get('/myprofile/:id', getUserProfile);
+const {getMe} = require('../controllers/mutual/user-authController')
+router.get('/getMe',getMe)
 // service routes
 const { getAllServices, getServiceById, getProviderbyId } = require('../controllers/users/userServiceController');
 router.get('/services', getAllServices);

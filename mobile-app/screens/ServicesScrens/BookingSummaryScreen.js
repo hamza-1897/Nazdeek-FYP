@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 import { AuthContext } from '../../context/AuthContext';
-import { createBooking } from '../../api/customerApi';
+import { createBooking,rebookService } from '../../api/customerApi';
 
 const BookingSummaryScreen = ({ route, navigation }) => {
   const { bookingPayload } = route.params || {};
@@ -28,12 +28,25 @@ const BookingSummaryScreen = ({ route, navigation }) => {
 
     return formatted.format('ddd, DD MMM YYYY');
   };
+const handleConfirmBooking = async () => {
+  setLoading(true);
+  try {
+    let response;
 
-  const handleConfirmBooking = async () => {
-    setLoading(true);
-    try {
-      const apiPayload = {
-        userId: userInfo.id,
+    if (bookingPayload?.isRebook) {
+      const rebookPayload = {
+        bookingDate: bookingPayload.bookingDate,
+        bookingTime: bookingPayload.bookingTime,
+      };
+
+      console.log("Rebooking ID:", bookingPayload.bookingId);
+      response = await rebookService(bookingPayload.bookingId, rebookPayload);
+      
+    } else {
+      const currentUserId = userInfo?._id || userInfo?.id;
+
+      const newBookingPayload = {
+        userId: currentUserId,
         providerId: bookingPayload.providerId,
         serviceId: bookingPayload.serviceId,
         customerName: bookingPayload.customerName,
@@ -42,34 +55,33 @@ const BookingSummaryScreen = ({ route, navigation }) => {
         bookingTime: bookingPayload.bookingTime,
         bookingAddress: bookingPayload.bookingAddress,
         bookingPrice: bookingPayload.bookingPrice,
-        description: bookingPayload.description,
+        description: bookingPayload.description || '',
       };
 
-      const response = await createBooking(apiPayload);
-      setLoading(false);
-
-      const createdBooking = response?.booking || response?.data?.booking;
-      console.log("Booking created successfully:", createdBooking);
-      if (createdBooking) {
-        navigation.replace('BookingSuccess');
-      }
-
-    } catch (error) {
-      setLoading(false);
-      const serverMessage = error.response?.data?.message || error.response?.data?.error;
-      console.error("Error creating booking:", error.response?.data || error.message);
-      Alert.alert(
-        'Booking Failed',
-        serverMessage || 'Failed to place booking. Please try again.'
-      );
+      console.log(" New Booking Payload:", newBookingPayload);
+      response = await createBooking(newBookingPayload);
     }
-  };
+
+    setLoading(false);
+    console.log(" Success Response:", response);
+    
+    navigation.replace('BookingSuccess');
+
+  } catch (error) {
+    setLoading(false);
+    const serverMessage = error.response?.data?.message || error.response?.data?.error;
+    console.error("Action Error:", error.response?.data || error.message);
+    Alert.alert(
+      'Booking Failed',
+      serverMessage || 'Something went wrong. Please try again.'
+    );
+  }
+};
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
       <StatusBar barStyle="dark-content" backgroundColor="#f8fafc" />
 
-      {/* Header */}
       <View className="px-6 py-4 flex-row items-center relative bg-white border-b border-slate-100">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -84,7 +96,6 @@ const BookingSummaryScreen = ({ route, navigation }) => {
 
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1 px-5 pt-5">
         
-        {/* Service Card */}
         <View className="bg-white p-4 rounded-2xl border border-slate-100 mb-4 shadow-xs">
           <Text className="text-xs font-bold text-[#1a5ea1] uppercase tracking-wider mb-2">
             Selected Service
@@ -113,13 +124,11 @@ const BookingSummaryScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-        {/* Date & Location Card */}
         <View className="bg-white p-4 rounded-2xl border border-slate-100 mb-4 shadow-xs space-y-3">
           <Text className="text-xs font-bold text-[#1a5ea1] uppercase tracking-wider mb-1">
             Schedule & Location
           </Text>
 
-          {/* Date & Time */}
           <View className="flex-row items-center">
             <View className="w-8 h-8 rounded-full bg-blue-50 items-center justify-center mr-3">
               <Ionicons name="calendar" size={16} color="#1a5ea1" />
@@ -134,7 +143,6 @@ const BookingSummaryScreen = ({ route, navigation }) => {
 
           <View className="h-[1px] bg-slate-100 my-1" />
 
-          {/* Customer Address */}
           <View className="flex-row items-center">
             <View className="w-8 h-8 rounded-full bg-blue-50 items-center justify-center mr-3">
               <Ionicons name="location" size={16} color="#1a5ea1" />
@@ -147,7 +155,6 @@ const BookingSummaryScreen = ({ route, navigation }) => {
             </View>
           </View>
 
-          {/* Customer Contact */}
           <View className="h-[1px] bg-slate-100 my-1" />
 
           <View className="flex-row items-center">
@@ -163,7 +170,6 @@ const BookingSummaryScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-        {/* Payment / Price Breakdown */}
         <View className="bg-white p-4 rounded-2xl border border-slate-100 mb-6 shadow-xs">
           <Text className="text-xs font-bold text-[#1a5ea1] uppercase tracking-wider mb-3">
             Payment Breakdown

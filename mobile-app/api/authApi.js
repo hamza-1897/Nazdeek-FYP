@@ -79,3 +79,14 @@ export const resetPassword = async (email, newPassword) => {
         throw error.response ? error.response.data : error;
     }
 };
+
+export const getMe = async ()=>{
+    try{
+        const response  = await api.get('/customer/getMe');
+         console.log("get ME API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.log(" get Me API error:", error.response ? error.response.data : error);
+        throw error.response ? error.response.data : error;
+    }
+}
