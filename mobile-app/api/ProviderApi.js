@@ -106,3 +106,14 @@ export const uploadPayment = async (formData) => {
     throw error;
   }
 };
+
+export const providerReviews = async (providerId)=>{
+  try {
+    const response = await api.get(`/provider/reviews/${providerId}`)
+    console.log("fetching reviews  API response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error  fetching reviews  :", error);
+    throw error;
+  }
+}

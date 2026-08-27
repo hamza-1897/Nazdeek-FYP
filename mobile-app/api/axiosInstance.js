@@ -6,13 +6,13 @@ import { useContext } from 'react';
 
 
 //LAPTOP IPADRESS
-const API_BASE_URL = 'https://nazdeek-fyp.onrender.com/api'; 
+//const API_BASE_URL = 'https://nazdeek-fyp.onrender.com/api'; 
 
 //Malaika Laptop IPAdress
 //const API_BASE_URL = 'http://192.168.10.10:3000/api'; 
 
 //OFFICE IPADRESS
-//onst API_BASE_URL = 'http://192.168.1.14:3000/api';
+const API_BASE_URL = 'http://192.168.1.14:3000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

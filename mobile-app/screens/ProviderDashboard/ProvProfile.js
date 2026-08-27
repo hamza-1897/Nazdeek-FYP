@@ -26,20 +26,7 @@ const ProvProfile = ({ navigation }) => {
         </View>
 
       
-        <View className="flex-row justify-around items-center my-6 px-4">
-          <View className="items-center">
-            <Text className="text-xl font-bold text-[#1a5ea1]">4.9</Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Rating</Text>
-          </View>
-          <View className="items-center">
-            <Text className="text-xl font-bold text-[#1a5ea1]">20</Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Bookings</Text>
-          </View>
-          <View className="items-center">
-            <Text className="text-xl font-bold text-[#1a5ea1]">2</Text>
-            <Text className="text-gray-400 text-xs mt-0.5">Services</Text>
-          </View>
-        </View>
+      
 
         <View className="px-6 mt-2 gap-y-3">
           
