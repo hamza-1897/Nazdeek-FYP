@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'https://nazdeek-fyp.onrender.com/api', 
+   // baseURL: 'https://nazdeek-fyp.onrender.com/api', 
+    baseURL:'http://localhost:3000/api',
     withCredentials: true
 });
 

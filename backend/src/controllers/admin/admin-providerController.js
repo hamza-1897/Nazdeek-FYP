@@ -125,13 +125,17 @@ const updatePayment = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Provider not found.' });
     }
 
-    const paymentType = provider.paymentDetails?.paymentType;
+    const paymentType = (provider.paymentDetails?.paymentType || '').toLowerCase().trim();
 
     if (status === 'approve') {
       if (paymentType === 'registration') {
         provider.registrationFee = 'paid';
-      } else if (paymentType === 'premium') {
+      } else if (paymentType === 'premium' || paymentType === 'subscription') {
         
+        if (!provider.subscriptionDetails) {
+          provider.subscriptionDetails = {};
+        }
+
         const planId = provider.subscriptionDetails?.planId || 'monthly';
         const now = new Date();
         let expiryDate = new Date();
@@ -144,27 +148,33 @@ const updatePayment = async (req, res) => {
           expiryDate.setFullYear(now.getFullYear() + 1);
         }
 
-        
         provider.isPremium = true;
         provider.subscriptionDetails.status = 'active';
         provider.subscriptionDetails.activatedAt = now;
         provider.subscriptionDetails.expiresAt = expiryDate;
+
+        provider.markModified('subscriptionDetails');
       }
     } else if (status === 'reject') {
       if (paymentType === 'registration') {
         provider.registrationFee = 'unpaid';
-      } else if (paymentType === 'premium') {
+      } else if (paymentType === 'premium' || paymentType === 'subscription') {
         provider.isPremium = false;
+        if (!provider.subscriptionDetails) {
+          provider.subscriptionDetails = {};
+        }
         provider.subscriptionDetails.status = 'rejected';
+        provider.markModified('subscriptionDetails');
       }
     }
 
-   
+    // Clear active pending slip details
     provider.paymentDetails = {
       paymentType: null,
       paymentSlip: null,
       submittedAt: null
     };
+    provider.markModified('paymentDetails');
 
     await provider.save();
 
@@ -183,7 +193,6 @@ const updatePayment = async (req, res) => {
     });
   }
 };
-
 const getPendingPaymentRequests = async (req, res) => {
   try {
     const pendingProviders = await providerModel.find({
