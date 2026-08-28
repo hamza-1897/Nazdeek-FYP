@@ -16,24 +16,39 @@ const getDashboardStats = async (req, res) => {
     ] = await Promise.all([
       userModel.countDocuments({ role: 'customer' }),
       userModel.countDocuments({ role: 'provider' }),
-      providerModel.countDocuments({ registrationFee: 'pending_approval' }),
+      providerModel.countDocuments({
+        $or: [
+          { registrationFee: 'pending_approval' },
+          { registrationFee: 'pending' },
+          { 'paymentDetails.status': 'pending' },
+          { 'paymentDetails.status': 'pending_approval' },
+          { subscriptionStatus: 'pending' },
+          { subscriptionStatus: 'pending_approval' }
+        ]
+      }),
       providerModel.countDocuments({ verificationStatus: 'pending' }),
-      providerModel.countDocuments({ isPremium: true })
+      providerModel.countDocuments({
+        $or: [
+          { isPremium: true },
+          { subscriptionStatus: 'active' },
+          { 'paymentDetails.status': 'paid' }
+        ]
+      })
     ]);
 
-   const recentCustomers = await userModel.find({ role: 'customer' })
+    const recentCustomers = await userModel.find({ role: 'customer' })
       .sort({ createdAt: -1 })
       .limit(4)
       .select('name email isActive createdAt');
 
     const recentProviders = await providerModel.find()
-    .select('businessName verificationStatus createdAt categoryId ')
+      .select('businessName verificationStatus createdAt categoryId')
       .populate('userId', 'name email')
       .populate('categoryId', 'name')
       .sort({ createdAt: -1 })
       .limit(4);
 
-      return res.status(200).json({
+    return res.status(200).json({
       success: true,
       stats: {
         totalCustomers,
@@ -45,7 +60,7 @@ const getDashboardStats = async (req, res) => {
       recentCustomers,
       recentProviders
     });
-    } catch (error) {
+  } catch (error) {
     console.error("Error in Dashboard Stats:", error);
     return res.status(500).json({
       success: false,

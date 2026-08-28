@@ -1,13 +1,57 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const VerificationTab = ({ provider, onApprove, onBlock }) => {
-  const [showRejectModal, setShowRejectModal] = useState(false);
-  const [rejectionReason, setRejectionReason] = useState('');
+  const [showRejectModal, setShowRejectModal] = React.useState(false);
+  const [rejectionReason, setRejectionReason] = React.useState('');
 
-  const profileImg = provider?.providerImage || provider?.userId?.profileImage || 'https://via.placeholder.com/150';
-  const status = (provider?.verificationStatus || provider?.status || 'pending').toLowerCase();
-  const regFeeStatus = (provider?.registrationFee || 'unpaid').toLowerCase();
-  const isPremium = provider?.isPremium || false;
+  const {
+    _id,
+    businessName = 'N/A',
+    providerImage,
+    userId = {},
+    categoryId = {},
+    cnicNumber = 'N/A',
+    address = 'N/A',
+    experience,
+    description,
+    cnicImages = [],
+    workImages = [],
+    verificationStatus,
+    status: fallbackStatus,
+    accountRejectionReason,
+    registrationFee = 'unpaid',
+    isPremium,
+    subscriptionDetails = {},
+    paymentDetails = {},
+    subscriptionStatus,
+    planType
+  } = provider || {};
+
+  const profileImg = providerImage || userId?.profileImage || 'https://via.placeholder.com/150';
+  const status = (verificationStatus || fallbackStatus || 'pending').toLowerCase();
+  const regFeeStatus = registrationFee.toLowerCase();
+
+  const hasPaidMonthlyPlan = 
+    isPremium === true ||
+    subscriptionStatus === 'active' ||
+    paymentDetails?.status === 'paid' ||
+    paymentDetails?.status === 'approved' ||
+    Boolean(subscriptionDetails?.planTitle) ||
+    Boolean(planType && planType.toLowerCase() !== 'free');
+
+  const activePlanTitle = 
+    subscriptionDetails?.planTitle || 
+    planType || 
+    (hasPaidMonthlyPlan ? 'Monthly Premium Plan' : 'Free Tier');
+
+  const rawExpiry = subscriptionDetails?.expiresAt || subscriptionDetails?.expiryDate || provider?.planExpiry;
+  const planExpiryDate = rawExpiry
+    ? new Date(rawExpiry).toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      })
+    : null;
 
   const statusColors = {
     approved: 'text-emerald-600 font-bold',
@@ -30,8 +74,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
       alert('Please enter a rejection reason.');
       return;
     }
-    // Passing providerId and accountRejectionReason to parent handler
-    onBlock && onBlock(provider?._id, rejectionReason);
+    onBlock && onBlock(_id, rejectionReason);
     setShowRejectModal(false);
     setRejectionReason('');
   };
@@ -51,9 +94,9 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
           
           <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h3 className="text-lg font-bold text-gray-800">{provider?.businessName || 'N/A'}</h3>
+              <h3 className="text-lg font-bold text-gray-800">{businessName}</h3>
               <p className="text-xs text-gray-400">
-                Category: <span className="font-semibold text-gray-600">{provider?.categoryId?.name || 'N/A'}</span>
+                Category: <span className="font-semibold text-gray-600">{categoryId?.name || 'N/A'}</span>
               </p>
             </div>
             
@@ -63,9 +106,9 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
               </span>
 
               <span className={`px-3 py-1 text-xs font-bold rounded-full border ${
-                isPremium ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-gray-100 text-gray-600 border-gray-200'
+                hasPaidMonthlyPlan ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-gray-100 text-gray-600 border-gray-200'
               }`}>
-                {isPremium ? '⭐ Premium Tier' : 'Free Tier'}
+                {hasPaidMonthlyPlan ? `⭐ ${activePlanTitle}` : 'Free Tier'}
               </span>
             </div>
           </div>
@@ -74,45 +117,47 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div>
             <p className="text-gray-400 text-xs">Owner Name</p>
-            <p className="font-semibold text-gray-700">{provider?.userId?.name || 'N/A'}</p>
+            <p className="font-semibold text-gray-700">{userId?.name || 'N/A'}</p>
           </div>
           <div>
             <p className="text-gray-400 text-xs">Email Address</p>
-            <p className="font-semibold text-gray-700">{provider?.userId?.email || 'N/A'}</p>
+            <p className="font-semibold text-gray-700">{userId?.email || 'N/A'}</p>
           </div>
           <div>
             <p className="text-gray-400 text-xs">CNIC Number</p>
-            <p className="font-semibold text-gray-700">{provider?.cnicNumber || 'N/A'}</p>
+            <p className="font-semibold text-gray-700">{cnicNumber}</p>
           </div>
           <div>
             <p className="text-gray-400 text-xs">Address</p>
-            <p className="font-semibold text-gray-700 capitalize">{provider?.address || 'N/A'}</p>
+            <p className="font-semibold text-gray-700 capitalize">{address}</p>
           </div>
           <div>
             <p className="text-gray-400 text-xs">Experience</p>
-            <p className="font-semibold text-gray-700">{provider?.experience ? `${provider.experience} Years` : 'N/A'}</p>
+            <p className="font-semibold text-gray-700">{experience ? `${experience} Years` : 'N/A'}</p>
           </div>
           <div>
-            <p className="text-gray-400 text-xs">Subscription Type</p>
-            <p className="font-semibold text-gray-700">{isPremium ? 'Premium Tier' : 'Free Tier'}</p>
+            <p className="text-gray-400 text-xs">Active Plan Status</p>
+            <p className="font-semibold text-gray-700">
+              {activePlanTitle}
+              {planExpiryDate && <span className="block text-xs font-normal text-purple-600 mt-0.5">Expires: {planExpiryDate}</span>}
+            </p>
           </div>
         </div>
 
         <div className="mt-4 pt-3 border-t border-gray-50">
           <p className="text-gray-400 text-xs">Business Detail</p>
-          <p className="text-sm font-medium text-gray-600 mt-1">{provider?.description || 'No bio provided.'}</p>
+          <p className="text-sm font-medium text-gray-600 mt-1">{description || 'No bio provided.'}</p>
         </div>
       </div>
 
-      {/* Verification Documents */}
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <h3 className="text-base font-bold text-gray-800 mb-4">Verification Documents</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <p className="text-xs font-medium text-gray-500 mb-2">CNIC Document Images</p>
-            {provider?.cnicImages && provider.cnicImages.length > 0 ? (
+            {cnicImages.length > 0 ? (
               <div className="flex gap-2 flex-wrap">
-                {provider.cnicImages.map((imgUrl, index) => (
+                {cnicImages.map((imgUrl, index) => (
                   <a key={index} href={imgUrl} target="_blank" rel="noreferrer" className="w-full md:w-48">
                     <img 
                       src={imgUrl} 
@@ -129,9 +174,9 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
 
           <div>
             <p className="text-xs font-medium text-gray-500 mb-2">Work Portfolio / Work Images</p>
-            {provider?.workImages && provider.workImages.length > 0 ? (
+            {workImages.length > 0 ? (
               <div className="flex gap-2 flex-wrap">
-                {provider.workImages.map((imgUrl, index) => (
+                {workImages.map((imgUrl, index) => (
                   <a key={index} href={imgUrl} target="_blank" rel="noreferrer" className="inline-block">
                     <img 
                       src={imgUrl} 
@@ -148,16 +193,15 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         </div>
       </div>
 
-      {/* Verification Action Box */}
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h4 className="font-bold text-gray-800 text-sm">Verification Status Action</h4>
           <p className="text-xs text-gray-400 mt-0.5">
             Current status: <span className={`uppercase ${statusColors[status] || 'text-gray-600'}`}>{status}</span>
           </p>
-          {isRejected && provider?.accountRejectionReason && (
+          {isRejected && accountRejectionReason && (
             <p className="text-xs text-red-500 font-medium mt-1">
-              Reason: "{provider.accountRejectionReason}"
+              Reason: "{accountRejectionReason}"
             </p>
           )}
         </div>
@@ -179,7 +223,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
           <button 
             type="button"
             disabled={isApproved}
-            onClick={() => onApprove && onApprove(provider?._id)}
+            onClick={() => onApprove && onApprove(_id)}
             className={`px-4 py-2 text-white text-xs font-semibold rounded-lg transition-all shadow-sm ${
               isApproved
                 ? 'bg-emerald-300 cursor-not-allowed opacity-60'
@@ -191,7 +235,6 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         </div>
       </div>
 
-      {/* Rejection Modal */}
       {showRejectModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white p-6 rounded-2xl max-w-md w-full shadow-xl space-y-4">
@@ -210,14 +253,14 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
               <button
                 type="button"
                 onClick={() => setShowRejectModal(false)}
-                className="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
+                className="px-4 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleConfirmReject}
-                className="px-4 py-2 text-xs font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700"
+                className="px-4 py-2 text-xs font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 cursor-pointer"
               >
                 Confirm Rejection
               </button>

@@ -20,7 +20,7 @@ export const handleProviderRouting = (navigation, verificationStatus, registrati
         } else if (registrationFeeStatus === 'pending_approval') {
             return navigation.replace('PaymentStatusScreen', { status: 'pending_approval' });
         } else {
-            return navigation.replace('PaymentUploadScreen');
+            return navigation.replace('PaymentUploadScreen', {type: 'registration',});
         }
     }
 };

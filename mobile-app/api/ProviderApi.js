@@ -144,3 +144,14 @@ export const providerReviews = async (providerId)=>{
     throw error;
   }
 }
+
+export const getPremiumPlans = async ()=>{
+  try {
+    const response = await api.get('/provider/getPremiumPlans');
+    console.log("fetching plans  API response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error  fetching plans  :", error);
+    throw error;
+  }
+}
