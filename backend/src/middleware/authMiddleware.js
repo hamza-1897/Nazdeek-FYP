@@ -1,25 +1,23 @@
+
 const jwt = require('jsonwebtoken');
 const config = require('../config/envConfig');
-const {generateNewAccessToken} = require('../lib/generateToken');
+const { generateNewAccessToken } = require('../lib/generateToken');
 
+const authMiddleware = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "no token provided" });
+  }
 
-const authMiddleware = async (req,res,next) => {
-
-    const authHeader = req.headers.authorization;
-    if(!authHeader || !authHeader.startsWith("Bearer ")){
-        return res.status(401).json({message : "no token provided"})
-    } else {
-        const token = authHeader.split(" ")[1];
-        try {
-            const decoded = jwt.verify(token, config.JWT_SECRET);
-            req.user = {userId: decoded.userId, role: decoded.role};
-            next();
-        } catch (error) {
-            return res.status(401).json({message : "invalid token"})
-        }
-    }
-
-}
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, config.JWT_SECRET);
+    req.user = { userId: decoded.userId, role: decoded.role };
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "jwt expired", isExpired: true });
+  }
+};
 
 const checkRole = (roles) => {
     return (req,res,next) => {
@@ -30,27 +28,24 @@ const checkRole = (roles) => {
         }
     }
 }
+const refreshAccessTokenController = async (req, res) => {
+  try {
+    const refreshToken = req.cookies?.jwt;
 
-
-
-
-const refreshTokenMiddleware = async (req,res,next) => {
-
-    const refreshToken = req.cookies.jwt;
-    if(!refreshToken){
-        return res.status(401).json({message : "no refresh token provided"})
-    } else {
-        try {
-            const decoded = jwt.verify(refreshToken, config.JWT_SECRET);
-            const userId = decoded.userId;
-            const newAccessToken = generateNewAccessToken(userId);
-            req.accessToken = newAccessToken;
-            next();
-        } catch (error) {
-            return res.status(401).json({message : "invalid refresh token"})
-        }
+    if (!refreshToken) {
+      return res.status(401).json({ message: "No refresh token provided" });
     }
 
-}
+    const decoded = jwt.verify(refreshToken, config.JWT_SECRET);
+    const newAccessToken = generateNewAccessToken(decoded.userId, decoded.role);
 
-module.exports = { authMiddleware, checkRole, refreshTokenMiddleware };
+    return res.status(200).json({
+      success: true,
+      accessToken: newAccessToken
+    });
+  } catch (error) {
+    return res.status(401).json({ message: "Invalid or expired refresh token" });
+  }
+};
+
+module.exports = { authMiddleware, checkRole, refreshAccessTokenController };

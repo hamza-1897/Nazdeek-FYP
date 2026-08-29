@@ -1,6 +1,93 @@
 const providerModel = require('../../models/providerModel'); 
 const userModel = require('../../models/usersModel');  
 const settingModel = require('../../models/settingModel');
+const serviceModel = require('../../models/serviceModel');
+const bookingModel = require('../../models/bookingModel');
+const reviewModel = require('../../models/reviewModel');
+const notificationModel = require('../../models/notificationModel');
+const mongoose = require('mongoose');
+
+const getProviderDashboardStats = async (req, res) => {
+  try {
+   const {providerId} = req.body;
+    const provider = await providerModel.findById(providerId);
+    if (!provider) {
+      return res.status(404).json({
+        success: false,
+        message: 'Provider profile not found.'
+      });
+    }
+
+    const [
+      totalServices,
+      activeBookings,
+      totalReviewsCount,
+      ratingData,
+      ongoingBookings,
+      unreadNotificationsCount
+    ] = await Promise.all([
+      serviceModel.countDocuments({ providerId }),
+
+      bookingModel.countDocuments({
+        providerId,
+        status: { $nin: ['completed', 'cancelled', 'rejected'] }
+      }),
+
+      reviewModel.countDocuments({ providerId }),
+
+      reviewModel.aggregate([
+        { $match: { providerId: new mongoose.Types.ObjectId(providerId) } },
+        {
+          $group: {
+            _id: null,
+            avgRating: { $avg: '$rating' }
+          }
+        }
+      ]),
+
+      bookingModel.find({
+        providerId,
+        status: 'accepted'
+      })
+        .populate('userId', 'name profileImage phone')
+        .populate('serviceId', 'title price')
+        .sort({ createdAt: -1 }),
+
+      notificationModel.countDocuments({
+        recipientId: { $in: [providerId] },
+        isRead: false
+      })
+    ]);
+
+    const averageRating = ratingData.length > 0 ? Number(ratingData[0].avgRating.toFixed(1)) : 0;
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        notifications: {
+          hasUnread: unreadNotificationsCount > 0,
+          unreadCount: unreadNotificationsCount
+        },
+        stats: {
+          totalServices,
+          activeBookings,
+          totalReviews: totalReviewsCount,
+          averageRating
+        },
+        ongoingBookings
+      }
+    });
+
+  } catch (error) {
+    console.error('Error fetching Provider Dashboard stats:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error while fetching dashboard metrics.',
+      error: error.message
+    });
+  }
+};
+
 
 const registerProvider = async (req, res) => {
   try {
@@ -173,4 +260,4 @@ const submitPaymentSlip = async (req, res) => {
 };
 
 
-module.exports = { registerProvider , getPaymentDetails,submitPaymentSlip };
+module.exports = {getProviderDashboardStats, registerProvider , getPaymentDetails,submitPaymentSlip };
