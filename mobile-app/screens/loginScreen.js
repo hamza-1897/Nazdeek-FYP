@@ -38,8 +38,8 @@ const LoginScreen = ({ navigation }) => {
       const data = await userLogin(email, password);
       console.log("Login successful response:", data);
 
-      // Verify token presence
       const token = data?.accessToken;
+  const refreshToken = data?.refreshToken;
 
       if (token) {
         const userObj = {
@@ -55,7 +55,7 @@ const LoginScreen = ({ navigation }) => {
           accountRejectionReason: data.providerInfo?.accountRejectionReason || null
         };
 
-        await login(token, userObj);
+        await login(token, refreshToken, userObj);
 
         await new Promise((resolve) => setTimeout(resolve, 100));
 

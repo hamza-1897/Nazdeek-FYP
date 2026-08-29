@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [userToken, setUserToken] = useState(null);
+  const [refreshToken, setRefreshToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
   const [providerInfo, setProviderInfo] = useState(null);
@@ -13,10 +14,14 @@ export const AuthProvider = ({ children }) => {
     const checkToken = async () => {
       try {
         const token = await SecureStore.getItemAsync('userToken');
+        const refToken = await SecureStore.getItemAsync('refreshToken');
         const savedUser = await SecureStore.getItemAsync('userData');
-        
+
         if (token) {
           setUserToken(token);
+        }
+        if (refToken) {
+          setRefreshToken(refToken);
         }
         if (savedUser) {
           const userData = JSON.parse(savedUser);
@@ -32,12 +37,17 @@ export const AuthProvider = ({ children }) => {
     checkToken();
   }, []);
 
-  const login = async (token, userData) => {
-    setUserToken(token);
+  // Updated login function to accept refreshToken
+  const login = async (accessToken, refToken, userData) => {
+    setUserToken(accessToken);
+    setRefreshToken(refToken);
     setUserInfo(userData);
     setProviderInfo(userData?.providerInfo || null);
 
-    await SecureStore.setItemAsync('userToken', token);
+    await SecureStore.setItemAsync('userToken', accessToken);
+    if (refToken) {
+      await SecureStore.setItemAsync('refreshToken', refToken);
+    }
     await SecureStore.setItemAsync('userData', JSON.stringify(userData));
   };
 
@@ -52,25 +62,29 @@ export const AuthProvider = ({ children }) => {
     await SecureStore.setItemAsync('userData', JSON.stringify(updatedUser));
   };
 
+  // Clear all tokens on logout
   const logout = async () => {
     setUserToken(null);
+    setRefreshToken(null);
     setUserInfo(null);
     setProviderInfo(null);
     await SecureStore.deleteItemAsync('userToken');
+    await SecureStore.deleteItemAsync('refreshToken');
     await SecureStore.deleteItemAsync('userData');
   };
 
   return (
-    <AuthContext.Provider 
-      value={{ 
-        userToken, 
-        userInfo, 
-        providerInfo, 
+    <AuthContext.Provider
+      value={{
+        userToken,
+        refreshToken,
+        userInfo,
+        providerInfo,
         setUserInfo,
-        login, 
-        logout, 
+        login,
+        logout,
         updateProviderDetails,
-        isLoading 
+        isLoading,
       }}
     >
       {children}
