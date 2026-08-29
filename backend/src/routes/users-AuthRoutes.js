@@ -12,6 +12,7 @@ router.post('/verify-forgot-otp', verifyForgotOTP);
 router.post('/reset-password', resetPassword);
 router.post('/update-role/:id', updateRole);
 
-router.get('/refresh-token', refreshAccessToken);
+const {refreshAccessTokenController} = require('../middleware/authMiddleware')
+router.get('/refresh-token', refreshAccessTokenController);
 
 module.exports = router;

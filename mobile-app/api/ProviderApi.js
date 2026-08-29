@@ -14,7 +14,16 @@ export const registerProviderApi = async (formData) => {
   }
 };
 
-
+export const getProviderDashboardStats = async (providerId)=>{
+  try {
+    const response = await api.post('/provider/dashboard',{providerId});
+    console.log("get dashboard  API :", response.data);
+        return response.data;
+  } catch (error) {
+    console.error("Error  fetching dashboard:", error);
+        throw error;
+  }
+}
 
 
 

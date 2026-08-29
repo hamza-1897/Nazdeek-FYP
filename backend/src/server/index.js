@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const cookies = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const http = require('http');
 
 
@@ -14,6 +15,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(cookies());
+app.use(cookieParser());
 
 
 

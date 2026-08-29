@@ -16,22 +16,21 @@ const getDashboardStats = async (req, res) => {
     ] = await Promise.all([
       userModel.countDocuments({ role: 'customer' }),
       userModel.countDocuments({ role: 'provider' }),
+
       providerModel.countDocuments({
         $or: [
           { registrationFee: 'pending_approval' },
-          { registrationFee: 'pending' },
-          { 'paymentDetails.status': 'pending' },
-          { 'paymentDetails.status': 'pending_approval' },
-          { subscriptionStatus: 'pending' },
-          { subscriptionStatus: 'pending_approval' }
+          { 'subscriptionDetails.status': 'pending_approval' },
+          { 'paymentDetails.paymentType': { $in: ['registration', 'premium'] } }
         ]
       }),
+
       providerModel.countDocuments({ verificationStatus: 'pending' }),
+
       providerModel.countDocuments({
         $or: [
           { isPremium: true },
-          { subscriptionStatus: 'active' },
-          { 'paymentDetails.status': 'paid' }
+          { 'subscriptionDetails.status': 'active' }
         ]
       })
     ]);

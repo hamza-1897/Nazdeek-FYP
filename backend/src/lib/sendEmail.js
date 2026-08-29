@@ -26,10 +26,10 @@ const sendEmail = async (options) => {
                 'content-type': 'application/json'
             }
         });
-        console.log('✅ Brevo Email Sent Successfully:', response.data);
+        console.log(' Brevo Email Sent Successfully:', response.data);
         return response.data;
     } catch (error) {
-        console.error('❌ Brevo API Error:', error.response ? JSON.stringify(error.response.data) : error.message);
+        console.error(' Brevo API Error:', error.response ? JSON.stringify(error.response.data) : error.message);
         throw error;
     }
 };
