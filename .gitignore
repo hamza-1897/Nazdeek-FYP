@@ -4,3 +4,19 @@
 backend/.env
 admin-panel/node_modules
 admin-panel/.env
+
+
+# Temporary Expo artifacts
+/mobile-app/.expo/
+/mobile-app/dist/
+/mobile-app/web-build/
+
+# Firebase Secret Key
+/mobile-app/firebase-key.json.json
+/mobile-app/firebase-key.json
+
+
+
+# Auto-generated icons and splash images
+mobile-app/expo/web/cache/
+/mobile-app/*.log

@@ -6,6 +6,7 @@ import ProviderHeader from '../Components/ProviderHeader';
 import ProviderStatsCard from '../Cards/ProviderStatsCard';
 import SubscriptionBanner from '../Components/SubscriptionBanner';
 import { getProviderDashboardStats } from '../api/ProviderApi';
+import {registerForPushNotificationsAsync} from '../services/notificationService'
 
 const ProviderDashboard = ({ navigation }) => {
   const { providerInfo } = useContext(AuthContext);
@@ -13,6 +14,7 @@ const ProviderDashboard = ({ navigation }) => {
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [token,setToken] = useState('');
   const [dashboardData, setDashboardData] = useState({
     notifications: { hasUnread: false, unreadCount: 0 },
     stats: {
@@ -43,6 +45,13 @@ const ProviderDashboard = ({ navigation }) => {
 
   useEffect(() => {
     fetchDashboard();
+      registerForPushNotificationsAsync().then(generatedToken => {
+      if (generatedToken) {
+        setToken(generatedToken);
+      } else {
+        setToken('Permission denied ya koi error aaya.');
+      }
+    });
   }, [providerId]);
 
   const onRefresh = () => {
@@ -134,6 +143,8 @@ const ProviderDashboard = ({ navigation }) => {
           />
         </View>
 
+
+
         <View className="flex-row justify-between items-center mt-6 mb-3">
           <Text className="text-slate-800 font-extrabold uppercase tracking-wider text-[11px]">
             Ongoing Bookings ({dashboardData?.ongoingBookings?.length || 0})
@@ -143,7 +154,7 @@ const ProviderDashboard = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* Dynamic Ongoing Bookings List */}
+        
         {dashboardData?.ongoingBookings?.length > 0 ? (
           dashboardData.ongoingBookings.map((booking) => {
             const customerName = booking?.userId?.name || 'Customer';
