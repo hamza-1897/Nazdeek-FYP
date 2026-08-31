@@ -57,12 +57,19 @@ const SelectPlanScreen = ({ navigation }) => {
       return;
     }
 
-   navigation.navigate('PaymentUploadScreen', {
-  type: 'subscription',
-  selectedPlan: selectedPlan, 
-  bankAccounts: paymentAccounts, 
-});
+    navigation.navigate('PaymentUploadScreen', {
+      type: 'subscription',
+      selectedPlan: selectedPlan,
+      bankAccounts: paymentAccounts,
+    });
   };
+
+  const premiumPerks = [
+    { id: 1, icon: 'infinite', title: 'Unlimited Services', desc: 'Add & offer unlimited services without any limit' },
+    { id: 2, icon: 'home', title: 'Home Page Feature', desc: 'Get featured directly on Customer Home Screen' },
+    { id: 3, icon: 'trending-up', title: 'Top Search Ranking', desc: 'Your listings stay on top in search & category pages' },
+    { id: 4, icon: 'checkmark-circle', title: 'Verified Badge', desc: 'Get official Gold Badge to build maximum customer trust' },
+  ];
 
   if (loading) {
     return (
@@ -86,9 +93,34 @@ const SelectPlanScreen = ({ navigation }) => {
       </View>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 20, paddingBottom: 40 }} showsVerticalScrollIndicator={false}>
+        
+        <View className="bg-gradient-to-r from-blue-900 to-indigo-900 bg-[#1a5ea1] p-5 rounded-3xl mb-6 shadow-md">
+          <View className="flex-row items-center mb-3">
+            <Ionicons name="ribbon-sharp" size={26} color="#fbbf24" />
+            <Text className="text-white font-extrabold text-lg ml-2">Why Go Premium?</Text>
+          </View>
+          <Text className="text-blue-100 text-xs mb-4 font-medium">
+            Boost your bookings & grow your service business 5x faster.
+          </Text>
+
+          <View className="space-y-3">
+            {premiumPerks.map((perk) => (
+              <View key={perk.id} className="flex-row items-start mb-2.5">
+                <View className="bg-white/10 p-1.5 rounded-lg mr-3 mt-0.5">
+                  <Ionicons name={perk.icon} size={16} color="#fbbf24" />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-white text-xs font-bold">{perk.title}</Text>
+                  <Text className="text-blue-100/80 text-[11px] font-normal">{perk.desc}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+
         <Text className="text-xl font-bold text-gray-900 mb-1">Choose Your Plan</Text>
-        <Text className="text-gray-500 text-xs mb-6">
-          Get verified badge, unlimited client queries, and rank higher in search results.
+        <Text className="text-gray-500 text-xs mb-4">
+          Select a duration plan that best fits your business needs.
         </Text>
 
         <View className="mb-6">
@@ -96,13 +128,13 @@ const SelectPlanScreen = ({ navigation }) => {
             <Text className="text-gray-400 text-sm text-center py-4">No plans available.</Text>
           ) : (
             plans.map((plan) => {
-              const isSelected = selectedPlan?.id === plan.id;
+              const isSelected = selectedPlan?.id === plan.id || selectedPlan?._id === plan._id;
               return (
                 <TouchableOpacity
-                  key={plan.id}
+                  key={plan.id || plan._id}
                   onPress={() => setSelectedPlan(plan)}
                   className={`p-4 rounded-2xl border-2 flex-row items-center justify-between mb-3 bg-white ${
-                    isSelected ? 'border-[#1a5ea1] bg-blue-50' : 'border-gray-200'
+                    isSelected ? 'border-[#1a5ea1] bg-blue-50/50' : 'border-gray-200'
                   }`}
                 >
                   <View className="flex-row items-center">
@@ -120,7 +152,7 @@ const SelectPlanScreen = ({ navigation }) => {
                   </View>
 
                   <Text className="text-lg font-extrabold text-[#1a5ea1]">
-                    {plan.currency} {plan.price}
+                    {plan.currency || 'PKR'} {plan.price}
                   </Text>
                 </TouchableOpacity>
               );

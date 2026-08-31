@@ -53,7 +53,6 @@ const verifySignUPOTP = async (req,res) => {
     
 }
 
-
 const userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -88,7 +87,7 @@ const userLogin = async (req, res) => {
       }
     }
 
-    const accessToken = generateToken(user._id, user.role, res);
+    const { accessToken, refreshToken } = generateToken(user._id, user.role, res);
 
     return res.status(200).json({
       _id: user._id,
@@ -100,9 +99,10 @@ const userLogin = async (req, res) => {
       profileImage: user.profileImage,
       providerStatus,
       providerInfo,
-      isRegistrationFree, 
+      isRegistrationFree,
       message: "User logged in successfully",
-      accessToken
+      accessToken,
+      refreshToken 
     });
 
   } catch (error) {
@@ -112,7 +112,6 @@ const userLogin = async (req, res) => {
     });
   }
 };
-
 // User Logout
 const userLogout = async (req,res) => {
     res.clearCookie('jwt', { httpOnly: true, secure: false, sameSite: 'strict',path: "/" });

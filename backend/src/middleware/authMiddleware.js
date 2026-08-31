@@ -1,7 +1,6 @@
-
 const jwt = require('jsonwebtoken');
 const config = require('../config/envConfig');
-const { generateNewAccessToken } = require('../lib/generateToken');
+const { generateToken, generateNewAccessToken } = require('../lib/generateToken');
 
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -20,28 +19,39 @@ const authMiddleware = async (req, res, next) => {
 };
 
 const checkRole = (roles) => {
-    return (req,res,next) => {
-        if(roles.includes(req.user.role)){
-            next();
-        } else {
-            return res.status(403).json({message : "insufficient permissions"})
-        }
+  return (req, res, next) => {
+    if (roles.includes(req.user.role)) {
+      next();
+    } else {
+      return res.status(403).json({ message: "insufficient permissions" });
     }
-}
+  };
+};
+
 const refreshAccessTokenController = async (req, res) => {
   try {
-    const refreshToken = req.cookies?.jwt;
+    const refreshToken = 
+      req.cookies?.jwt || 
+      req.body?.refreshToken || 
+      req.headers['x-refresh-token'];
 
     if (!refreshToken) {
       return res.status(401).json({ message: "No refresh token provided" });
     }
 
     const decoded = jwt.verify(refreshToken, config.JWT_SECRET);
+
     const newAccessToken = generateNewAccessToken(decoded.userId, decoded.role);
+    const newRefreshToken = jwt.sign(
+      { userId: decoded.userId, role: decoded.role }, 
+      config.JWT_SECRET, 
+      { expiresIn: '7d' }
+    );
 
     return res.status(200).json({
       success: true,
-      accessToken: newAccessToken
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken 
     });
   } catch (error) {
     return res.status(401).json({ message: "Invalid or expired refresh token" });
