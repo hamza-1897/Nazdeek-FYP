@@ -32,4 +32,7 @@ router.post('/create-review', createReview);
 const {getPublicSettings} = require('../controllers/mutual/supportController')
 router.get('/getSupportDetails',getPublicSettings)
 
+const {updateFcmToken} = require('../controllers/mutual/user-authController');
+router.post('/update-fcmToken',updateFcmToken)
+
 module.exports = router;

@@ -1,25 +1,24 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/envConfig');
 
-const generateToken = (userId, role, res) => {
-  const refreshToken = jwt.sign({ userId, role }, config.JWT_SECRET, { expiresIn: '7d' });
-  const accessToken = jwt.sign({ userId, role }, config.JWT_SECRET, { expiresIn: '15m' });
+const JWT_SECRET = config.JWT_SECRET || process.env.JWT_SECRET;
 
-  if (res && res.cookie) {
-    res.cookie('jwt', refreshToken, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-      path: '/'
-    });
-  }
-
-  return { accessToken, refreshToken };
+// Sign Access Token (15m)
+const generateAccessToken = (userId, role) => {
+  return jwt.sign(
+    { userId, role }, 
+    JWT_SECRET, 
+    { expiresIn: '15m' }
+  );
 };
 
-const generateNewAccessToken = (userId, role) => {
-  return jwt.sign({ userId, role }, config.JWT_SECRET, { expiresIn: '15m' });
+// Sign Refresh Token (7d)
+const generateRefreshToken = (userId, role) => {
+  return jwt.sign(
+    { userId, role }, 
+    JWT_SECRET, 
+    { expiresIn: '7d' }
+  );
 };
 
-module.exports = { generateToken, generateNewAccessToken };
+module.exports = { generateAccessToken, generateRefreshToken };

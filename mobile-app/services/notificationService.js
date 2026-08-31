@@ -1,18 +1,31 @@
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
+import { updateFcmToken } from '../api/authApi';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
-     shouldShowBanner: true, 
+    shouldShowBanner: true, 
     shouldShowList: true,   
     shouldPlaySound: true,  
     shouldSetBadge: false,
   }),
 });
 
-export const registerForPushNotificationsAsync = async () => {
-  let token;
+/**
+ * @param {string} currentSavedToken 
+ */
+export const registerForPushNotificationsAsync = async (currentSavedToken = null) => {
+  let token = null;
+
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#1a5ea1',
+    });
+  }
 
   if (Device.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -30,17 +43,16 @@ export const registerForPushNotificationsAsync = async () => {
 
     token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log('Expo Push Token:', token);
+
+    if (currentSavedToken && currentSavedToken === token) {
+      console.log('FCM Token unchanged. Skipping backend update.');
+    } else {
+      console.log('New token detected, updating backend...');
+      await updateFcmToken(token); 
+    }
+
   } else {
     console.log('Must use physical device for Push Notifications');
-  }
-
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#1a5ea1',
-    });
   }
 
   return token;

@@ -53,7 +53,7 @@ app.use('/api/admin', authMiddleware, checkRole(['admin']), adminRoutes);
 //app.use('/api/admin',  adminRoutes);
 app.use('/api/user-auth', userAuthRoutes);
 app.use('/api/customer',authMiddleware, userRoutes);
-app.use('/api/provider', providerRoutes);   
+app.use('/api/provider',authMiddleware, providerRoutes);   
 app.use('/api/chat',authMiddleware, chatRoutes);
 app.use('/api/notifications',authMiddleware, notificationRoutes);
 

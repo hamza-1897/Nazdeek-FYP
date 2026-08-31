@@ -1,8 +1,8 @@
-import {React , useState , useContext} from 'react';
+import {React , useState,useEffect , useContext} from 'react';
 import { View, ScrollView, TouchableOpacity,StatusBar, Text } from 'react-native';
 import HeaderCard from '../Cards/HeaderCard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import {registerForPushNotificationsAsync} from '../services/notificationService'
 import {AuthContext} from '../context/AuthContext';
 import PromoBanner from '../Components/PromoBanner';
 import CategoryPills from '../Components/CategoryPills';
@@ -11,7 +11,10 @@ import ServiceCard from '../Cards/HomeServiceCard';
 const HomeScreen = ({ navigation, servicesData = [] }) => {
   const { userInfo } = useContext(AuthContext);
  
-
+useEffect(() => {
+    
+      registerForPushNotificationsAsync(userInfo?.fcmToken);
+  }, []);
 
   const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState('');
