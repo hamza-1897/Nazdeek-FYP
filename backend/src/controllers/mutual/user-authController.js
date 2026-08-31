@@ -76,7 +76,6 @@ const userLogin = async (req, res) => {
     if (user.role === 'provider') {
       const providerDoc = await providerModel
         .findOne({ userId: user._id })
-        .select('providerId providerImage businessName isPremium verificationStatus accountRejectionReason categoryId registrationFee')
         .populate('categoryId', 'name');
 
       if (!providerDoc) {
@@ -235,7 +234,6 @@ const getMe = async (req, res) => {
     if (user.role === 'provider') {
       const providerDoc = await providerModel
         .findOne({ userId: user._id })
-        .select('providerId providerImage businessName isPremium verificationStatus accountRejectionReason categoryId registrationFee')
         .populate('categoryId', 'name');
 
       if (!providerDoc) {

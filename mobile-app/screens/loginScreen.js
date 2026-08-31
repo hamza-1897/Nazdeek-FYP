@@ -79,35 +79,37 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  return (
-    <SafeAreaView className="flex-1 bg-white">
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-        className="flex-1"
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView 
-            contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }} 
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View className="px-6 py-6">
-              <Text className="text-4xl font-bold text-[#1a5ea1] text-center italic mb-10">
+ return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView className="flex-1 bg-white">
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ flexGrow: 1 }}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View className="px-6 pt-10 pb-6 justify-center flex-1">
+              
+              <Text className="text-4xl font-extrabold text-[#1a5ea1] text-center italic mb-8">
                 Nazdeek
               </Text>
               
-              <Text className="text-3xl font-bold text-center text-gray-800">
+              <Text className="text-3xl font-bold text-gray-900">
                 Welcome back!
               </Text>
-              <Text className="text-base text-center text-gray-500 mb-8">
+              <Text className="text-sm text-gray-500 mt-1 mb-8">
                 Log in to your account to continue
               </Text>
 
-              <View className="mb-5">
-                <Text className="text-sm font-bold mb-2 text-gray-800">Email</Text>
+              <View className="mb-4">
+                <Text className="text-sm font-bold mb-2 text-gray-800">Email Address</Text>
                 <TextInput
-                  className="border border-gray-300 rounded-lg p-3 text-base text-gray-900 bg-gray-50"
-                  placeholder="Enter your email"
+                  className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50 text-gray-900"
+                  placeholder="name@example.com"
+                  placeholderTextColor="#9ca3af" 
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -115,12 +117,13 @@ const LoginScreen = ({ navigation }) => {
                 />
               </View>
 
-              <View className="mb-5">
+              <View className="mb-2">
                 <Text className="text-sm font-bold mb-2 text-gray-800">Password</Text>
-                <View className="flex-row items-center border border-gray-300 rounded-lg pr-4 bg-gray-50">
+                <View className="flex-row items-center border border-gray-200 rounded-xl px-4 bg-gray-50">
                   <TextInput
-                    className="flex-1 p-3 text-base text-gray-900"
+                    className="flex-1 py-4 text-base text-gray-900"
                     placeholder="Enter password"
+                    placeholderTextColor="#9ca3af"
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!isPasswordVisible}
@@ -128,8 +131,8 @@ const LoginScreen = ({ navigation }) => {
                   <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
                     <Ionicons 
                       name={isPasswordVisible ? "eye-outline" : "eye-off-outline"} 
-                      size={20} 
-                      color="gray" 
+                      size={22} 
+                      color="#9ca3af" 
                     />
                   </TouchableOpacity>
                 </View>
@@ -139,33 +142,33 @@ const LoginScreen = ({ navigation }) => {
                 className="self-end mb-8"
                 onPress={() => navigation.navigate('ForgotPassword')}
               >
-                <Text className="text-[#1a5ea1] underline font-bold">Forgot Password?</Text>
+                <Text className="text-[#1a5ea1] font-bold text-sm">Forgot Password?</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
-                className="bg-[#1a5ea1] p-4 rounded-lg items-center mb-4 flex-row justify-center"
+                className="bg-[#1a5ea1] py-4 rounded-xl items-center shadow-sm"
                 onPress={handleLogin}
                 disabled={loading}
               >
                 {loading ? (
                   <ActivityIndicator color="#fff" />
                 ) : (
-                  <Text className="text-white text-lg font-bold">Login</Text>
+                  <Text className="text-white font-bold text-base">Login</Text>
                 )}
               </TouchableOpacity>
 
-              <View className="flex-row justify-center mt-12">
-                <Text className="text-gray-500">Don't have an account? </Text>
+              <View className="flex-row justify-center mt-8 mb-6">
+                <Text className="text-gray-500 text-sm">Don't have an account? </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                  <Text className="text-[#1a5ea1] font-bold">Sign up</Text>
+                  <Text className="text-[#1a5ea1] font-bold text-sm">Sign up</Text>
                 </TouchableOpacity>
               </View>
 
             </View>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

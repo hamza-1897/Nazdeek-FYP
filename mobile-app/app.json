@@ -16,6 +16,7 @@
     },
     "android": {
       "gradleVersion": "8.13",
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",

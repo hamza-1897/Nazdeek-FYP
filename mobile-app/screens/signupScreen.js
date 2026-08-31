@@ -138,6 +138,7 @@ const SignupScreen = ({ navigation }) => {
               <TextInput
                 className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50 text-gray-900"
                 placeholder="Enter Your Name"
+                placeholderTextColor="#9ca3af" 
                 value={name}
                 onChangeText={setName}
               />
@@ -148,6 +149,7 @@ const SignupScreen = ({ navigation }) => {
               <TextInput
                 className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50 text-gray-900"
                 placeholder="name@example.com"
+                placeholderTextColor="#9ca3af" 
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -160,6 +162,7 @@ const SignupScreen = ({ navigation }) => {
               <TextInput
                 className="border border-gray-200 rounded-xl p-4 text-base bg-gray-50 text-gray-900"
                 placeholder="03001234567"
+                placeholderTextColor="#9ca3af" 
                 value={phone}
                 onChangeText={setPhone}
                 keyboardType="phone-pad"
@@ -173,6 +176,7 @@ const SignupScreen = ({ navigation }) => {
                 <TextInput
                   className="flex-1 py-4 text-base text-gray-900"
                   placeholder="Min 6 characters"
+                  placeholderTextColor="#9ca3af" 
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry={!isPasswordVisible}
