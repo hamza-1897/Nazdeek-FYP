@@ -6,7 +6,7 @@ import { AuthContext } from '../../context/AuthContext';
 import {updateProvider} from '../../api/ProviderApi'
 
 const EditProfileProvider = ({ navigation }) => {
-  const { providerInfo, userInfo } = useContext(AuthContext);
+  const { providerInfo,updateUserInfo,updateProviderInfo, userInfo } = useContext(AuthContext);
 
   const [name, setName] = useState(providerInfo?.businessName || '');
   const [contact, setContact] = useState(userInfo?.phone || '');
@@ -15,7 +15,7 @@ const EditProfileProvider = ({ navigation }) => {
   const [cnicNumber, setCnicNumber] = useState(providerInfo?.cnicNumber || '');
   const [profileCreatedAt, setProfileCreatedAt] = useState(providerInfo?.createdAt || '');
   const [description, setDescription] = useState(providerInfo?.description || '');
-  const [experience, setExperience] = useState(providerInfo?.experience || '');
+  const [experience, setExperience] = useState(  providerInfo?.experience != null ? String(providerInfo.experience) : '');
   const [isPremium, setIsPremium] = useState(providerInfo?.isPremium || false);
   const [regFee, setRegFee] = useState(providerInfo?.registrationFee || '');
   const [profileImage, setProfileImage] = useState(providerInfo?.providerImage || '');
@@ -54,44 +54,79 @@ const EditProfileProvider = ({ navigation }) => {
 const handleUpdateOrEdit = async () => {
   if (!isEditable) {
     setIsEditable(true);
-  } else {
-    try {
-      const formData = new FormData();
+    return;
+  }
 
-      if (name?.trim()) formData.append('name', name.trim());
-      if (contact?.trim()) formData.append('phone', contact.trim());
-      if (address?.trim()) formData.append('address', address.trim());
-      if (description?.trim()) formData.append('description', description.trim());
-      if (experience?.trim()) formData.append('experience', experience.trim());
+  try {
+ 
 
-      if (profileImage && profileImage.startsWith('file://')) {
-        const filename = profileImage.split('/').pop();
+    const formData = new FormData();
+
+   
+
+    if (name) {
+      formData.append('name', String(name).trim());
+    }
+
+    if (contact) {
+      formData.append('phone', String(contact).trim());
+    }
+
+    if (address) {
+      formData.append('address', String(address).trim());
+    }
+
+    if (description) {
+      formData.append('description', String(description).trim());
+    }
+
+    if (experience !== undefined && experience !== null) {
+      formData.append('experience', String(experience).trim());
+    }
+
+  
+
+    if (profileImage && typeof profileImage === 'string') {
+
+      if (profileImage.startsWith('file://')) {
+
+        const filename = profileImage.split('/').pop() || 'profile.jpg';
         const match = /\.(\w+)$/.exec(filename);
         const type = match ? `image/${match[1]}` : 'image/jpeg';
 
         formData.append('providerImage', {
           uri: profileImage,
-          filename: filename || 'profile.jpg',
+          name: filename,
           type: type,
         });
-      } else if (profileImage) {
-        formData.append('providerImage', profileImage);
-      }
-      console.log("Check updateProvider function:", typeof updateProvider);
-      console.log("FormData created:", formData);
-      const response = await updateProvider(formData);
 
-      if (response && response.success) {
-        Alert.alert("Success", "Profile updated successfully!");
-        setIsEditable(false);
       }
-    } catch (error) {
-      console.log("Update Profile Error:", error);
-      Alert.alert(
-        "Error", 
-        error.response?.data?.message || error.message || "Failed to update profile."
-      );
+
     }
+
+   
+
+    const response = await updateProvider(formData);
+
+    if (response?.success) {
+      Alert.alert("Success", "Profile updated successfully!");
+      updateProviderInfo(response?.providerInfo);
+        updateUserInfo({
+    phone: response.userPhone
+  });
+      setIsEditable(false);
+    }
+
+  } catch (error) {
+
+    console.log(" Update Profile Error:", error);
+
+    Alert.alert(
+      "Error",
+      error?.response?.data?.message ||
+      error?.message ||
+      "Failed to update profile."
+    );
   }
 };
 

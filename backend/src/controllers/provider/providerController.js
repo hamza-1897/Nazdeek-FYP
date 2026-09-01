@@ -211,7 +211,7 @@ const registerProvider = async (req, res) => {
     if (description !== undefined) provider.description = description;
     if (experience !== undefined) provider.experience = experience;
      if (req.file) {
-      provider.profileImage = req.file.path;
+      provider.providerImage = req.file.path;
     }
 
     await user.save();

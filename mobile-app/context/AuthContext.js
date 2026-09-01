@@ -63,6 +63,18 @@ export const AuthProvider = ({ children }) => {
     await SecureStore.setItemAsync('userData', JSON.stringify(updatedUser));
   };
 
+  const updateProviderInfo = (updatedProvider) => {
+  setProviderInfo(updatedProvider);
+};
+
+
+const updateUserInfo = (updatedUser) => {
+  setUserInfo(prev => ({
+    ...prev,
+    ...updatedUser
+  }));
+};
+
   const logout = async () => {
     setUserToken(null);
     setRefreshToken(null);
@@ -82,8 +94,10 @@ export const AuthProvider = ({ children }) => {
         userInfo,
         providerInfo,
         setUserInfo,
+        updateUserInfo,
         login,
         logout,
+        updateProviderInfo,
         updateProviderDetails,
         isLoading,
       }}

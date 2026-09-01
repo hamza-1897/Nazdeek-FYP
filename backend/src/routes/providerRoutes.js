@@ -19,7 +19,7 @@ router.post(
   registerProvider
 );
 
-router.post('/update-profile', upload.single('profileImage'),updateProviderProfile);
+router.post('/update-profile', upload.single('providerImage'),updateProviderProfile);
 
 // payment routes
 router.get('/payment',getPaymentDetails) ;
