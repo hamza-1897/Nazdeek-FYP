@@ -1,3 +1,16 @@
 {
+<<<<<<< Updated upstream
   "devices": []
+=======
+  "devices": [
+    {
+      "installationId": "fbaf20ed-2c85-4748-b69f-8516e0977059",
+      "lastUsed": 1788336773910
+    },
+    {
+      "installationId": "7db9ac6c-df47-4d31-af84-d99b5bd92712",
+      "lastUsed": 1788109869417
+    }
+  ]
+>>>>>>> Stashed changes
 }

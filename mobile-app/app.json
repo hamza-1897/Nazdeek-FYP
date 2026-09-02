@@ -14,13 +14,18 @@
     "ios": {
       "supportsTablet": true
     },
-    "android": {
+   "android": {
+      "versionCode": 1,
+      "gradleVersion": "8.13",
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
-      }
+      },
+      "package": "com.hamzaaa.x1897.mobileapp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"

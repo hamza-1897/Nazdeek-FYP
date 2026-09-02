@@ -2,15 +2,9 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
+const API_BASE_URL = 'https://nazdeek-fyp.onrender.com/api'; 
 
-//LAPTOP IPADRESS
-//const API_BASE_URL = 'https://nazdeek-fyp.onrender.com/api'; 
 
-// my laptop
-//const API_BASE_URL = 'http://10.37.247.200:3000/api';
-
-//OFFICE IPADRESS
-const API_BASE_URL = 'http://10.37.247.122:3000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
