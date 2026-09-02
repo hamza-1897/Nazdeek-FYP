@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { getBookingsByProvider } = require('../controllers/provider/bookingController');
 
 const bookingSchema = new mongoose.Schema({
     userId: {

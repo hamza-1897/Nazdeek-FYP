@@ -24,14 +24,12 @@ const ChatHeader = ({ receiverName, receiverImage, onBack }) => {
           }}
           className="w-11 h-11 rounded-full bg-gray-100 border border-gray-100"
         />
-        <View className="w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white absolute bottom-0 right-0" />
       </View>
 
       <View className="ml-3 flex-1">
         <Text className="text-base font-bold text-slate-800" numberOfLines={1}>
           {receiverName || 'Chat'}
         </Text>
-        <Text className="text-xs text-emerald-600 font-medium">Active now</Text>
       </View>
     </View>
   );

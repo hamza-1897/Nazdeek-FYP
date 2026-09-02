@@ -9,59 +9,58 @@ const API_BASE_URL = 'https://nazdeek-fyp.onrender.com/api';
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
-  withCredentials: true, // HTTP-Only Cookie bhejne ke liye zaroori hai
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
-// Request Interceptor: Attach Access Token
 api.interceptors.request.use(
   async (config) => {
-    try {
-      const token = await SecureStore.getItemAsync('userToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (error) {
-      console.error('API Interceptor Token Error:', error);
+    const token = await SecureStore.getItemAsync('userToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Auto-Renew Token on 401 Expiry
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Agar 401 error aaye aur yeh retry na hua ho pehle
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response?.data?.isExpired) &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       try {
-        // Refresh token route ko call karke naya access token lein
-        const refreshResponse = await axios.get(`${API_BASE_URL}/user-auth/refresh-token`, {
-          withCredentials: true,
+        const storedRefreshToken = await SecureStore.getItemAsync('refreshToken');
+        if (!storedRefreshToken) throw new Error('No refresh token');
+
+        const refreshResponse = await axios.post(`${API_BASE_URL}/user-auth/refresh-token`, {
+          refreshToken: storedRefreshToken,
         });
 
-        const newAccessToken = refreshResponse.data?.accessToken;
+        const { accessToken, refreshToken: newRefreshToken } = refreshResponse.data;
 
-        if (newAccessToken) {
-          // Naye Token ko SecureStore mein save karein
-          await SecureStore.setItemAsync('userToken', newAccessToken);
+        if (accessToken) {
+          await SecureStore.setItemAsync('userToken', accessToken);
+          if (newRefreshToken) {
+            await SecureStore.setItemAsync('refreshToken', newRefreshToken);
+          }
 
-          // Original request ka header update karke usko wapis execute karein
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // Agar Refresh Token bhi expire ho chuka ho to clear karke logout hone dein
-        console.log('Refresh token expired or invalid, logging out...');
         await SecureStore.deleteItemAsync('userToken');
+        await SecureStore.deleteItemAsync('refreshToken');
         await SecureStore.deleteItemAsync('userData');
+        
+        return Promise.reject(refreshError);
       }
     }
 

@@ -90,3 +90,14 @@ export const getMe = async ()=>{
         throw error.response ? error.response.data : error;
     }
 }
+
+export const updateFcmToken = async (token)=>{
+    try{
+        const response  = await api.post('/customer/update-fcmToken',{fcmToken: token});
+         console.log("update Fcm Token API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.log("error update fcm token API error:", error.response ? error.response.data : error);
+        throw error.response ? error.response.data : error;
+    }
+}

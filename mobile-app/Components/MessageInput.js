@@ -6,21 +6,22 @@ const MessageInput = ({ value, onChangeText, onSend }) => {
   const isEnabled = value.trim().length > 0;
 
   return (
-    <View className="flex-row items-end px-3 py-2 bg-white border-t border-slate-100">
-      <View className="flex-1 flex-row items-center bg-slate-100 rounded-2xl px-4 min-h-[44px] max-h-[100px] mr-2 py-1">
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          placeholder="Write a message..."
-          placeholderTextColor="#94a3b8"
-          multiline={true}
-          textAlignVertical="center"
-          style={{
-            paddingTop: Platform.OS === 'ios' ? 8 : 4,
-            paddingBottom: Platform.OS === 'ios' ? 8 : 4,
-          }}
-          className="flex-1 text-[15px] text-slate-800 leading-5"
-        />
+    <View className="flex-row items-end px-3 py-2 bg-white border-t mb-3 border-slate-100">
+      <View className="flex-1 flex-row items-center bg-slate-100 rounded-2xl px-4  max-h-[100px] mr-2 py-1">
+       <TextInput
+  value={value}
+  onChangeText={onChangeText}
+  placeholder="Write a message..."
+  placeholderTextColor="#94a3b8"
+  multiline={true}
+  textAlignVertical="center"
+
+  style={{
+    paddingTop: Platform.OS === 'ios' ? 8 : 4,
+    paddingBottom: Platform.OS === 'ios' ? 8 : 2,
+  }}
+  className="flex-1 text-[15px] text-slate-800 leading-5"
+/>
       </View>
 
       <TouchableOpacity

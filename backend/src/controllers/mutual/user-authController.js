@@ -7,7 +7,7 @@ const settingModel = require('../../models/settingModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/envConfig');
-const {generateToken, generateNewAccessToken} = require('../../lib/generateToken');
+const {generateAccessToken, generateRefreshToken} = require('../../lib/generateToken');
 const checkPassword = require('../../lib/checkPass');
 const {signUpOTP, forgotPasswordOTP} = require('../../lib/generateOTP');
 
@@ -53,7 +53,6 @@ const verifySignUPOTP = async (req,res) => {
     
 }
 
-
 const userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -77,7 +76,6 @@ const userLogin = async (req, res) => {
     if (user.role === 'provider') {
       const providerDoc = await providerModel
         .findOne({ userId: user._id })
-        .select('providerId providerImage businessName isPremium verificationStatus accountRejectionReason categoryId registrationFee')
         .populate('categoryId', 'name');
 
       if (!providerDoc) {
@@ -88,8 +86,8 @@ const userLogin = async (req, res) => {
       }
     }
 
-    const accessToken = generateToken(user._id, user.role, res);
-
+    const  accessToken  = generateAccessToken(user._id, user.role);
+    const refreshToken = generateRefreshToken(user._id,user.role);
     return res.status(200).json({
       _id: user._id,
       name: user.name,
@@ -100,9 +98,10 @@ const userLogin = async (req, res) => {
       profileImage: user.profileImage,
       providerStatus,
       providerInfo,
-      isRegistrationFree, 
+      isRegistrationFree,
       message: "User logged in successfully",
-      accessToken
+      accessToken,
+      refreshToken 
     });
 
   } catch (error) {
@@ -112,7 +111,6 @@ const userLogin = async (req, res) => {
     });
   }
 };
-
 // User Logout
 const userLogout = async (req,res) => {
     res.clearCookie('jwt', { httpOnly: true, secure: false, sameSite: 'strict',path: "/" });
@@ -179,20 +177,38 @@ const updateRole = async (req,res) => {
 
 
 // Refresh Access Token
-const refreshAccessToken = async (req,res) => {
+const refreshAccessToken = async (req, res) => {
+  try {
+    const refreshToken = 
+      req.cookies?.jwt || 
+      req.body?.refreshToken || 
+      req.headers['x-refresh-token'];
 
-    const refreshToken = req.cookies.jwt;
-    console.log("refresh token: ", refreshToken);
-    if(!refreshToken){
-        return res.status(401).json({message : "no refresh token provided"})
-    } else {
-    const decoded = jwt.verify(refreshToken, config.JWT_SECRET);
-    const userId = decoded.userId;
-    const userRole = decoded.role;
-    const newAccessToken = generateNewAccessToken(userId , userRole);
-    res.status(200).json({accessToken: newAccessToken})
+    if (!refreshToken) {
+      return res.status(401).json({ success: false, message: "No refresh token provided" });
     }
-}
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+
+    const newAccessToken = generateAccessToken(decoded.userId, decoded.role);
+    const newRefreshToken = generateRefreshToken(decoded.userId, decoded.role);
+
+    return res.status(200).json({
+      success: true,
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken 
+    });
+  } catch (error) {
+    return res.status(401).json({ 
+      success: false, 
+      message: "Invalid or expired refresh token",
+      isExpired: true 
+    });
+  }
+};
+
+
+
 const getMe = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -218,7 +234,6 @@ const getMe = async (req, res) => {
     if (user.role === 'provider') {
       const providerDoc = await providerModel
         .findOne({ userId: user._id })
-        .select('providerId providerImage businessName isPremium verificationStatus accountRejectionReason categoryId registrationFee')
         .populate('categoryId', 'name');
 
       if (!providerDoc) {
@@ -251,4 +266,29 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = {registerUser,verifySignUPOTP ,getMe, userLogin, userLogout, forgotOTP,verifyForgotOTP, updateRole, resetPassword,refreshAccessToken};
+const updateFcmToken = async (req, res) => {
+  try {
+    const { fcmToken } = req.body; 
+    const userId = req.user?.userId || req.user?._id;
+
+    if (!fcmToken) {
+      return res.status(400).json({ success: false, message: 'fcmToken is required' });
+    }
+
+    const user = await userModel.findById(userId);
+    
+    if (user && user.fcmToken === fcmToken) {
+      return res.status(200).json({ success: true, message: 'FCM token already up to date' });
+    }
+
+    await userModel.findByIdAndUpdate(userId, { fcmToken });
+
+    return res.status(200).json({
+      success: true,
+      message: 'FCM Token updated successfully'
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+module.exports = {registerUser,updateFcmToken,verifySignUPOTP ,getMe, userLogin, userLogout, forgotOTP,verifyForgotOTP, updateRole, resetPassword,refreshAccessToken};

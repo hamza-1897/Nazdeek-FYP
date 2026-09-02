@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "613569898358",
+    "project_id": "nazdeek",
+    "storage_bucket": "nazdeek.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:613569898358:android:ebbb86c7ab0faa4e69fc57",
+        "android_client_info": {
+          "package_name": "com.hamzaaa.x1897.mobileapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHq9x25tCbHgxzrDS6YopxhV4xWNJe6wc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

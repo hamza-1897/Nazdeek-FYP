@@ -7,7 +7,7 @@ import {AuthContext} from '../../context/AuthContext';
 
 
 const ProvProfile = ({ navigation }) => {
-  const { providerInfo, userInfo } = useContext(AuthContext);
+  const { logout,providerInfo, userInfo } = useContext(AuthContext);
 
   return (
     <View className="flex-1 bg-white">
@@ -80,7 +80,8 @@ const ProvProfile = ({ navigation }) => {
        
           <TouchableOpacity 
             onPress={() => {
-              navigation.replace('Login');
+              logout();
+              navigation.replace("Login");
             }}
             className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
           >

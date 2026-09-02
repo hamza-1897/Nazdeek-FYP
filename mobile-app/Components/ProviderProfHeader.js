@@ -32,9 +32,21 @@ const ProviderProfHeader = ({ provider, stats }) => {
         )}
       </View>
 
-      <Text className="text-xl font-black text-slate-900 text-center">
-        {provider?.businessName}
-      </Text>
+      <View className="flex-row items-center justify-center px-4 flex-wrap">
+        <Text className="text-xl font-black text-slate-900 text-center mr-1.5">
+          {provider?.businessName}
+        </Text>
+        
+       
+        {provider?.isPremium && (
+          <View className="bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md flex-row items-center justify-center ml-1">
+            <Ionicons name="ribbon" size={12} color="#d97706" />
+            <Text className="text-[10px] font-black text-amber-700 ml-1 tracking-wider uppercase">
+              PRO
+            </Text>
+          </View>
+        )}
+      </View>
 
       <View className="bg-slate-100 px-3 py-1 rounded-full mt-1">
         <Text className="text-slate-600 font-semibold text-xs">
