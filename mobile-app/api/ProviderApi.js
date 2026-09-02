@@ -26,6 +26,19 @@ export const getProviderDashboardStats = async (providerId)=>{
 }
 
 
+export const updateProvider = async (formData) => {
+  try {
+    const response = await api.post('/provider/update-profile', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error in updateProvider API:", error);
+    throw error;
+  }
+};
 
 export const createService = async (formData) => {
     try {

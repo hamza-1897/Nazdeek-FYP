@@ -17,12 +17,8 @@ export const AuthProvider = ({ children }) => {
         const refToken = await SecureStore.getItemAsync('refreshToken');
         const savedUser = await SecureStore.getItemAsync('userData');
 
-        if (token) {
-          setUserToken(token);
-        }
-        if (refToken) {
-          setRefreshToken(refToken);
-        }
+        if (token) setUserToken(token);
+        if (refToken) setRefreshToken(refToken);
         if (savedUser) {
           const userData = JSON.parse(savedUser);
           setUserInfo(userData);
@@ -37,18 +33,23 @@ export const AuthProvider = ({ children }) => {
     checkToken();
   }, []);
 
-  // Updated login function to accept refreshToken
   const login = async (accessToken, refToken, userData) => {
     setUserToken(accessToken);
-    setRefreshToken(refToken);
+    setRefreshToken(refToken || null);
     setUserInfo(userData);
     setProviderInfo(userData?.providerInfo || null);
 
-    await SecureStore.setItemAsync('userToken', accessToken);
-    if (refToken) {
+    if (accessToken) {
+      await SecureStore.setItemAsync('userToken', accessToken);
+    }
+    
+    if (refToken && typeof refToken === 'string') {
       await SecureStore.setItemAsync('refreshToken', refToken);
     }
-    await SecureStore.setItemAsync('userData', JSON.stringify(userData));
+    
+    if (userData) {
+      await SecureStore.setItemAsync('userData', JSON.stringify(userData));
+    }
   };
 
   const updateProviderDetails = async (newProviderInfo, newStatus = 'pending') => {
@@ -62,15 +63,27 @@ export const AuthProvider = ({ children }) => {
     await SecureStore.setItemAsync('userData', JSON.stringify(updatedUser));
   };
 
-  // Clear all tokens on logout
+  const updateProviderInfo = (updatedProvider) => {
+  setProviderInfo(updatedProvider);
+};
+
+
+const updateUserInfo = (updatedUser) => {
+  setUserInfo(prev => ({
+    ...prev,
+    ...updatedUser
+  }));
+};
+
   const logout = async () => {
     setUserToken(null);
     setRefreshToken(null);
     setUserInfo(null);
     setProviderInfo(null);
-    await SecureStore.deleteItemAsync('userToken');
-    await SecureStore.deleteItemAsync('refreshToken');
-    await SecureStore.deleteItemAsync('userData');
+
+    await SecureStore.deleteItemAsync('userToken').catch(() => {});
+    await SecureStore.deleteItemAsync('refreshToken').catch(() => {});
+    await SecureStore.deleteItemAsync('userData').catch(() => {});
   };
 
   return (
@@ -81,8 +94,10 @@ export const AuthProvider = ({ children }) => {
         userInfo,
         providerInfo,
         setUserInfo,
+        updateUserInfo,
         login,
         logout,
+        updateProviderInfo,
         updateProviderDetails,
         isLoading,
       }}

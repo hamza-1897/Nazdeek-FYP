@@ -9,7 +9,7 @@ import { getProviderDashboardStats } from '../api/ProviderApi';
 import {registerForPushNotificationsAsync} from '../services/notificationService'
 
 const ProviderDashboard = ({ navigation }) => {
-  const { providerInfo } = useContext(AuthContext);
+  const { providerInfo , userInfo } = useContext(AuthContext);
   const providerId = providerInfo?._id;
 
   const [loading, setLoading] = useState(true);
@@ -45,11 +45,11 @@ const ProviderDashboard = ({ navigation }) => {
 
   useEffect(() => {
     fetchDashboard();
-      registerForPushNotificationsAsync().then(generatedToken => {
+      registerForPushNotificationsAsync(userInfo?.fcmToken).then(generatedToken => {
       if (generatedToken) {
         setToken(generatedToken);
       } else {
-        setToken('Permission denied ya koi error aaya.');
+        setToken('Permission denied.');
       }
     });
   }, [providerId]);

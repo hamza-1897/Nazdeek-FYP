@@ -3,20 +3,19 @@ import {
   View,
   Text,
   FlatList,
-  KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  Keyboard,
+  Animated,
 } from 'react-native';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { Ionicons } from '@expo/vector-icons';
+
 import { socket } from '../services/socket';
 import ChatHeader from '../Components/ChatHeader';
 import MessageBubble from '../Components/MessageBubble';
 import MessageInput from '../Components/MessageInput';
-import {getAllMessages , sendMessage, markRead} from '../api/chatApi';
-
+import { getAllMessages, sendMessage, markRead } from '../api/chatApi';
 
 const ChatScreen = ({ route, navigation }) => {
   const {
@@ -32,45 +31,71 @@ const ChatScreen = ({ route, navigation }) => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const flatListRef = useRef(null);
 
- useEffect(() => {
-  if (!chatId) return;
+  useEffect(() => {
+    // Dynamic Keyboard Height Adjustment for Android & iOS
+    const showSub = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => {
+        setKeyboardHeight(e.endCoordinates.height);
+        setTimeout(() => {
+          flatListRef.current?.scrollToEnd({ animated: true });
+        }, 50);
+      }
+    );
 
-  if (!socket.connected) {
-    socket.connect();
-  }
+    const hideSub = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
 
-  const onConnect = () => {
-    socket.emit('join_room', chatId);
-  };
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
-  if (socket.connected) {
-    socket.emit('join_room', chatId);
-  } else {
-    socket.on('connect', onConnect);
-  }
+  useEffect(() => {
+    if (!chatId) return;
 
-  fetchMessages();
-
-   markAsRead(chatId,currentUserId);
-
-  const handleReceiveMessage = (newMessage) => {
-    if (newMessage.chatId === chatId || newMessage.chat === chatId) {
-      setMessages((prevMessages) => {
-        const exists = prevMessages.some((msg) => msg._id === newMessage._id);
-        return exists ? prevMessages : [...prevMessages, newMessage];
-      });
+    if (!socket.connected) {
+      socket.connect();
     }
-  };
 
-  socket.on('receive_message', handleReceiveMessage);
+    const onConnect = () => {
+      socket.emit('join_room', chatId);
+    };
 
-  return () => {
-    socket.off('connect', onConnect);
-    socket.off('receive_message', handleReceiveMessage);
-  };
-}, [chatId]);
+    if (socket.connected) {
+      socket.emit('join_room', chatId);
+    } else {
+      socket.on('connect', onConnect);
+    }
+
+    fetchMessages();
+    markAsRead(chatId, currentUserId);
+
+    const handleReceiveMessage = (newMessage) => {
+      if (newMessage.chatId === chatId || newMessage.chat === chatId) {
+        setMessages((prevMessages) => {
+          const exists = prevMessages.some((msg) => msg._id === newMessage._id);
+          return exists ? prevMessages : [...prevMessages, newMessage];
+        });
+      }
+    };
+
+    socket.on('receive_message', handleReceiveMessage);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('receive_message', handleReceiveMessage);
+    };
+  }, [chatId]);
+
   const fetchMessages = async () => {
     try {
       setLoading(true);
@@ -83,76 +108,68 @@ const ChatScreen = ({ route, navigation }) => {
     }
   };
 
-  const markAsRead = async (chatId,userId)=>{
-    if (!chatId || !userId) {
-  return res.status(400).json({ message: 'chatId and userId are required' });
-}
+  const markAsRead = async (chatId, userId) => {
+    if (!chatId || !userId) return;
+
     try {
-      const response = await markRead(chatId,userId);
-      
+      await markRead(chatId, userId);
     } catch (error) {
-            console.error('Error read messages:', error);
-
+      console.error('Error reading messages:', error);
     }
-  }
-
- const handleSend = async () => {
-  if (!inputText.trim()) return;
-
-  const textToSend = inputText.trim();
-  const tempId = Date.now().toString();
-
-  const messageData = {
-    chatId,
-    senderId: currentUserId,
-    senderModel: currentUserModel,
-    receiverId,
-    receiverModel,
-    text: textToSend,
   };
 
-  const tempMessage = {
-    ...messageData,
-    _id: tempId,
-    createdAt: new Date().toISOString(),
-  };
+  const handleSend = async () => {
+    if (!inputText.trim()) return;
 
-  setMessages((prevMessages) => [...prevMessages, tempMessage]);
-  setInputText('');
+    const textToSend = inputText.trim();
+    const tempId = Date.now().toString();
 
-  try {
-    const response = await sendMessage(messageData);
+    const messageData = {
+      chatId,
+      senderId: currentUserId,
+      senderModel: currentUserModel,
+      receiverId,
+      receiverModel,
+      text: textToSend,
+    };
 
-    const savedMessage = response?.data || response?.message || response || messageData;
+    const tempMessage = {
+      ...messageData,
+      _id: tempId,
+      createdAt: new Date().toISOString(),
+    };
 
-    socket.emit('send_message', savedMessage);
+    setMessages((prevMessages) => [...prevMessages, tempMessage]);
+    setInputText('');
 
-    if (savedMessage._id) {
-      setMessages((prev) =>
-        prev.map((msg) => (msg._id === tempId ? savedMessage : msg))
+    try {
+      const response = await sendMessage(messageData);
+      const savedMessage = response?.data || response?.message || response || messageData;
+
+      socket.emit('send_message', savedMessage);
+
+      if (savedMessage._id) {
+        setMessages((prev) =>
+          prev.map((msg) => (msg._id === tempId ? savedMessage : msg))
+        );
+      }
+    } catch (error) {
+      console.error('Message send error:', error);
+      setMessages((prevMessages) =>
+        prevMessages.filter((msg) => msg._id !== tempId)
       );
     }
-  } catch (error) {
-    console.error('Message send error:', error);
-    
-    setMessages((prevMessages) =>
-      prevMessages.filter((msg) => msg._id !== tempId)
-    );
-  }
-};
+  };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }} edges={['top', 'bottom']}>
       <ChatHeader
         receiverName={receiverName}
         receiverImage={receiverImage}
         onBack={() => navigation.goBack()}
       />
 
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
+      <View style={{ flex: 1, paddingBottom: keyboardHeight, backgroundColor: '#f8fafc' }}>
         {loading ? (
           <View className="flex-1 items-center justify-center">
             <ActivityIndicator size="large" color="#1a5ea1" />
@@ -165,7 +182,11 @@ const ChatScreen = ({ route, navigation }) => {
             renderItem={({ item }) => (
               <MessageBubble item={item} currentUserId={currentUserId} />
             )}
-            contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12 }}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+            }}
             onContentSizeChange={() =>
               flatListRef.current?.scrollToEnd({ animated: true })
             }
@@ -188,7 +209,7 @@ const ChatScreen = ({ route, navigation }) => {
           onChangeText={setInputText}
           onSend={handleSend}
         />
-      </KeyboardAvoidingView>
+      </View>
     </SafeAreaView>
   );
 };

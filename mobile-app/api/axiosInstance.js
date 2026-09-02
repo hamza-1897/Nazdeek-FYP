@@ -19,16 +19,11 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
 api.interceptors.request.use(
   async (config) => {
-    try {
-      const token = await SecureStore.getItemAsync('userToken');
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (error) {
-      console.error('API Interceptor Token Error:', error);
+    const token = await SecureStore.getItemAsync('userToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -40,36 +35,38 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response?.data?.isExpired) &&
+      !originalRequest._retry
+    ) {
       originalRequest._retry = true;
 
       try {
         const storedRefreshToken = await SecureStore.getItemAsync('refreshToken');
-
-        if (!storedRefreshToken) {
-          throw new Error("No refresh token stored");
-        }
+        if (!storedRefreshToken) throw new Error('No refresh token');
 
         const refreshResponse = await axios.post(`${API_BASE_URL}/user-auth/refresh-token`, {
-          refreshToken: storedRefreshToken
+          refreshToken: storedRefreshToken,
         });
 
-        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.data;
+        const { accessToken, refreshToken: newRefreshToken } = refreshResponse.data;
 
-        if (newAccessToken) {
-          await SecureStore.setItemAsync('userToken', newAccessToken);
+        if (accessToken) {
+          await SecureStore.setItemAsync('userToken', accessToken);
           if (newRefreshToken) {
             await SecureStore.setItemAsync('refreshToken', newRefreshToken);
           }
 
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return api(originalRequest);
         }
       } catch (refreshError) {
-        console.log('Refresh token expired (7 days inactive), forcing logout...');
         await SecureStore.deleteItemAsync('userToken');
         await SecureStore.deleteItemAsync('refreshToken');
         await SecureStore.deleteItemAsync('userData');
+        
+        return Promise.reject(refreshError);
       }
     }
 

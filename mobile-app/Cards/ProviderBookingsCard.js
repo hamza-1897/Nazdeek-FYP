@@ -39,8 +39,8 @@ const ProviderBookingsCard = ({ item, onAccept, onReject, onComplete }) => {
 
      navigation.navigate('ChatScreen', {
         chatId: chatRoom._id,
-        senderId: item?.providerId,
-        senderModel: 'Provider',
+          currentUserId: item?.providerId,
+  currentUserModel: 'Provider',
         receiverId: userId,
         receiverModel: 'User',
         receiverName: userName,

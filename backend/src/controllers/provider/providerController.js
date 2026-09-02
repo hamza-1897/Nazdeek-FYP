@@ -182,6 +182,61 @@ const registerProvider = async (req, res) => {
   }
 };
 
+
+ const updateProviderProfile = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { 
+      name, 
+      phone, 
+      address, 
+      description, 
+      experience 
+    } = req.body;
+
+    const user = await userModel.findById(userId);
+    const provider = await providerModel.findOne({ userId });
+
+    if (!user || !provider) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Provider record not found." 
+      });
+    }
+
+    if (phone !== undefined) user.phone = phone;
+
+    if (name !== undefined) provider.businessName = name;
+    if (address !== undefined) provider.address = address;
+    if (description !== undefined) provider.description = description;
+    if (experience !== undefined) provider.experience = experience;
+     if (req.file) {
+      provider.providerImage = req.file.path;
+    }
+
+    await user.save();
+    await provider.save();
+
+    const updatedProvider = await providerModel.findOne({ userId })
+      .populate('categoryId', 'name')
+      .populate('userId', 'phone email name');
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully.",
+      providerInfo: updatedProvider,
+      userPhone: updatedProvider.userId.phone,
+    });
+
+  } catch (error) {
+    return res.status(500).json({ 
+      success: false, 
+      message: error.message || "Internal server error." 
+    });
+  }
+};
+
+
 const getPaymentDetails = async (req, res) => {
   try {
     const settings = await settingModel.findOne();
@@ -260,4 +315,4 @@ const submitPaymentSlip = async (req, res) => {
 };
 
 
-module.exports = {getProviderDashboardStats, registerProvider , getPaymentDetails,submitPaymentSlip };
+module.exports = {getProviderDashboardStats, updateProviderProfile,registerProvider , getPaymentDetails,submitPaymentSlip };

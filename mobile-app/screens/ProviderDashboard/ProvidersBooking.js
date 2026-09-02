@@ -84,9 +84,9 @@ const ProvidersBooking = ({ navigation }) => {
     <View className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      <View className="px-6 py-4 bg-white flex-row items-center justify-center border-b border-gray-100">
-        <Text className="text-xl font-bold text-gray-900 text-center">My Bookings</Text>
-      </View>
+      <View className="px-6 pt-10 pb-4 bg-white flex-row items-center justify-center border-b border-gray-100">
+  <Text className="text-xl font-bold text-gray-900 text-center">My Bookings</Text>
+</View>
 
       <View className="flex-row bg-white border-b border-gray-200">
         {['Active', 'Completed'].map((tab) => (
