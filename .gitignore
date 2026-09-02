@@ -14,7 +14,7 @@ admin-panel/.env
 # Firebase Secret Key
 /mobile-app/firebase-key.json.json
 /mobile-app/firebase-key.json
-
+/mobile-app/google-services.json
 
 
 # Auto-generated icons and splash images

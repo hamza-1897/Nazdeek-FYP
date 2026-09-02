@@ -3,7 +3,7 @@ const otpModel = require('../../models/otpModel')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/envConfig');
-const {generateToken, generateNewAccessToken} = require('../../lib/generateToken');
+const {generateToken,generateRefreshToken, generateNewAccessToken} = require('../../lib/generateToken');
 const checkPassword = require('../../lib/checkPass');
 const {forgotPasswordOTP} = require('../../lib/generateOTP')
 
@@ -37,7 +37,7 @@ if(!admin || !(await checkPassword(password, admin.password))){
    return res.status(400).json({message : "invalid credentials"})
 } else {
 
-        const accessToken = generateToken(admin._id, admin.role, res);
+        const accessToken = generateRefreshToken(admin._id, admin.role, res);
         res.status(200).json({_id: admin._id, name: admin.name, lastLogin: admin.lastLogin, message : "admin logged in successfully", accessToken})
     }
 
