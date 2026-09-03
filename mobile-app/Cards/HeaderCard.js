@@ -4,7 +4,7 @@ import { SafeAreaFrameContext } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-const HeaderCard = ({ userName }) => {
+const HeaderCard = ({ userName,hasUnread }) => {
 
   const getGreeting = () => {
   const currentHour = new Date().getHours();
@@ -35,11 +35,16 @@ const HeaderCard = ({ userName }) => {
           </Text>
         </View>
         
-        <TouchableOpacity className="bg-white/20 p-3 rounded-2xl border border-white/30"
-        onPress={()=> navigation.navigate('Notification')}
-        >
-          <Ionicons name="notifications" size={18} color="white" />
-        </TouchableOpacity>
+        <TouchableOpacity 
+  className="bg-white/20 p-3 rounded-2xl border border-white/30 relative"
+  onPress={() => navigation.navigate('Notification')}
+>
+  <Ionicons name="notifications" size={18} color="white" />
+  
+  {hasUnread && (
+    <View className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border border-white" />
+  )}
+</TouchableOpacity>
       </View>
 
       <View className="bg-white flex-row items-center px-4  rounded-2xl shadow-lg">

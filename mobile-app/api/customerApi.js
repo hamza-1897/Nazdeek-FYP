@@ -1,6 +1,17 @@
 import api from './axiosInstance';
 
 
+export const getDashboard = async () => {
+    try {
+        const response = await api.get('/customer/getDashboard');
+        console.log("Get Dashboard API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching dashboard:", error);
+        throw error;
+    }
+}
 export const updateProfile = async (customerId, data) => {
   try {
     const response = await api.post(`/customer/update-profile/${customerId}`, data, {
