@@ -43,6 +43,10 @@ const ReportScreen = ({ navigation, route }) => {
       Alert.alert('Error', 'User authentication details missing. Please log in again.');
       return;
     }
+    if(!details.trim()) {
+      Alert.alert('Details Required', 'Please provide additional details for the report.');
+      return;
+    }
 
     const apiPayload = {
       reporterId,

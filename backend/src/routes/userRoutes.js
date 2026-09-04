@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const {getUserProfile, updateUserProfile} = require('../controllers/users/userController');
+const {getUserProfile,getCustomerDashboard, updateUserProfile} = require('../controllers/users/userController');
 const upload = require('../config/cloudinary');
 
 router.post('/update-profile/:id', upload.single('profileImage'), updateUserProfile);
-
+router.get('/getDashboard',getCustomerDashboard);
 router.get('/myprofile/:id', getUserProfile);
 const {getMe} = require('../controllers/mutual/user-authController')
 router.get('/getMe',getMe)

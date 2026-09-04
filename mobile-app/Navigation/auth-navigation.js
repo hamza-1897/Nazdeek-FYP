@@ -31,6 +31,7 @@ import EditProfileScreen from '../screens/CustProfile section/EditProfileScreen'
 import ProviderProfileScreen from '../screens/ProviderScreens/ProviderProfileScreen';
 import LeaveReviewScreen from '../screens/ServicesScrens/LeaveReviewScreen';
 import HelpCenterScreen from '../screens/CustProfile section/HelpCenterScreen';
+import ViewPremiumProvidersScreen from '../screens/CustProfile section/ViewPremiumProviders';
 
 // --- PROVIDER FLOW SCREENS ---
 import ProviderTabNavigator from './ProviderTabNavigator';
@@ -88,6 +89,7 @@ const AuthNavigation = () => {
       <Stack.Screen name="ProviderProfile" component={ProviderProfileScreen} />
       <Stack.Screen name="LeaveReview" component={LeaveReviewScreen} />
       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+      <Stack.Screen name="ViewPremiumProviders" component={ViewPremiumProvidersScreen} />
 
       {/* 3. Provider Stack */}
       <Stack.Screen name="ProviderTabNavigator" component={ProviderTabNavigator} />

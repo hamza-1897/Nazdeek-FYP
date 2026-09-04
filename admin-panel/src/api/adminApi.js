@@ -195,17 +195,20 @@ export const getPendingPayemnts = async () =>{
     } 
 }
 
-export const updatePayments = async (providerId, status) =>{
-    try{
-    const response= await API.put(`/admin/providers/${providerId}/update-payment`,{status});
-     console.log("Get pending payments API response:", response.data);
-        return response.data;
-    }
-    catch (error) {
-        console.error("Error updating payments  :", error);
-        throw error;
-    } 
-}
+export const updatePayments = async (providerId, data) => {
+  try {
+    const response = await API.put(
+      `/admin/providers/${providerId}/update-payment`,
+      data
+    );
+
+    console.log("Update payment API response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating payments:", error);
+    throw error;
+  }
+};
 
 // category APIs
 export const getAllCategories = async () => {

@@ -2,12 +2,12 @@
   "expo": {
     "name": "Nazdeek",
     "slug": "mobile-app",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/naz-icon.jpeg",
+    "icon": "./assets/favicon.jpeg",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash-icon.jpeg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,7 +15,7 @@
       "supportsTablet": true
     },
    "android": {
-      "versionCode": 1,
+      "versionCode": 1.1,
       "gradleVersion": "8.13",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
