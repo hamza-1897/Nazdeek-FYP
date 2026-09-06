@@ -1,5 +1,7 @@
 const chatModel = require('../../models/chatModel');
 const messageModel = require('../../models/messageModel');
+const sendPushNotification = require('../../lib/sendPushNotification');
+const userModel = require('../../models/usersModel');
 
 const accessChat = async (req, res) => {
   try {
@@ -78,6 +80,8 @@ const sendMessage = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
+    const receiver = await userModel.findById(receiverId).select('name email fcmToken');
+
     const message = await messageModel.create({
       chatId,
       senderId,
@@ -95,8 +99,16 @@ const sendMessage = async (req, res) => {
     } 
   },
   { returnDocument: 'after' }
-);
-    
+);  
+
+
+    if (receiver && receiver.fcmToken) {
+      const title = 'New Message';
+      const body = text.length > 50 ? text.substring(0, 50) + '...' : text;
+      const extraData = { chatId, type: 'CHAT' };
+
+      await sendPushNotification(receiver.fcmToken, title, body, extraData);
+    }
 
     res.status(201).json(message);
   } catch (error) {
@@ -119,7 +131,7 @@ const sendMediaMessage = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'Media file is required' });
     }
-
+    const receiver = await userModel.findById(receiverId).select('name email fcmToken');
     const mediaUrl = req.file.path;
 
     const autoText = messageType === 'image' ? '📷 Photo' : '🎤 Voice message';
@@ -142,6 +154,13 @@ const sendMediaMessage = async (req, res) => {
       { returnDocument: 'after' }
     );
 
+    if (receiver && receiver.fcmToken) {
+      const title = 'New Message';
+      const body = messageType === 'image' ? '📷 Photo' : '🎤 Voice message';
+      const extraData = { chatId, type: 'CHAT' };
+
+      await sendPushNotification(receiver.fcmToken, title, body, extraData);
+    }
     res.status(201).json(message);
   } catch (error) {
     res.status(500).json({ message: error.message });
