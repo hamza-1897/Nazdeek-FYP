@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 
 const ChatItem = ({ chat, currentUserId, onPress }) => {
@@ -10,7 +11,20 @@ const ChatItem = ({ chat, currentUserId, onPress }) => {
   const recipientImage = recipient?.profileImage || recipient?.providerImage || null;
 
   const lastMsg = chat.lastMessage;
-  const lastMessageText = lastMsg?.text || 'No messages yet';
+
+  let lastMessageText = 'No messages yet';
+  let lastMessageIcon = null;
+  if (lastMsg) {
+    if (lastMsg.messageType === 'image') {
+      lastMessageText = 'Photo';
+      lastMessageIcon = 'image';
+    } else if (lastMsg.messageType === 'voice') {
+      lastMessageText = 'Voice message';
+      lastMessageIcon = 'mic';
+    } else {
+      lastMessageText = lastMsg.text || 'No messages yet';
+    }
+  }
 
   const timeToFormat = lastMsg?.createdAt || chat.lastMessageTime;
   const formattedTime = timeToFormat ? dayjs(timeToFormat).format('hh:mm A') : '';
@@ -62,16 +76,26 @@ const ChatItem = ({ chat, currentUserId, onPress }) => {
         </View>
 
         <View className="flex-row items-center justify-between">
-          <Text
-            className={`flex-1 text-sm ${
-              isUnread
-                ? 'font-extrabold text-slate-900'
-                : 'font-normal text-slate-500'
-            }`}
-            numberOfLines={1}
-          >
-            {lastMessageText}
-          </Text>
+          <View className="flex-1 flex-row items-center">
+            {lastMessageIcon && (
+              <Ionicons
+                name={lastMessageIcon}
+                size={13}
+                color={isUnread ? '#0f172a' : '#94a3b8'}
+                style={{ marginRight: 4 }}
+              />
+            )}
+            <Text
+              className={`flex-1 text-sm ${
+                isUnread
+                  ? 'font-extrabold text-slate-900'
+                  : 'font-normal text-slate-500'
+              }`}
+              numberOfLines={1}
+            >
+              {lastMessageText}
+            </Text>
+          </View>
 
           {isUnread && (
             <View className="w-2.5 h-2.5 bg-blue-600 rounded-full ml-2" />

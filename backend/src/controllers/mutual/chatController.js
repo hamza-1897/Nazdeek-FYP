@@ -69,6 +69,7 @@ const getMessages = async (req, res) => {
   }
 };
 
+
 const sendMessage = async (req, res) => {
   try {
     const { chatId, senderId, senderModel, receiverId, receiverModel , text } = req.body;
@@ -103,6 +104,50 @@ const sendMessage = async (req, res) => {
   }
 };
 
+const sendMediaMessage = async (req, res) => {
+  try {
+    const { chatId, senderId, senderModel, receiverId, receiverModel, messageType, duration } = req.body;
+
+    if (!chatId || !senderId || !senderModel || !receiverId || !receiverModel || !messageType) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    if (!['image', 'voice'].includes(messageType)) {
+      return res.status(400).json({ message: 'messageType must be either "image" or "voice"' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Media file is required' });
+    }
+
+    const mediaUrl = req.file.path;
+
+    const autoText = messageType === 'image' ? '📷 Photo' : '🎤 Voice message';
+
+    const message = await messageModel.create({
+      chatId,
+      senderId,
+      senderModel,
+      receiverId,
+      receiverModel,
+      messageType,
+      mediaUrl,
+      duration: messageType === 'voice' ? Number(duration) || 0 : 0,
+      text: autoText,
+    });
+
+    await chatModel.findByIdAndUpdate(
+      chatId,
+      { $set: { lastMessage: message._id } },
+      { returnDocument: 'after' }
+    );
+
+    res.status(201).json(message);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const markChatAsRead = async (req, res) => {
   try {
     const { chatId } = req.params;
@@ -124,5 +169,6 @@ module.exports = {
   fetchChats,
   getMessages,
   sendMessage,
+  sendMediaMessage,
 markChatAsRead
 };
