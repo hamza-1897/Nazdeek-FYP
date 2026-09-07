@@ -110,8 +110,52 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+const getAllProviders = async (req, res) => {
+  try {
+    const providers = await providerModel
+      .find({ verificationStatus: 'approved' })
+      .select('businessName  providerImage isPremium  categoryId createdAt')
+      .populate('categoryId', 'name')
+      .lean();
+
+    const sortedProviders = providers.sort((a, b) => {
+      const aPremium = a.isPremium || false;
+      const bPremium = b.isPremium || false;
+
+      if (aPremium === bPremium) {
+        
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+      return aPremium ? -1 : 1;
+    });
+
+    const formattedProviders = sortedProviders.map((provider) => ({
+      _id: provider._id,
+      name:  provider.businessName ,
+      category: provider.categoryId.name,
+      isPremium: provider.isPremium ,
+      image: provider.providerImage ,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      count: formattedProviders.length,
+      providers: formattedProviders
+    });
+
+  } catch (error) {
+    console.error('Error fetching all providers:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server Error fetching providers',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
     getUserProfile,
     getCustomerDashboard,
-    updateUserProfile
+    updateUserProfile,
+    getAllProviders
 }

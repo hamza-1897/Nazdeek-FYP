@@ -65,9 +65,13 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (userInfo?.fcmToken) {
-      registerForPushNotificationsAsync(userInfo?.fcmToken);
-    }
+   registerForPushNotificationsAsync(userInfo?.fcmToken)
+    .then((token) => {
+      if (token) {
+        console.log("Customer FCM Token generated/updated successfully:", token);
+      }
+    })
+    .catch((err) => console.error("Error registering notification:", err));
     if (isFocused) {
       fetchDashboardData();
     }

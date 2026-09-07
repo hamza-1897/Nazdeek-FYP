@@ -47,14 +47,6 @@ const HeaderCard = ({ userName,hasUnread }) => {
 </TouchableOpacity>
       </View>
 
-      <View className="bg-white flex-row items-center px-4  rounded-2xl shadow-lg">
-        <Ionicons name="search" size={22} color="#1a5ea1" />
-        <TextInput 
-          placeholder="Search services..." 
-          placeholderTextColor="#94a3b8"
-          className="ml-3 flex-1 text-gray-800 text-base"
-        />
-      </View>
     </View>
     
         

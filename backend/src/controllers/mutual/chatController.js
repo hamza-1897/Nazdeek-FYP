@@ -2,6 +2,7 @@ const chatModel = require('../../models/chatModel');
 const messageModel = require('../../models/messageModel');
 const sendPushNotification = require('../../lib/sendPushNotification');
 const userModel = require('../../models/usersModel');
+const providerModel = require('../../models/providerModel');
 
 const accessChat = async (req, res) => {
   try {
@@ -74,13 +75,25 @@ const getMessages = async (req, res) => {
 
 const sendMessage = async (req, res) => {
   try {
-    const { chatId, senderId, senderModel, receiverId, receiverModel , text } = req.body;
+    const { chatId, senderId, senderModel, receiverId, receiverModel, text } = req.body;
 
     if (!chatId || !senderId || !senderModel || !receiverId || !receiverModel || !text) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    const receiver = await userModel.findById(receiverId).select('name email fcmToken');
+    let receiver;
+    if (receiverModel === 'Provider') {
+      receiver = await providerModel.findById(receiverId).select('userId').populate('userId', 'name email fcmToken');
+    } else {
+      receiver = await userModel.findById(receiverId).select('name email fcmToken');
+    }
+
+    let sender;
+    if (senderModel === 'Provider') {
+      sender = await providerModel.findById(senderId).select('businessName providerImage');
+    } else {
+      sender = await userModel.findById(senderId).select('name profileImage');
+    }
 
     const message = await messageModel.create({
       chatId,
@@ -91,23 +104,33 @@ const sendMessage = async (req, res) => {
       text
     });
 
-   const updatedChat = await chatModel.findByIdAndUpdate(
-  chatId,
-  { 
-    $set: { 
-      lastMessage: message._id,
-    } 
-  },
-  { returnDocument: 'after' }
-);  
+    await chatModel.findByIdAndUpdate(
+      chatId,
+      { $set: { lastMessage: message._id } },
+      { returnDocument: 'after' }
+    );
 
+    const targetFcmToken = receiverModel === 'Provider' ? receiver?.userId?.fcmToken : receiver?.fcmToken;
 
-    if (receiver && receiver.fcmToken) {
-      const title = 'New Message';
+    if (targetFcmToken) {
+      const senderName = sender?.businessName || sender?.name || 'User';
+      const senderImage = sender?.profileImage || sender?.providerImage || '';
+
+      const title = senderName;
       const body = text.length > 50 ? text.substring(0, 50) + '...' : text;
-      const extraData = { chatId, type: 'CHAT' };
 
-      await sendPushNotification(receiver.fcmToken, title, body, extraData);
+      const extraData = {
+        chatId: chatId.toString(),
+        type: 'CHAT',
+        senderId: senderId.toString(),
+        senderModel: senderModel,
+        senderName: senderName,
+        senderImage: senderImage
+      };
+
+      await sendPushNotification(targetFcmToken, title, body, senderImage, extraData).catch(err =>
+        console.error('Push notification failed:', err)
+      );
     }
 
     res.status(201).json(message);
@@ -131,9 +154,22 @@ const sendMediaMessage = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'Media file is required' });
     }
-    const receiver = await userModel.findById(receiverId).select('name email fcmToken');
-    const mediaUrl = req.file.path;
 
+    let receiver;
+    if (receiverModel === 'Provider') {
+      receiver = await providerModel.findById(receiverId).select('userId').populate('userId', 'name email fcmToken');
+    } else {
+      receiver = await userModel.findById(receiverId).select('name email fcmToken');
+    }
+
+    let sender;
+    if (senderModel === 'Provider') {
+      sender = await providerModel.findById(senderId).select('businessName providerImage');
+    } else {
+      sender = await userModel.findById(senderId).select('name profileImage');
+    }
+
+    const mediaUrl = req.file.path;
     const autoText = messageType === 'image' ? '📷 Photo' : '🎤 Voice message';
 
     const message = await messageModel.create({
@@ -154,13 +190,29 @@ const sendMediaMessage = async (req, res) => {
       { returnDocument: 'after' }
     );
 
-    if (receiver && receiver.fcmToken) {
-      const title = 'New Message';
-      const body = messageType === 'image' ? '📷 Photo' : '🎤 Voice message';
-      const extraData = { chatId, type: 'CHAT' };
+    const targetFcmToken = receiverModel === 'Provider' ? receiver?.userId?.fcmToken : receiver?.fcmToken;
 
-      await sendPushNotification(receiver.fcmToken, title, body, extraData);
+    if (targetFcmToken) {
+      const senderName = sender?.businessName || sender?.name || 'User';
+      const senderImage = sender?.profileImage || sender?.providerImage || '';
+
+      const title = senderName;
+      const body = autoText;
+
+      const extraData = {
+        chatId: chatId.toString(),
+        type: 'CHAT',
+        senderId: senderId.toString(),
+        senderModel: senderModel,
+        senderName: senderName,
+        senderImage: senderImage
+      };
+
+      await sendPushNotification(targetFcmToken, title, body, senderImage, extraData).catch(err =>
+        console.error('Push notification failed:', err)
+      );
     }
+
     res.status(201).json(message);
   } catch (error) {
     res.status(500).json({ message: error.message });

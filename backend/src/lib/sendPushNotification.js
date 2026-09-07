@@ -5,9 +5,10 @@ const expo = new Expo();
  * @param {string} pushToken - Receiver's Expo Push Token
  * @param {string} title - Notification Title
  * @param {string} body - Notification Body Message
+ * @param {string} largeIcon - Large icon for the notification
  * @param {object} data - Extra custom data for screen navigation
  */
-const sendPushNotification = async (pushToken, title, body, data = {}) => {
+const sendPushNotification = async (pushToken, title, body, largeIcon, data = {}) => {
   if (!pushToken || !Expo.isExpoPushToken(pushToken)) {
     console.error(`Push token ${pushToken} is not a valid Expo push token`);
     return;
@@ -21,6 +22,7 @@ const sendPushNotification = async (pushToken, title, body, data = {}) => {
       body: body,
       data: data,
       priority: 'high',
+      largeIcon: largeIcon
     },
   ];
 
