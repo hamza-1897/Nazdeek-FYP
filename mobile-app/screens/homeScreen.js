@@ -143,10 +143,10 @@ const HomeScreen = ({ navigation }) => {
               {services.length > 0 ? (
                 services.map((item) => (
                   <ServiceCardItem
-                    key={item.id}
+                    key={item._id}
                     item={item}
                     onPress={() =>
-                      navigation.navigate('ViewDetailScreen', { serviceId: item.id })
+                      navigation.navigate('ViewDetail', { serviceId: item._id })
                     }
                   />
                 ))

@@ -1,41 +1,58 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const ServiceCardItem = ({ item, onPress }) => {
+  const imageUrl =
+    item?.serviceImages && item.serviceImages.length > 0
+      ? item.serviceImages[0]
+      : item?.image || 'https://via.placeholder.com/300';
+
   return (
     <TouchableOpacity
       activeOpacity={0.85}
       onPress={onPress}
-      className="bg-white rounded-2xl p-3 border border-slate-100 mb-3 flex-row  shadow-sm"
+      className="bg-white rounded-2xl mb-3.5 p-3 flex-row items-center border border-slate-100 shadow-xs"
     >
-      <Image
-        source={{ uri: item.image }}
-        className="w-22 h-22 rounded-xl bg-slate-100"
-      />
-      <View className="ml-3.5 flex-1 py-0.5">
-        <View className="bg-blue-50 self-start px-2 py-0.5 rounded-md mb-1">
-          <Text className="text-[10px] text-[#1a5ea1] font-bold uppercase tracking-wider">
-            {item.category}
+      <View className="w-24 h-24 rounded-xl overflow-hidden bg-slate-100 relative">
+        <Image
+          source={{ uri: imageUrl }}
+          className="w-full h-full"
+          resizeMode="cover"
+        />
+      </View>
+
+      <View className="flex-1 ml-3.5 justify-between py-0.5 h-24">
+        <View>
+          <View className="self-start bg-blue-50 px-2 py-0.5 rounded-md mb-1">
+            <Text className="text-[#1a5ea1] text-[10px] font-bold tracking-wide uppercase">
+              {item?.category || 'General'}
+            </Text>
+          </View>
+
+          <Text
+            numberOfLines={1}
+            className="text-slate-900 font-bold text-base tracking-tight"
+          >
+            {item?.title}
           </Text>
         </View>
 
-        <Text className="text-slate-800 font-bold text-sm" numberOfLines={1}>
-          {item.title}
-        </Text>
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center">
+            <Ionicons name="checkmark-circle" size={13} color="#16a34a" />
+            <Text className="text-slate-400 text-[11px] ml-1 font-medium">
+              Verified
+            </Text>
+          </View>
 
-        <View className="flex-row items-center mt-1">
-          <Ionicons name="star" size={12} color="#f59e0b" />
-          <Text className="text-slate-700 text-xs font-bold ml-1">{item.rating}</Text>
-          <Text className="text-slate-400 text-xs ml-1">({item.reviews} reviews)</Text>
-        </View>
-
-        <View className="flex-row items-center justify-between mt-2">
-          <Text className="text-slate-900 font-bold text-base">
-            Rs. {item.price}
-          </Text>
-          <View className="bg-[#1a5ea1] px-3 py-1 rounded-lg">
-            <Text className="text-white text-xs font-bold">Book</Text>
+          <View className="items-end">
+            <Text className="text-[9px] font-semibold text-slate-400 uppercase">
+              Starting
+            </Text>
+            <Text className="text-[#1a5ea1] font-extrabold text-sm">
+              PKR {item?.price}
+            </Text>
           </View>
         </View>
       </View>
