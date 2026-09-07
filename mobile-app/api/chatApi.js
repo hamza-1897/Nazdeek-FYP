@@ -50,6 +50,22 @@ export const sendMessage = async (apiPayload) => {
     }
 };
 
+export const sendMediaMessage = async (formData) => {
+    try {
+        const response = await api.post('/chat/send-media', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        console.log("Send Media Message API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error sending media message:", error);
+        throw error;
+    }
+};
+
 export const markRead = async (chatId,userId)=>{
 try {
      const response = await api.put(`/chat/markRead/${chatId}`, {userId});

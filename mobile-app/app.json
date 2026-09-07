@@ -14,8 +14,8 @@
     "ios": {
       "supportsTablet": true
     },
-   "android": {
-      "versionCode": 1.1,
+    "android": {
+      "versionCode": 2,
       "gradleVersion": "8.13",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
@@ -33,7 +33,13 @@
     "plugins": [
       "@react-native-community/datetimepicker",
       "expo-secure-store",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+  "expo-audio",
+  {
+    "microphonePermission": "Allow Nazdeek to access your microphone to record voice messages."
+  }
+]
     ],
     "extra": {
       "eas": {
