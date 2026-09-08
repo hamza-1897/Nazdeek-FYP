@@ -1694,3 +1694,142 @@
 {"_e":"env:load","_t":1788889780374,"mode":"development","files":[],"env":{}}
 {"_e":"devserver:start","_t":1788889781412,"mode":"development","web":true,"baseUrl":"","asyncRoutes":false,"routerRoot":"../..\\..\\app","serverComponents":false,"serverActions":false,"serverRendering":false,"apiRoutes":false,"exporting":false}
 {"_e":"metro:config","_t":1788889782777,"serverRoot":"../..\\..","projectRoot":"../..\\..","exporting":false,"flags":{"autolinkingModuleResolution":false,"serverActions":false,"serverComponents":false,"reactCompiler":false,"optimizeGraph":false,"treeshaking":false,"logbox":false}}
+{"_e":"metro:instantiate","_t":1788889797961,"atlas":false,"workers":3,"host":"::","port":8081}
+{"_e":"metro:bundling:started","_t":1788889817942,"id":"1","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1788889817943,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1788889817953,"id":"1","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1788889818053,"id":"1","progress":0.0625,"total":16,"current":4}
+{"_e":"metro:bundling:progress","_t":1788889818153,"id":"1","progress":0.0625,"total":72,"current":14}
+{"_e":"metro:bundling:progress","_t":1788889818258,"id":"1","progress":0.0625,"total":168,"current":19}
+{"_e":"metro:bundling:progress","_t":1788889818358,"id":"1","progress":0.07310013717421125,"total":270,"current":73}
+{"_e":"metro:bundling:progress","_t":1788889818465,"id":"1","progress":0.08336639555643721,"total":284,"current":82}
+{"_e":"metro:bundling:progress","_t":1788889818565,"id":"1","progress":0.09777722397415867,"total":323,"current":101}
+{"_e":"metro:bundling:progress","_t":1788889818665,"id":"1","progress":0.12551836734693875,"total":350,"current":124}
+{"_e":"metro:bundling:progress","_t":1788889818766,"id":"1","progress":0.1694223794042091,"total":379,"current":156}
+{"_e":"metro:bundling:progress","_t":1788889818868,"id":"1","progress":0.19041322314049586,"total":385,"current":168}
+{"_e":"metro:bundling:progress","_t":1788889819120,"id":"1","progress":0.19041322314049586,"total":395,"current":168}
+{"_e":"metro:bundling:progress","_t":1788889819224,"id":"1","progress":0.19041322314049586,"total":395,"current":169}
+{"_e":"metro:bundling:progress","_t":1788889819448,"id":"1","progress":0.19041322314049586,"total":396,"current":170}
+{"_e":"metro:bundling:progress","_t":1788889819549,"id":"1","progress":0.19209562905671632,"total":397,"current":174}
+{"_e":"metro:bundling:progress","_t":1788889819649,"id":"1","progress":0.2037362951722937,"total":401,"current":181}
+{"_e":"metro:bundling:progress","_t":1788889819749,"id":"1","progress":0.21717409746441702,"total":412,"current":192}
+{"_e":"metro:bundling:progress","_t":1788889819849,"id":"1","progress":0.23818136031684256,"total":418,"current":204}
+{"_e":"metro:bundling:progress","_t":1788889819949,"id":"1","progress":0.24534893877194514,"total":428,"current":212}
+{"_e":"metro:bundling:progress","_t":1788889820067,"id":"1","progress":0.26408179012345673,"total":432,"current":222}
+{"_e":"metro:bundling:progress","_t":1788889820167,"id":"1","progress":0.284593231911206,"total":478,"current":255}
+{"_e":"metro:bundling:progress","_t":1788889820267,"id":"1","progress":0.33707606748986707,"total":515,"current":299}
+{"_e":"metro:bundling:progress","_t":1788889820401,"id":"1","progress":0.3393345272881515,"total":515,"current":300}
+{"_e":"metro:bundling:progress","_t":1788889820552,"id":"1","progress":0.34027777777777785,"total":516,"current":301}
+{"_e":"metro:bundling:progress","_t":1788889820688,"id":"1","progress":0.34027777777777785,"total":518,"current":302}
+{"_e":"metro:bundling:progress","_t":1788889820812,"id":"1","progress":0.34027777777777785,"total":520,"current":303}
+{"_e":"metro:bundling:progress","_t":1788889820914,"id":"1","progress":0.34027777777777785,"total":540,"current":311}
+{"_e":"metro:bundling:progress","_t":1788889821014,"id":"1","progress":0.349961088972078,"total":546,"current":323}
+{"_e":"metro:bundling:progress","_t":1788889821115,"id":"1","progress":0.3566453298818247,"total":571,"current":341}
+{"_e":"metro:bundling:progress","_t":1788889821214,"id":"1","progress":0.3620196313819645,"total":595,"current":358}
+{"_e":"metro:bundling:progress","_t":1788889821329,"id":"1","progress":0.39673638050261434,"total":616,"current":388}
+{"_e":"metro:bundling:progress","_t":1788889821434,"id":"1","progress":0.39673638050261434,"total":628,"current":394}
+{"_e":"metro:bundling:progress","_t":1788889821534,"id":"1","progress":0.39673638050261434,"total":674,"current":404}
+{"_e":"metro:bundling:progress","_t":1788889821634,"id":"1","progress":0.39673638050261434,"total":675,"current":424}
+{"_e":"metro:bundling:progress","_t":1788889821752,"id":"1","progress":0.39673638050261434,"total":675,"current":425}
+{"_e":"metro:bundling:progress","_t":1788889821857,"id":"1","progress":0.4489978155469125,"total":685,"current":459}
+{"_e":"metro:bundling:progress","_t":1788889821960,"id":"1","progress":0.4502859297962366,"total":687,"current":461}
+{"_e":"metro:bundling:progress","_t":1788889822062,"id":"1","progress":0.4594045765828771,"total":689,"current":467}
+{"_e":"metro:bundling:progress","_t":1788889822161,"id":"1","progress":0.4942633771862885,"total":724,"current":509}
+{"_e":"metro:bundling:progress","_t":1788889822261,"id":"1","progress":0.5885347134040637,"total":743,"current":570}
+{"_e":"metro:bundling:progress","_t":1788889822365,"id":"1","progress":0.6344800390448166,"total":752,"current":599}
+{"_e":"metro:bundling:progress","_t":1788889822465,"id":"1","progress":0.6344800390448166,"total":852,"current":634}
+{"_e":"metro:bundling:progress","_t":1788889822565,"id":"1","progress":0.6344800390448166,"total":893,"current":687}
+{"_e":"metro:bundling:progress","_t":1788889822665,"id":"1","progress":0.6344800390448166,"total":917,"current":717}
+{"_e":"metro:bundling:progress","_t":1788889822783,"id":"1","progress":0.6344800390448166,"total":918,"current":718}
+{"_e":"metro:bundling:progress","_t":1788889822971,"id":"1","progress":0.6344800390448166,"total":918,"current":719}
+{"_e":"metro:bundling:progress","_t":1788889823239,"id":"1","progress":0.6344800390448166,"total":962,"current":735}
+{"_e":"metro:bundling:progress","_t":1788889823379,"id":"1","progress":0.6344800390448166,"total":964,"current":736}
+{"_e":"metro:bundling:progress","_t":1788889823479,"id":"1","progress":0.6710754004693398,"total":990,"current":811}
+{"_e":"metro:bundling:progress","_t":1788889823579,"id":"1","progress":0.6772427139252593,"total":1011,"current":832}
+{"_e":"metro:bundling:progress","_t":1788889823679,"id":"1","progress":0.6883089814834542,"total":1039,"current":862}
+{"_e":"metro:bundling:progress","_t":1788889823779,"id":"1","progress":0.6934005596698514,"total":1064,"current":886}
+{"_e":"metro:bundling:progress","_t":1788889823888,"id":"1","progress":0.7087290427257977,"total":1075,"current":905}
+{"_e":"metro:bundling:progress","_t":1788889824025,"id":"1","progress":0.7102961600865333,"total":1075,"current":906}
+{"_e":"metro:bundling:progress","_t":1788889824128,"id":"1","progress":0.7102961600865333,"total":1078,"current":906}
+{"_e":"metro:bundling:progress","_t":1788889824228,"id":"1","progress":0.730500364920695,"total":1108,"current":947}
+{"_e":"metro:bundling:progress","_t":1788889824331,"id":"1","progress":0.7495914127423823,"total":1140,"current":987}
+{"_e":"metro:bundling:progress","_t":1788889824471,"id":"1","progress":0.7511111111111112,"total":1140,"current":988}
+{"_e":"metro:bundling:progress","_t":1788889824572,"id":"1","progress":0.7677097505668934,"total":1155,"current":1012}
+{"_e":"metro:bundling:progress","_t":1788889824729,"id":"1","progress":0.8080131145742275,"total":1177,"current":1058}
+{"_e":"metro:bundling:progress","_t":1788889824836,"id":"1","progress":0.8110529735645154,"total":1197,"current":1078}
+{"_e":"metro:bundling:progress","_t":1788889824948,"id":"1","progress":0.8261799217054168,"total":1241,"current":1128}
+{"_e":"metro:bundling:progress","_t":1788889825049,"id":"1","progress":0.8333969629550223,"total":1263,"current":1153}
+{"_e":"metro:bundling:progress","_t":1788889825150,"id":"1","progress":0.8333969629550223,"total":1292,"current":1178}
+{"_e":"metro:bundling:progress","_t":1788889825250,"id":"1","progress":0.8604639117843618,"total":1340,"current":1243}
+{"_e":"metro:bundling:progress","_t":1788889825353,"id":"1","progress":0.8804376675984421,"total":1378,"current":1293}
+{"_e":"metro:bundling:progress","_t":1788889825454,"id":"1","progress":0.9022278142215581,"total":1396,"current":1326}
+{"_e":"metro:bundling:progress","_t":1788889825565,"id":"1","progress":0.9368804958725548,"total":1403,"current":1358}
+{"_e":"metro:bundling:progress","_t":1788889825667,"id":"1","progress":0.9368804958725548,"total":1413,"current":1362}
+{"_e":"metro:bundling:progress","_t":1788889825806,"id":"1","progress":0.9368804958725548,"total":1416,"current":1368}
+{"_e":"metro:bundling:progress","_t":1788889825933,"id":"1","progress":0.9419213296398892,"total":1425,"current":1383}
+{"_e":"metro:bundling:progress","_t":1788889826034,"id":"1","progress":0.9488152454735949,"total":1427,"current":1390}
+{"_e":"metro:bundling:progress","_t":1788889826211,"id":"1","progress":0.9501809383454245,"total":1427,"current":1391}
+{"_e":"metro:bundling:progress","_t":1788889826314,"id":"1","progress":0.9639918916318849,"total":1431,"current":1405}
+{"_e":"metro:bundling:progress","_t":1788889826420,"id":"1","progress":0.9750702327331885,"total":1435,"current":1417}
+{"_e":"metro:bundling:progress","_t":1788889826530,"id":"1","progress":0.9888966856161037,"total":1437,"current":1429}
+{"_e":"metro:bundling:failed","_t":1788889826620,"id":"1","message":"Unable to resolve \"../api/UserApi\" from \"screens\\profileScreen.js\"\n  4 | import { Ionicons } from '@expo/vector-icons';\n  5 | import { AuthContext } from '../context/AuthContext';\n> 6 | import {deleteAccount} from '../api/UserApi';\n    |                              ^\n  7 | const ProfileScreen = ({ navigation }) => {\n  8 |   const { userInfo, logout } = useContext(AuthContext);\n  9 |","importStack":"\u001b[1mImport stack:\u001b[22m\n\n\u001b[90m \u001b[39mscreens\\profileScreen.js\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"../api/UserApi\"\u001b[39m\n\n\u001b[90m \u001b[39mComponents\\AppTabs.js\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"../screens/profileScreen\"\u001b[39m\n\n\u001b[90m \u001b[39mNavigation\\auth-navigation.js\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"../Components/AppTabs\"\u001b[39m\n\n\u001b[90m \u001b[39mApp.js\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./Navigation/auth-navigation\"\u001b[39m\n\n\u001b[90m \u001b[39mindex.js\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./App\"\u001b[39m\n\n\u001b[90m \u001b[39m\n\u001b[90m |\u001b[39m \u001b[36mimport\u001b[39m \u001b[32m\"./index\"\u001b[39m\n","filename":null,"targetModuleName":"../api/UserApi","originModulePath":"screens\\profileScreen.js"}
+{"_e":"metro:bundling:started","_t":1788889857121,"id":"2","platform":"android","environment":null,"entry":"index.js"}
+{"_e":"metro:bundling:progress","_t":1788889857122,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1788889857132,"id":"2","progress":0,"total":1,"current":0}
+{"_e":"metro:bundling:progress","_t":1788889857232,"id":"2","progress":0.024488666161645595,"total":262,"current":41}
+{"_e":"metro:bundling:progress","_t":1788889857333,"id":"2","progress":0.1352886775003303,"total":348,"current":128}
+{"_e":"metro:bundling:progress","_t":1788889857434,"id":"2","progress":0.17740577741020794,"total":368,"current":155}
+{"_e":"metro:bundling:progress","_t":1788889857533,"id":"2","progress":0.21698078749360802,"total":468,"current":218}
+{"_e":"metro:bundling:progress","_t":1788889857633,"id":"2","progress":0.3169819002949205,"total":611,"current":344}
+{"_e":"metro:bundling:progress","_t":1788889857733,"id":"2","progress":0.39663986564683573,"total":678,"current":427}
+{"_e":"metro:bundling:progress","_t":1788889858169,"id":"2","progress":0.41326530612244905,"total":700,"current":450}
+{"_e":"metro:bundling:progress","_t":1788889858271,"id":"2","progress":0.4143007339813529,"total":710,"current":457}
+{"_e":"metro:bundling:progress","_t":1788889858372,"id":"2","progress":0.41600752050880935,"total":738,"current":476}
+{"_e":"metro:bundling:progress","_t":1788889858472,"id":"2","progress":0.5126110166936213,"total":764,"current":547}
+{"_e":"metro:bundling:progress","_t":1788889858572,"id":"2","progress":0.5126110166936213,"total":883,"current":608}
+{"_e":"metro:bundling:progress","_t":1788889858676,"id":"2","progress":0.5126110166936213,"total":896,"current":617}
+{"_e":"metro:bundling:progress","_t":1788889858776,"id":"2","progress":0.5268198865927106,"total":941,"current":683}
+{"_e":"metro:bundling:progress","_t":1788889858888,"id":"2","progress":0.6323721370498917,"total":962,"current":765}
+{"_e":"metro:bundling:progress","_t":1788889858990,"id":"2","progress":0.6323721370498917,"total":980,"current":773}
+{"_e":"metro:bundling:progress","_t":1788889859090,"id":"2","progress":0.7247320419213082,"total":1029,"current":876}
+{"_e":"metro:bundling:progress","_t":1788889859190,"id":"2","progress":0.7512173240160034,"total":1088,"current":943}
+{"_e":"metro:bundling:progress","_t":1788889859293,"id":"2","progress":0.8341988832453766,"total":1154,"current":1054}
+{"_e":"metro:bundling:progress","_t":1788889859393,"id":"2","progress":0.848256479062213,"total":1190,"current":1096}
+{"_e":"metro:bundling:progress","_t":1788889859494,"id":"2","progress":0.8706093912591052,"total":1240,"current":1157}
+{"_e":"metro:bundling:progress","_t":1788889859594,"id":"2","progress":0.9430830276882143,"total":1316,"current":1278}
+{"_e":"metro:bundling:progress","_t":1788889859694,"id":"2","progress":0.9649519154784745,"total":1414,"current":1389}
+{"_e":"metro:bundling:done","_t":1788889859932,"id":"2","total":1414,"ms":2810.6494}
+{"_e":"metro:client_log","_t":1788889872930,"level":"log","data":["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTcwYzY4ZmQzMTczZTM4NGJmMjVhYzUiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3ODg4MDcyNzIsImV4cCI6MTc4ODgwODE3Mn0.pR-g_hKHBbOWGxTvR64tbKVDekANuBF437a3XLeAMzc"]}
+{"_e":"metro:client_log","_t":1788889874152,"level":"log","data":["get ME API response:","{\"_id\": \"6a70c68fd3173e384bf25ac5\", \"address\": \"Rasul lokriii\", \"email\": \"hanjaa1897@gmail.com\", \"isRegistrationFree\": false, \"message\": \"User profile fetched successfully\", \"name\": \"Muhammad Hamza\", \"phone\": \"03410632835\", \"profileImage\": \"https://res.cloudinary.com/djyigw0bw/image/upload/v1786730271/Nazdeek_Uploads/smfxqqokjydxvkwczjrp.png\", \"providerInfo\": null, \"providerStatus\": null, \"role\": \"customer\"}"]}
+{"_e":"metro:client_log","_t":1788889876271,"level":"log","data":["Get Dashboard API response:","{\"hasUnreadNotifications\": false, \"providers\": [{\"_id\": \"6a68fd7dfe3db23cb04f5554\", \"businessName\": \"ACWorks\", \"categoryName\": \"Electrician\", \"isPremium\": true, \"providerImage\": \"https://res.cloudinary.com/djyigw0bw/image/upload/v1785265533/Nazdeek_Uploads/qhdgcwkbxwb98m8clfdg.jpg\"}, {\"_id\": \"6a980c1ac526103d4e617db8\", \"businessName\": \"Electric store\", \"categoryName\": \"Electrician\", \"isPremium\": false, \"providerImage\": \"https://res.cloudinary.com/djyigw0bw/image/upload/v1788349464/Nazdeek_Uploads/rylyffj9x11sltu5e8v1.jpg\"}, {\"_id\": \"6a97fd29569e46c1ecc37aa8\", \"businessName\": \"Ali Technician \", \"categoryName\": \"Technician\", \"isPremium\": false, \"providerImage\": \"https://res.cloudinary.com/djyigw0bw/image/upload/v1788345640/Nazdeek_Uploads/wtqzvifsqmtwikim8liu.jpg\"}], \"services\": [{\"__v\": 0, \"_id\": \"6a8fec54267d4ad7c0194b49\", \"categoryId\": [Object], \"createdAt\": \"2026-08-27T07:50:44.097Z\", \"description\": \"We do all kind of Electrician work.\", \"price\": 100, \"priceType\": \"hourly\", \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"electrician Work\"}], \"success\": true}"]}
+{"_e":"metro:client_log","_t":1788889877124,"level":"log","data":["Expo Push Token:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788889877175,"level":"log","data":["New token detected, updating backend..."]}
+{"_e":"metro:client_log","_t":1788889877358,"level":"log","data":["update Fcm Token API response:","{\"message\": \"FCM token already up to date\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1788889877411,"level":"log","data":["Customer FCM Token generated/updated successfully:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788889895070,"level":"log","data":["Expo Push Token:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788889895120,"level":"log","data":["New token detected, updating backend..."]}
+{"_e":"metro:client_log","_t":1788889895351,"level":"log","data":["update Fcm Token API response:","{\"message\": \"FCM token already up to date\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1788889895400,"level":"log","data":["Customer FCM Token generated/updated successfully:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788889910637,"level":"log","data":["Login API response:","{\"_id\": \"6a7f6752152083a4145100ea\", \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTdmNjc1MjE1MjA4M2E0MTQ1MTAwZWEiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3ODg4ODk5MTAsImV4cCI6MTc4ODg5MDgxMH0.Yehj0-ncb1uKPkWt_lYs1BPQc-itNvhedULtXIVMwaw\", \"address\": \"M.b.din\", \"email\": \"abt00986@gmail.com\", \"isRegistrationFree\": false, \"message\": \"User logged in successfully\", \"name\": \"Abu bakar\", \"phone\": \"03001246536\", \"profileImage\": \"https://res.cloudinary.com/djyigw0bw/image/upload/v1786816302/Nazdeek_Uploads/onzascpxnfvkjm10uesj.jpg\", \"providerInfo\": null, \"providerStatus\": null, \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTdmNjc1MjE1MjA4M2E0MTQ1MTAwZWEiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3ODg4ODk5MTAsImV4cCI6MTc4OTQ5NDcxMH0.iHBsninacnLaVNRriEmbJ23-j8Xr05w4hdQyMgJScB4\", \"role\": \"customer\"}"]}
+{"_e":"metro:client_log","_t":1788889910693,"level":"log","data":["Login successful response:","{\"_id\": \"6a7f6752152083a4145100ea\", \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTdmNjc1MjE1MjA4M2E0MTQ1MTAwZWEiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3ODg4ODk5MTAsImV4cCI6MTc4ODg5MDgxMH0.Yehj0-ncb1uKPkWt_lYs1BPQc-itNvhedULtXIVMwaw\", \"address\": \"M.b.din\", \"email\": \"abt00986@gmail.com\", \"isRegistrationFree\": false, \"message\": \"User logged in successfully\", \"name\": \"Abu bakar\", \"phone\": \"03001246536\", \"profileImage\": \"https://res.cloudinary.com/djyigw0bw/image/upload/v1786816302/Nazdeek_Uploads/onzascpxnfvkjm10uesj.jpg\", \"providerInfo\": null, \"providerStatus\": null, \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTdmNjc1MjE1MjA4M2E0MTQ1MTAwZWEiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3ODg4ODk5MTAsImV4cCI6MTc4OTQ5NDcxMH0.iHBsninacnLaVNRriEmbJ23-j8Xr05w4hdQyMgJScB4\", \"role\": \"customer\"}"]}
+{"_e":"metro:client_log","_t":1788889911995,"level":"log","data":["Expo Push Token:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788889912048,"level":"log","data":["New token detected, updating backend..."]}
+{"_e":"metro:client_log","_t":1788889912252,"level":"log","data":["Get Dashboard API response:","{\"hasUnreadNotifications\": false, \"providers\": [{\"_id\": \"6a68fd7dfe3db23cb04f5554\", \"businessName\": \"ACWorks\", \"categoryName\": \"Electrician\", \"isPremium\": true, \"providerImage\": \"https://res.cloudinary.com/djyigw0bw/image/upload/v1785265533/Nazdeek_Uploads/qhdgcwkbxwb98m8clfdg.jpg\"}, {\"_id\": \"6a980c1ac526103d4e617db8\", \"businessName\": \"Electric store\", \"categoryName\": \"Electrician\", \"isPremium\": false, \"providerImage\": \"https://res.cloudinary.com/djyigw0bw/image/upload/v1788349464/Nazdeek_Uploads/rylyffj9x11sltu5e8v1.jpg\"}, {\"_id\": \"6a97fd29569e46c1ecc37aa8\", \"businessName\": \"Ali Technician \", \"categoryName\": \"Technician\", \"isPremium\": false, \"providerImage\": \"https://res.cloudinary.com/djyigw0bw/image/upload/v1788345640/Nazdeek_Uploads/wtqzvifsqmtwikim8liu.jpg\"}], \"services\": [{\"__v\": 0, \"_id\": \"6a8fec54267d4ad7c0194b49\", \"categoryId\": [Object], \"createdAt\": \"2026-08-27T07:50:44.097Z\", \"description\": \"We do all kind of Electrician work.\", \"price\": 100, \"priceType\": \"hourly\", \"providerId\": [Object], \"serviceImages\": [Array], \"serviceName\": \"electrician Work\"}], \"success\": true}"]}
+{"_e":"metro:client_log","_t":1788889912711,"level":"log","data":["update Fcm Token API response:","{\"message\": \"FCM Token updated successfully\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1788889912766,"level":"log","data":["Customer FCM Token generated/updated successfully:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788889917791,"level":"log","data":["Expo Push Token:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788889917843,"level":"log","data":["New token detected, updating backend..."]}
+{"_e":"metro:client_log","_t":1788889917998,"level":"log","data":["update Fcm Token API response:","{\"message\": \"FCM token already up to date\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1788889918048,"level":"log","data":["Customer FCM Token generated/updated successfully:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788889927318,"level":"log","data":["Delete Account Error: ","[TypeError: undefined is not a function]"]}
+{"_e":"metro:client_log","_t":1788890049275,"level":"log","data":["Expo Push Token:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788890049323,"level":"log","data":["New token detected, updating backend..."]}
+{"_e":"metro:client_log","_t":1788890050133,"level":"log","data":["update Fcm Token API response:","{\"message\": \"FCM token already up to date\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1788890050189,"level":"log","data":["Customer FCM Token generated/updated successfully:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788890058374,"level":"log","data":["Expo Push Token:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788890058435,"level":"log","data":["New token detected, updating backend..."]}
+{"_e":"metro:client_log","_t":1788890059034,"level":"log","data":["update Fcm Token API response:","{\"message\": \"FCM token already up to date\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1788890059090,"level":"log","data":["Customer FCM Token generated/updated successfully:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1788890075134,"level":"log","data":["Delete Account API response:","{\"message\": \"Account deleted successfully\"}"]}
+{"_e":"metro:client_log","_t":1788890089512,"level":"log","data":["Login API error:","{\"message\": \"Invalid credentials\"}"]}
+{"_e":"metro:client_log","_t":1788890089555,"level":"log","data":["Login error:","{\"message\": \"Invalid credentials\"}"]}

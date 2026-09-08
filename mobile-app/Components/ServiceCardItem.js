@@ -3,10 +3,10 @@ import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const ServiceCardItem = ({ item, onPress }) => {
-  const imageUrl =
-    item?.serviceImages && item.serviceImages.length > 0
-      ? item.serviceImages[0]
-      : item?.image || 'https://via.placeholder.com/300';
+ const imageUrl =
+    (item?.serviceImages && item.serviceImages.length > 0 && item.serviceImages[0]) ||
+    item?.image ||
+    'https://via.placeholder.com/300';
 
   return (
     <TouchableOpacity

@@ -170,6 +170,9 @@ const ViewPremiumProviders = () => {
                   className={`mt-3 w-full py-2 rounded-xl items-center ${
                     isPremium ? 'bg-amber-500' : 'bg-[#1a5ea1]'
                   }`}
+                  onPress={() =>
+                    navigation.navigate('ProviderProfile', { providerId: item._id })
+                  }
                 >
                   <Text className="text-white font-bold text-xs">
                     View Profile
