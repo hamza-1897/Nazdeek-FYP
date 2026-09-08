@@ -314,5 +314,26 @@ const submitPaymentSlip = async (req, res) => {
   }
 };
 
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const provider = await providerModel.find({userId});
 
-module.exports = {getProviderDashboardStats, updateProviderProfile,registerProvider , getPaymentDetails,submitPaymentSlip };
+    if (!provider) {
+      return res.status(404).json({ success: false, message: 'Provider not found.' });
+    }
+
+    await serviceModel.deleteMany({ providerId: provider._id });
+    await bookingModel.deleteMany({ providerId: provider._id, status: { $nin: ['completed', 'cancelled', 'rejected'] } });
+    await reviewModel.deleteMany({ providerId: provider._id });
+    await notificationModel.deleteMany({ recipientId: provider._id });
+    await providerModel.findByIdAndDelete(provider._id);
+    await userModel.findByIdAndDelete(userId);
+    return res.status(200).json({ success: true, message: 'Account deleted successfully.' });
+  } catch (error) {
+    console.error('Delete Account Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error.', error: error.message });
+  }
+};
+
+module.exports = {getProviderDashboardStats, updateProviderProfile,registerProvider , getPaymentDetails,submitPaymentSlip, deleteAccount };

@@ -3,7 +3,7 @@ const router = express.Router();
 const upload = require('../config/cloudinary');
 
 
-const {getProviderDashboardStats, updateProviderProfile,registerProvider ,getPaymentDetails,submitPaymentSlip} = require('../controllers/provider/providerController')
+const {getProviderDashboardStats, updateProviderProfile,registerProvider ,getPaymentDetails,submitPaymentSlip,deleteAccount} = require('../controllers/provider/providerController')
 
 router.post('/dashboard',getProviderDashboardStats);
 
@@ -20,7 +20,7 @@ router.post(
 );
 
 router.post('/update-profile', upload.single('providerImage'),updateProviderProfile);
-
+router.delete('/delete-account',deleteAccount)
 // payment routes
 router.get('/payment',getPaymentDetails) ;
 router.post('/submit-payment', upload.single('paymentSlip'), submitPaymentSlip);
