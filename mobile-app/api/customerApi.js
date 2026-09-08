@@ -12,6 +12,18 @@ export const getDashboard = async () => {
         throw error;
     }
 }
+
+export const getAllProviders = async () => {
+    try {
+        const response = await api.get('/customer/providers');
+        console.log("Get All Providers API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching providers:", error);
+        throw error;
+    }
+};
 export const updateProfile = async (customerId, data) => {
   try {
     const response = await api.post(`/customer/update-profile/${customerId}`, data, {

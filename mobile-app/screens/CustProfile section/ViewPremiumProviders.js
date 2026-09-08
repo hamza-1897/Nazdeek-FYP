@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo,useEffect,useState } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
+import {getAllProviders} from '../../api/customerApi';
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 40) / 2;
 
@@ -70,12 +70,29 @@ const DUMMY_PROVIDERS = [
 const ViewPremiumProviders = () => {
   const navigation = useNavigation();
 
-  const sortedProviders = useMemo(() => {
-    return [...DUMMY_PROVIDERS].sort(
-      (a, b) => (b.isPremium ? 1 : 0) - (a.isPremium ? 1 : 0)
-    );
+  const [providers, setProviders] = useState([]);
+
+  useEffect(() => {
+    const fetchProviders = async () => {
+      try {
+        const data = await getAllProviders();
+        setProviders(data.providers);
+      } catch (error) {
+        console.error('Error fetching providers:', error);
+      }
+    };
+
+    fetchProviders();
   }, []);
 
+  const sortedProviders = useMemo(() => {
+    return [...providers].sort((a, b) => {
+      const aPremium = a.isPremium || false;
+      const bPremium = b.isPremium || false;
+      return bPremium - aPremium;
+    });
+  }, [providers]);
+  
   return (
     <SafeAreaView
       className="flex-1 bg-slate-100"

@@ -4,7 +4,7 @@
     "slug": "mobile-app",
     "version": "1.0.1",
     "orientation": "portrait",
-    "icon": "./assets/favicon.jpeg",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash-icon.jpeg",
@@ -19,10 +19,8 @@
       "gradleVersion": "8.13",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.hamzaaa.x1897.mobileapp",
       "googleServicesFile": "./google-services.json"
