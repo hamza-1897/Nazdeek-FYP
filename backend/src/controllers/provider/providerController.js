@@ -115,7 +115,9 @@ const registerProvider = async (req, res) => {
     const workImages = req.files?.['workImages'] 
       ? req.files['workImages'].map(f => f.path) 
       : [];
-
+    const selfieWithCnic = req.files?.['selfieWithCnic']
+      ? req.files['selfieWithCnic'][0].path
+      : null;
     let existingProvider = await providerModel.findOne({ userId });
 
     if (!businessName || !cnicNumber || !categoryId || (!providerImage && !existingProvider?.providerImage)) {
@@ -136,6 +138,7 @@ const registerProvider = async (req, res) => {
       if (providerImage) existingProvider.providerImage = providerImage;
       if (cnicImages.length > 0) existingProvider.cnicImages = cnicImages;
       if (workImages.length > 0) existingProvider.workImages = workImages;
+      if (selfieWithCnic) existingProvider.selfieWithCnic = selfieWithCnic;
 
       existingProvider.verificationStatus = 'pending';
       existingProvider.accountRejectionReason = null;
@@ -161,7 +164,8 @@ const registerProvider = async (req, res) => {
       categoryId,
       experience: Number(experience) || 0,
       verificationStatus: 'pending',
-      accountRejectionReason: null
+      accountRejectionReason: null,
+      selfieWithCnic
     });
 
     await newProvider.save();

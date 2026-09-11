@@ -31,6 +31,7 @@ const [loadingCategories, setLoadingCategories] = useState(true);
   const [profileImage, setProfileImage] = useState(null);
   const [cnicFront, setCnicFront] = useState(null);
   const [cnicBack, setCnicBack] = useState(null);
+  const [selfieWithCnic, setSelfieWithCnic] = useState(null);
   const [workImages, setWorkImages] = useState([]);
 
   const { userInfo } = useContext(AuthContext); 
@@ -76,6 +77,26 @@ const pickSingleImage = async (type) => {
     if (type === 'profile') setProfileImage(uri);
     if (type === 'cnicFront') setCnicFront(uri);
     if (type === 'cnicBack') setCnicBack(uri);
+  }
+};
+
+
+const captureSelfieWithCnic = async () => {
+  const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+  if (!permissionResult.granted) {
+    Alert.alert('Permission Required', 'Camera access is required to take this photo.');
+    return;
+  }
+
+  const result = await ImagePicker.launchCameraAsync({
+    mediaTypes: ['images'],
+    cameraType: ImagePicker.CameraType?.front, 
+    allowsEditing: false,
+    quality: 0.7,
+  });
+
+  if (!result.canceled && result.assets && result.assets[0].uri) {
+    setSelfieWithCnic(result.assets[0].uri);
   }
 };
 
@@ -134,6 +155,10 @@ const pickWorkImages = async () => {
       Alert.alert('Validation Error', 'Please upload both CNIC Front and Back images.');
       return;
     }
+    if (!selfieWithCnic) {
+      Alert.alert('Validation Error', 'Please take a selfie holding your CNIC. This helps us confirm the account belongs to you.');
+      return;
+    }
 
 try {
     setSubmitting(true);
@@ -155,7 +180,6 @@ try {
     formData.append('experience', experience);
     formData.append('address', address); 
 
-    // Helper function image object format karne ke liye
    const createImageObject = (uri, defaultName) => {
   const filename = uri.split('/').pop() || defaultName;
   const match = /\.(\w+)$/.exec(filename);
@@ -169,6 +193,9 @@ try {
     // CNIC Front and Back
     formData.append('cnicFront', createImageObject(cnicFront, 'cnic_front.jpg'));
     formData.append('cnicBack', createImageObject(cnicBack, 'cnic_back.jpg'));
+
+    // Selfie holding CNIC (identity verification)
+    formData.append('selfieWithCnic', createImageObject(selfieWithCnic, 'selfie_with_cnic.jpg'));
 
     //  Work Images (Multiple)
     if (workImages && workImages.length > 0) {
@@ -358,6 +385,29 @@ try {
             )}
           </TouchableOpacity>
         </View>
+
+        <Text className="text-base font-bold text-gray-800 mb-1">Selfie Holding Your CNIC</Text>
+        <Text className="text-xs text-gray-500 mb-3">
+          Take a live photo of yourself holding your CNIC next to your face. This confirms the account belongs to you and helps prevent fake registrations.
+        </Text>
+        <TouchableOpacity
+          onPress={captureSelfieWithCnic}
+          className="w-full h-44 border-2 border-dashed border-gray-300 rounded-lg justify-center items-center bg-gray-50 overflow-hidden mb-6"
+        >
+          {selfieWithCnic ? (
+            <Image source={{ uri: selfieWithCnic }} className="w-full h-full" resizeMode="cover" />
+          ) : (
+            <View className="items-center">
+              <Ionicons name="camera-outline" size={30} color="gray" />
+              <Text className="text-xs text-gray-500 mt-1">Tap to open camera</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+        {selfieWithCnic && (
+          <TouchableOpacity onPress={captureSelfieWithCnic} className="mb-6 -mt-4">
+            <Text className="text-xs text-[#1a5ea1] font-semibold">Retake photo</Text>
+          </TouchableOpacity>
+        )}
 
         <View className="mb-8">
           <View className="flex-row justify-between items-center mb-3">

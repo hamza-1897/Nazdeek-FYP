@@ -56,7 +56,10 @@ const providerSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  
+   selfieWithCnic: {
+    type: String,
+    default: null,
+  },
   verificationStatus: {
     type: String,
     enum: ['unsubmitted','pending', 'approved', 'rejected'],

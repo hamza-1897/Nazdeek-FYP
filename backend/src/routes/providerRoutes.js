@@ -13,7 +13,8 @@ router.post(
   upload.fields([
     { name: 'providerImage', maxCount: 1 }, 
     { name: 'cnicFront', maxCount: 1 },     
-    { name: 'cnicBack', maxCount: 1 },     
+    { name: 'cnicBack', maxCount: 1 }, 
+     { name: 'selfieWithCnic', maxCount: 1 },    
     { name: 'workImages', maxCount: 5 }     
   ]),
   registerProvider
