@@ -5,6 +5,7 @@ const serviceModel = require('../../models/serviceModel');
 const bookingModel = require('../../models/bookingModel');
 const reviewModel = require('../../models/reviewModel');
 const notificationModel = require('../../models/notificationModel');
+const { syncSubscriptionStatus } = require('../../lib/SubscriptionUtils');
 const mongoose = require('mongoose');
 
 const getProviderDashboardStats = async (req, res) => {
@@ -18,6 +19,8 @@ const getProviderDashboardStats = async (req, res) => {
       });
     }
 
+    await syncSubscriptionStatus(provider);
+    
     const [
       totalServices,
       activeBookings,
@@ -276,13 +279,14 @@ const getPaymentDetails = async (req, res) => {
 // payment setup
 const submitPaymentSlip = async (req, res) => {
   try {
-    const { providerId, paymentType, planId, planTitle } = req.body;
+    const userId = req.user.userId;
+    const {  paymentType, planId, planTitle } = req.body;
 
     if (!req.file || !req.file.path) {
       return res.status(400).json({ success: false, message: 'Payment slip image is required.' });
     }
 
-    const provider = await providerModel.findById(providerId);
+    const provider = await providerModel.findOne({ userId });
     if (!provider) {
       return res.status(404).json({ success: false, message: 'Provider profile not found.' });
     }
@@ -321,7 +325,7 @@ const submitPaymentSlip = async (req, res) => {
 const deleteAccount = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const provider = await providerModel.find({userId});
+    const provider = await providerModel.findOne({userId});
 
     if (!provider) {
       return res.status(404).json({ success: false, message: 'Provider not found.' });

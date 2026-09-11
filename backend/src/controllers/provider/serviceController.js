@@ -1,6 +1,7 @@
 const serviceModel = require("../../models/serviceModel");
 const providerModel = require("../../models/providerModel");
 const categoryModel = require("../../models/categoryModel");
+const { FREE_TIER_SERVICE_LIMIT, syncSubscriptionStatus, isCurrentlyPremium } = require("../../lib/SubscriptionUtils");
 
 const createService = async (req, res) => {
   try {
@@ -22,6 +23,26 @@ const createService = async (req, res) => {
       });
     }
 
+    const provider = await providerModel.findById(providerId);
+      if (!provider) {
+        return res.status(404).json({
+          success: false,
+          message: "Provider profile not found."
+        });
+      }
+       await syncSubscriptionStatus(provider);
+ 
+      if (!isCurrentlyPremium(provider)) {
+        const existingServiceCount = await serviceModel.countDocuments({ providerId });
+ 
+        if (existingServiceCount >= FREE_TIER_SERVICE_LIMIT) {
+          return res.status(403).json({
+            success: false,
+            message: `Free plan providers can list up to ${FREE_TIER_SERVICE_LIMIT} services. Upgrade to Premium for unlimited listings, or delete an existing service to add a new one.`,
+            code: "SERVICE_LIMIT_REACHED"
+          });
+        }
+      }
     const serviceImagesUrls = files.map(file => file.path);
 
     const newService = new serviceModel({

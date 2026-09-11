@@ -4,7 +4,7 @@ const reportModel = require('../../models/reportModel');
 const reviewModel = require('../../models/reviewModel');
 const serviceModel = require('../../models/serviceModel');
 const categoryModel = require('../../models/categoryModel')
-
+const settingModel = require('../../models/settingModel');
 //get all user
 const getAllUsers = async (req,res) => {
     try {
@@ -139,19 +139,23 @@ const updatePayment = async (req, res) => {
         const planId = provider.subscriptionDetails?.planId || 'monthly';
         const now = new Date();
         let expiryDate = new Date();
-
+        const settings = await settingModel.findOne();
         if (planId === 'monthly') {
           expiryDate.setMonth(now.getMonth() + 1);
+          provider.subscriptionDetails.amount = settings?.feeConfig?.monthlyPremiumPrice || 0;
         } else if (planId === 'quarterly') {
           expiryDate.setMonth(now.getMonth() + 3);
+          provider.subscriptionDetails.amount = settings?.feeConfig?.quarterlyPremiumPrice || 0;
         } else if (planId === 'yearly') {
           expiryDate.setFullYear(now.getFullYear() + 1);
+          provider.subscriptionDetails.amount = settings?.feeConfig?.yearlyPremiumPrice || 0;
         }
 
         provider.isPremium = true;
         provider.subscriptionDetails.status = 'active';
         provider.subscriptionDetails.activatedAt = now;
         provider.subscriptionDetails.expiresAt = expiryDate;
+       
 
         provider.markModified('subscriptionDetails');
       }
@@ -168,8 +172,7 @@ const updatePayment = async (req, res) => {
       }
     }
 
-    // Clear active pending slip details
-    provider.paymentDetails = {
+   provider.paymentDetails = {
       paymentType: null,
       paymentSlip: null,
       submittedAt: null

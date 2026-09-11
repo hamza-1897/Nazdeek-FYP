@@ -128,8 +128,10 @@ const SelectPlanScreen = ({ navigation }) => {
             <Text className="text-gray-400 text-sm text-center py-4">No plans available.</Text>
           ) : (
             plans.map((plan) => {
-              const isSelected = selectedPlan?.id === plan.id || selectedPlan?._id === plan._id;
-              return (
+const isSelected = selectedPlan && (
+  (plan._id && selectedPlan._id === plan._id) || 
+  (plan.id && selectedPlan.id === plan.id)
+);              return (
                 <TouchableOpacity
                   key={plan.id || plan._id}
                   onPress={() => setSelectedPlan(plan)}

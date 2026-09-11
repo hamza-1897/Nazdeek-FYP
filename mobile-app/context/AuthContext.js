@@ -52,6 +52,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Taza User aur Provider State ko Sync & Persist karne ke liye:
+  const updateUserState = async (updatedData) => {
+    try {
+      setUserInfo(updatedData);
+      setProviderInfo(updatedData.providerInfo || null);
+      await SecureStore.setItemAsync('userData', JSON.stringify(updatedData));
+    } catch (error) {
+      console.error("Error updating user state:", error);
+    }
+  };
+
   const updateProviderDetails = async (newProviderInfo, newStatus = 'pending') => {
     const updatedUser = {
       ...userInfo,
@@ -64,16 +75,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateProviderInfo = (updatedProvider) => {
-  setProviderInfo(updatedProvider);
-};
-
-
-const updateUserInfo = (updatedUser) => {
-  setUserInfo(prev => ({
-    ...prev,
-    ...updatedUser
-  }));
-};
+    setProviderInfo(updatedProvider);
+  };
 
   const logout = async () => {
     setUserToken(null);
@@ -94,9 +97,9 @@ const updateUserInfo = (updatedUser) => {
         userInfo,
         providerInfo,
         setUserInfo,
-        updateUserInfo,
         login,
         logout,
+        updateUserState, // Export added here
         updateProviderInfo,
         updateProviderDetails,
         isLoading,
