@@ -13,6 +13,18 @@ export const getDashboard = async () => {
     }
 }
 
+
+export const deleteAccount = async ()=>{
+    try{
+        const response = await api.delete('/customer/delete-account');
+        console.log("Delete Account API response:", response.data);
+        return response.data;
+    }catch(error){
+        console.error("Error deleting account:", error.response ? error.response.data : error);
+        throw error.response ? error.response.data : error;
+    }
+}
+
 export const getAllProviders = async () => {
     try {
         const response = await api.get('/customer/providers');

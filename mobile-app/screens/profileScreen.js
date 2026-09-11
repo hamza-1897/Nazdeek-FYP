@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Image, TouchableOpacity, StatusBar, Alert } fro
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '../context/AuthContext';
-
+import {deleteAccount} from '../api/customerApi';
 const ProfileScreen = ({ navigation }) => {
   const { userInfo, logout } = useContext(AuthContext);
 
@@ -23,6 +23,32 @@ const ProfileScreen = ({ navigation }) => {
       <Ionicons name="chevron-forward" size={20} color="#cbd5e1" />
     </TouchableOpacity>
   );
+
+  const handleDelete = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await deleteAccount();
+              await logout();
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }], 
+              });
+            } catch (error) {
+              console.log("Delete Account Error: ", error);
+            }
+          }
+        }
+      ]
+    );
+  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -85,6 +111,14 @@ const ProfileScreen = ({ navigation }) => {
             title="Help Center" 
             onPress={() => navigation.navigate('HelpCenter')}
           />
+
+       <TouchableOpacity 
+            className="flex-row items-center py-4 mt-4"
+            onPress={handleDelete}
+          >
+            <Ionicons name="trash-outline" size={22} color="#ef4444" />
+            <Text className="ml-4 text-red-500 font-bold text-base">Delete Account</Text>
+          </TouchableOpacity>
           
           <TouchableOpacity 
             className="flex-row items-center py-4 mt-4"

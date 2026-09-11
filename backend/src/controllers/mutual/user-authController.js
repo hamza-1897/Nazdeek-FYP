@@ -4,6 +4,7 @@ const providerModel = require('../../models/providerModel');
 const categoryModel = require('../../models/categoryModel');
 const settingModel = require('../../models/settingModel'); 
 
+const {resendOTP} = require('../../lib/generateOTP');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/envConfig');
@@ -130,6 +131,9 @@ const forgotOTP = async (req, res) => {
   }
 }
 
+const resendOTPController = async (req, res) => {
+  await resendOTP(req, res);
+}
 // Password Reset - OTP Verification
 const verifyForgotOTP = async (req,res) => {
     const {email , otp} = req.body;
@@ -291,4 +295,16 @@ const updateFcmToken = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
-module.exports = {registerUser,updateFcmToken,verifySignUPOTP ,getMe, userLogin, userLogout, forgotOTP,verifyForgotOTP, updateRole, resetPassword,refreshAccessToken};
+module.exports = {
+  registerUser,
+  updateFcmToken,
+  verifySignUPOTP ,
+  getMe,
+  userLogin,
+  userLogout,
+  forgotOTP,
+  resendOTPController,
+  verifyForgotOTP,
+  updateRole,
+  resetPassword,
+  refreshAccessToken};

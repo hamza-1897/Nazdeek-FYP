@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView, StatusBar, Alert, 
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker'; 
 import { AuthContext } from '../../context/AuthContext';
-import {updateProvider} from '../../api/ProviderApi'
+import { updateProvider } from '../../api/ProviderApi';
 
 const EditProfileProvider = ({ navigation }) => {
-  const { providerInfo,updateUserInfo,updateProviderInfo, userInfo } = useContext(AuthContext);
+  const { providerInfo, updateUserInfo, updateProviderInfo, userInfo } = useContext(AuthContext);
 
   const [name, setName] = useState(providerInfo?.businessName || '');
   const [contact, setContact] = useState(userInfo?.phone || '');
@@ -15,17 +15,19 @@ const EditProfileProvider = ({ navigation }) => {
   const [cnicNumber, setCnicNumber] = useState(providerInfo?.cnicNumber || '');
   const [profileCreatedAt, setProfileCreatedAt] = useState(providerInfo?.createdAt || '');
   const [description, setDescription] = useState(providerInfo?.description || '');
-  const [experience, setExperience] = useState(  providerInfo?.experience != null ? String(providerInfo.experience) : '');
+  const [experience, setExperience] = useState(providerInfo?.experience != null ? String(providerInfo.experience) : '');
   const [isPremium, setIsPremium] = useState(providerInfo?.isPremium || false);
   const [regFee, setRegFee] = useState(providerInfo?.registrationFee || '');
   const [profileImage, setProfileImage] = useState(providerInfo?.providerImage || '');
 
-  const subscriptionDetails = providerInfo?.subscriptionDetails || {
-    title: 'N/A',
-    amount: 0,
-    status: 'none',
-    activatedAt: null,
-    expiresAt: null
+  const rawSub = providerInfo?.subscriptionDetails;
+
+  const subscriptionDetails = {
+   title: rawSub?.planTitle || rawSub?.title || 'No Active Plan',
+    amount: rawSub?.amount && rawSub.amount > 0 ? rawSub.amount : (rawSub?.price || 0),
+    status: rawSub?.status || 'none',
+    activatedAt: rawSub?.activatedAt || null,
+    expiresAt: rawSub?.expiresAt || null,
   };
 
   const [isEditable, setIsEditable] = useState(false);
@@ -51,84 +53,71 @@ const EditProfileProvider = ({ navigation }) => {
     }
   };
 
-const handleUpdateOrEdit = async () => {
-  if (!isEditable) {
-    setIsEditable(true);
-    return;
-  }
-
-  try {
- 
-
-    const formData = new FormData();
-
-   
-
-    if (name) {
-      formData.append('name', String(name).trim());
+  const handleUpdateOrEdit = async () => {
+    if (!isEditable) {
+      setIsEditable(true);
+      return;
     }
 
-    if (contact) {
-      formData.append('phone', String(contact).trim());
-    }
+    try {
+      const formData = new FormData();
 
-    if (address) {
-      formData.append('address', String(address).trim());
-    }
-
-    if (description) {
-      formData.append('description', String(description).trim());
-    }
-
-    if (experience !== undefined && experience !== null) {
-      formData.append('experience', String(experience).trim());
-    }
-
-  
-
-    if (profileImage && typeof profileImage === 'string') {
-
-      if (profileImage.startsWith('file://')) {
-
-        const filename = profileImage.split('/').pop() || 'profile.jpg';
-        const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : 'image/jpeg';
-
-        formData.append('providerImage', {
-          uri: profileImage,
-          name: filename,
-          type: type,
-        });
-
+      if (name) {
+        formData.append('name', String(name).trim());
       }
 
-    }
+      if (contact) {
+        formData.append('phone', String(contact).trim());
+      }
 
-   
+      if (address) {
+        formData.append('address', String(address).trim());
+      }
 
-    const response = await updateProvider(formData);
+      if (description) {
+        formData.append('description', String(description).trim());
+      }
 
-    if (response?.success) {
-      Alert.alert("Success", "Profile updated successfully!");
-      updateProviderInfo(response?.providerInfo);
+      if (experience !== undefined && experience !== null) {
+        formData.append('experience', String(experience).trim());
+      }
+
+      if (profileImage && typeof profileImage === 'string') {
+        if (profileImage.startsWith('file://')) {
+          const filename = profileImage.split('/').pop() || 'profile.jpg';
+          const match = /\.(\w+)$/.exec(filename);
+          const type = match ? `image/${match[1]}` : 'image/jpeg';
+
+          formData.append('providerImage', {
+            uri: profileImage,
+            name: filename,
+            type: type,
+          });
+        }
+      }
+
+      const response = await updateProvider(formData);
+
+      if (response?.success) {
+        Alert.alert("Success", "Profile updated successfully!");
+        updateProviderInfo(response?.providerInfo);
         updateUserInfo({
-    phone: response.userPhone
-  });
-      setIsEditable(false);
+          phone: response.userPhone
+        });
+        setIsEditable(false);
+      }
+
+    } catch (error) {
+      console.log(" Update Profile Error:", error);
+
+      Alert.alert(
+        "Error",
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to update profile."
+      );
     }
-
-  } catch (error) {
-
-    console.log(" Update Profile Error:", error);
-
-    Alert.alert(
-      "Error",
-      error?.response?.data?.message ||
-      error?.message ||
-      "Failed to update profile."
-    );
-  }
-};
+  };
 
   return (
     <KeyboardAvoidingView 
@@ -321,14 +310,14 @@ const handleUpdateOrEdit = async () => {
             <View className="flex-row justify-between items-center mb-3">
               <Text className="text-gray-600 text-sm font-medium">Plan Title:</Text>
               <Text className="text-[#1a5ea1] font-bold text-base">
-                {subscriptionDetails.title || 'No Active Plan'}
+                {subscriptionDetails.title}
               </Text>
             </View>
 
             <View className="flex-row justify-between items-center mb-3">
               <Text className="text-gray-600 text-sm font-medium">Subscription Amount:</Text>
               <Text className="text-gray-900 font-semibold text-sm">
-                Rs. {subscriptionDetails.amount || 0}
+                Rs. {subscriptionDetails.amount}
               </Text>
             </View>
 
@@ -336,7 +325,7 @@ const handleUpdateOrEdit = async () => {
               <Text className="text-gray-600 text-sm font-medium">Status:</Text>
               <View className={`px-2.5 py-0.5 rounded-full ${subscriptionDetails.status === 'active' ? 'bg-green-100' : 'bg-gray-200'}`}>
                 <Text className={`text-xs font-bold capitalize ${subscriptionDetails.status === 'active' ? 'text-green-700' : 'text-gray-600'}`}>
-                  {subscriptionDetails.status || 'None'}
+                  {subscriptionDetails.status}
                 </Text>
               </View>
             </View>

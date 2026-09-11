@@ -5,6 +5,7 @@ const serviceModel = require('../../models/serviceModel');
 const bookingModel = require('../../models/bookingModel');
 const reviewModel = require('../../models/reviewModel');
 const notificationModel = require('../../models/notificationModel');
+const { syncSubscriptionStatus } = require('../../lib/SubscriptionUtils');
 const mongoose = require('mongoose');
 
 const getProviderDashboardStats = async (req, res) => {
@@ -18,6 +19,8 @@ const getProviderDashboardStats = async (req, res) => {
       });
     }
 
+    await syncSubscriptionStatus(provider);
+    
     const [
       totalServices,
       activeBookings,
@@ -115,7 +118,9 @@ const registerProvider = async (req, res) => {
     const workImages = req.files?.['workImages'] 
       ? req.files['workImages'].map(f => f.path) 
       : [];
-
+    const selfieWithCnic = req.files?.['selfieWithCnic']
+      ? req.files['selfieWithCnic'][0].path
+      : null;
     let existingProvider = await providerModel.findOne({ userId });
 
     if (!businessName || !cnicNumber || !categoryId || (!providerImage && !existingProvider?.providerImage)) {
@@ -136,6 +141,7 @@ const registerProvider = async (req, res) => {
       if (providerImage) existingProvider.providerImage = providerImage;
       if (cnicImages.length > 0) existingProvider.cnicImages = cnicImages;
       if (workImages.length > 0) existingProvider.workImages = workImages;
+      if (selfieWithCnic) existingProvider.selfieWithCnic = selfieWithCnic;
 
       existingProvider.verificationStatus = 'pending';
       existingProvider.accountRejectionReason = null;
@@ -161,7 +167,8 @@ const registerProvider = async (req, res) => {
       categoryId,
       experience: Number(experience) || 0,
       verificationStatus: 'pending',
-      accountRejectionReason: null
+      accountRejectionReason: null,
+      selfieWithCnic
     });
 
     await newProvider.save();
@@ -272,13 +279,14 @@ const getPaymentDetails = async (req, res) => {
 // payment setup
 const submitPaymentSlip = async (req, res) => {
   try {
-    const { providerId, paymentType, planId, planTitle } = req.body;
+    const userId = req.user.userId;
+    const {  paymentType, planId, planTitle } = req.body;
 
     if (!req.file || !req.file.path) {
       return res.status(400).json({ success: false, message: 'Payment slip image is required.' });
     }
 
-    const provider = await providerModel.findById(providerId);
+    const provider = await providerModel.findOne({ userId });
     if (!provider) {
       return res.status(404).json({ success: false, message: 'Provider profile not found.' });
     }
@@ -314,5 +322,26 @@ const submitPaymentSlip = async (req, res) => {
   }
 };
 
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const provider = await providerModel.findOne({userId});
 
-module.exports = {getProviderDashboardStats, updateProviderProfile,registerProvider , getPaymentDetails,submitPaymentSlip };
+    if (!provider) {
+      return res.status(404).json({ success: false, message: 'Provider not found.' });
+    }
+
+    await serviceModel.deleteMany({ providerId: provider._id });
+    await bookingModel.deleteMany({ providerId: provider._id, status: { $nin: ['completed', 'cancelled', 'rejected'] } });
+    await reviewModel.deleteMany({ providerId: provider._id });
+    await notificationModel.deleteMany({ recipientId: provider._id });
+    await providerModel.findByIdAndDelete(provider._id);
+    await userModel.findByIdAndDelete(userId);
+    return res.status(200).json({ success: true, message: 'Account deleted successfully.' });
+  } catch (error) {
+    console.error('Delete Account Error:', error);
+    return res.status(500).json({ success: false, message: 'Server error.', error: error.message });
+  }
+};
+
+module.exports = {getProviderDashboardStats, updateProviderProfile,registerProvider , getPaymentDetails,submitPaymentSlip, deleteAccount };

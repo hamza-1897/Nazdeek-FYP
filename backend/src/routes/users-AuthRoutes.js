@@ -1,8 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const {registerUser,verifySignUPOTP ,userLogin ,resetPassword,forgotOTP,verifyForgotOTP,userLogout,updateRole, refreshAccessToken} = require('../controllers/mutual/user-authController');
-
+const {registerUser,verifySignUPOTP ,userLogin ,resetPassword,forgotOTP,verifyForgotOTP,userLogout,updateRole,resendOTPController ,refreshAccessToken} = require('../controllers/mutual/user-authController');
 router.post('/register', registerUser);
 router.post('/verify-otp', verifySignUPOTP);
 router.post('/login', userLogin);
@@ -12,5 +11,5 @@ router.post('/verify-forgot-otp', verifyForgotOTP);
 router.post('/reset-password', resetPassword);
 router.post('/update-role/:id', updateRole);
 router.post('/refresh-token', refreshAccessToken);
-
+router.post('/resend-otp', resendOTPController);
 module.exports = router;

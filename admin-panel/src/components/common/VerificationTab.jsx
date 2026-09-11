@@ -15,6 +15,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
     experience,
     description,
     cnicImages = [],
+    selfieWithCnic = null,
     workImages = [],
     verificationStatus,
     status: fallbackStatus,
@@ -150,15 +151,15 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
+           <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <h3 className="text-base font-bold text-gray-800 mb-4">Verification Documents</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <p className="text-xs font-medium text-gray-500 mb-2">CNIC Document Images</p>
             {cnicImages.length > 0 ? (
               <div className="flex gap-2 flex-wrap">
                 {cnicImages.map((imgUrl, index) => (
-                  <a key={index} href={imgUrl} target="_blank" rel="noreferrer" className="w-full md:w-48">
+                  <a key={index} href={imgUrl} target="_blank" rel="noreferrer" className="w-full">
                     <img 
                       src={imgUrl} 
                       alt={`CNIC Document ${index + 1}`} 
@@ -171,7 +172,27 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
               <p className="text-xs text-gray-400">No CNIC images uploaded.</p>
             )}
           </div>
-
+ 
+          <div>
+            <p className="text-xs font-medium text-gray-500 mb-2">
+              Selfie Holding CNIC
+              <span className="ml-1.5 text-[10px] text-amber-600 font-semibold">(compare face + CNIC)</span>
+            </p>
+            {selfieWithCnic ? (
+              <a href={selfieWithCnic} target="_blank" rel="noreferrer" className="block">
+                <img 
+                  src={selfieWithCnic} 
+                  alt="Selfie holding CNIC" 
+                  className="w-full h-44 object-cover rounded-lg border-2 border-amber-200 hover:opacity-90 transition-all cursor-pointer"
+                />
+              </a>
+            ) : (
+              <p className="text-xs text-rose-500 font-medium">
+                Not submitted — verify manually before approving.
+              </p>
+            )}
+          </div>
+ 
           <div>
             <p className="text-xs font-medium text-gray-500 mb-2">Work Portfolio / Work Images</p>
             {workImages.length > 0 ? (

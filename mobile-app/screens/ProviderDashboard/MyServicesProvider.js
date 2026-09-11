@@ -87,6 +87,29 @@ const MyServicesProvider = ({ navigation }) => {
       .includes(searchQuery.toLowerCase())
   );
 
+  const handleAddServicePress = () => {
+  const isFreeUser = !providerInfo?.isPremium;
+  const currentServiceCount = services.length; 
+
+  if (isFreeUser && currentServiceCount >= 1) {
+    
+    Alert.alert(
+      "Upgrade to Premium",
+      "Free plan par aap sirf 1 service list kar sakte hain. Mazeed services add karne ke liye Premium package buy karein.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Upgrade Now", 
+          onPress: () => navigation.navigate("SelectPlanScreen") 
+        }
+      ]
+    );
+    return;
+  }
+
+  navigation.navigate("CreateService");
+};
+
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
       <StatusBar barStyle="dark-content" backgroundColor="#f8fafc" />
@@ -102,7 +125,7 @@ const MyServicesProvider = ({ navigation }) => {
           </View>
 
           <TouchableOpacity 
-            onPress={() => navigation.navigate('CreateService')}
+            onPress={handleAddServicePress}
             className="bg-[#1a5ea1] w-12 h-12 rounded-2xl items-center justify-center shadow-md shadow-blue-500/20"
           >
             <Ionicons name="add" size={26} color="white" />
@@ -154,7 +177,7 @@ const MyServicesProvider = ({ navigation }) => {
               
               {!searchQuery && !loading && (
                 <TouchableOpacity 
-                  onPress={() => navigation.navigate('CreateService')}
+                  onPress={handleAddServicePress}
                   className="mt-5 bg-[#1a5ea1] px-5 py-3 rounded-2xl shadow-sm"
                 >
                   <Text className="text-white font-bold text-xs">+ Create New Service</Text>

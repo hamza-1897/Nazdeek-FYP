@@ -6,7 +6,7 @@ import { getMe } from '../api/authApi';
 import { handleProviderRouting } from '../Navigation/handleProviderRouting';
 
 const SplashScreen = ({ navigation }) => {
-  const { userToken, updateUserState } = useContext(AuthContext);
+  const { userToken,updateProviderInfo, updateUserState } = useContext(AuthContext);
   const progressAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -41,6 +41,7 @@ const SplashScreen = ({ navigation }) => {
               accountRejectionReason: data.providerInfo?.accountRejectionReason || null
             };
             updateUserState(userObj);
+            updateProviderInfo(data.providerInfo || null);
           }
 
           if (data.role === 'customer') {

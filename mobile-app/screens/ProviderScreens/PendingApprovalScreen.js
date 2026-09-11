@@ -63,10 +63,10 @@ const PendingApprovalScreen = ({ navigation }) => {
 
         <View className="space-y-2">
           <Text className="text-xs text-gray-600">
-            • Admin will verify your nick and work portfolio.
+            • Admin will verify your data and work portfolio.
           </Text>
           <Text className="text-xs text-gray-600">
-            • When the status changes, you will be redirected to the dashboard.
+            • When approved, you will be able to upload registration Fee slip.
           </Text>
         </View>
       </View>

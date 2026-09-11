@@ -33,14 +33,16 @@ const HomeScreen = ({ navigation }) => {
       const response = await getDashboard();
 
       if (response && response.success) {
-        const formattedProviders = (response.providers || []).map((p) => ({
-          _id: p._id,
-          id: p._id,
-          name: p.businessName,
-          category: p.categoryName,
-          image: p.providerImage,
-          isPremium: p.isPremium,
-        }));
+      const formattedProviders = (response.providers || [])
+          .map((p) => ({
+            _id: p._id,
+            id: p._id,
+            name: p.businessName,
+            category: p.categoryName,
+            image: p.providerImage,
+            isPremium: p.isPremium || false,
+          }))
+          .sort((a, b) => (b.isPremium === a.isPremium ? 0 : b.isPremium ? 1 : -1));
 
         const formattedServices = (response.services || []).map((s) => ({
           _id: s._id,
@@ -50,7 +52,11 @@ const HomeScreen = ({ navigation }) => {
           price: s.price || s.rate || 'N/A',
           rating: s.rating || '4.8',
           reviews: s.reviewsCount || '10+',
-          image: s.image || s.serviceImage || 'https://via.placeholder.com/300',
+         serviceImages: s.serviceImages || [],
+        image:
+          s.serviceImages && s.serviceImages.length > 0
+            ? s.serviceImages[0]
+            : s.image || s.serviceImage || 'https://via.placeholder.com/300',
         }));
 
         setProviders(formattedProviders);
@@ -112,7 +118,7 @@ const HomeScreen = ({ navigation }) => {
               <View className="px-5 mt-4">
                 <View className="flex-row justify-between items-center mb-1">
                   <Text className="text-slate-900 font-bold text-base">
-                    Premium Providers
+                    Featured Providers
                   </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('ViewPremiumProviders')}

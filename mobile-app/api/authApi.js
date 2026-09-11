@@ -80,6 +80,18 @@ export const resetPassword = async (email, newPassword) => {
     }
 };
 
+export const resendOTP = async (email, name, purpose) => {
+    try {
+        const response = await api.post('/user-auth/resend-otp', { email, name, purpose });
+        console.log("Resend OTP API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.log("Resend OTP API error:", error.response ? error.response.data : error);
+        throw error.response ? error.response.data : error;
+    }
+};
+
 export const getMe = async ()=>{
     try{
         const response  = await api.get('/customer/getMe');

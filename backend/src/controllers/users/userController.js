@@ -153,9 +153,21 @@ const getAllProviders = async (req, res) => {
   }
 };
 
+const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    await userModel.findByIdAndDelete(userId);
+    return res.status(200).json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    return res.status(500).json({ message: "Server error while deleting account", error: error.message });
+  }
+};
+
 module.exports = {
     getUserProfile,
     getCustomerDashboard,
     updateUserProfile,
-    getAllProviders
+    getAllProviders,
+    deleteAccount
 }

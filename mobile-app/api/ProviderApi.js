@@ -40,6 +40,16 @@ export const updateProvider = async (formData) => {
   }
 };
 
+export const deleteAccount = async ()=>{
+try{
+  const response = await api.delete('/provider/delete-account');
+return response.data;
+}catch(error){
+  console.error("Error creating service:", error);
+        throw error;
+}
+}
+
 export const createService = async (formData) => {
     try {
         const response = await api.post('/provider/create-service', formData, {
