@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { verifySignupOTP, verifyForgotOTP } from '../api/authApi';
+import { verifySignupOTP, verifyForgotOTP, resendOTP } from '../api/authApi';
 
 const VerifyOTP = ({ navigation, route }) => {
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
   const [timer, setTimer] = useState(120);
   const [isResendActive, setIsResendActive] = useState(false);
 
@@ -14,6 +15,7 @@ const VerifyOTP = ({ navigation, route }) => {
   const flow = route.params.flow; 
   const phone = route.params?.phone;
   const role = route.params?.role;
+  const name = route.params?.name; 
 
   useEffect(() => {
     let interval = null;
@@ -28,11 +30,24 @@ const VerifyOTP = ({ navigation, route }) => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const handleResendOTP = () => {
-    if (!isResendActive) return;
-    setTimer(120);
-    setIsResendActive(false);
-    alert("OTP has been resent to your email.");
+  const handleResendOTP = async () => {
+    if (!isResendActive || resending) return;
+
+    setResending(true);
+    try {
+      const purpose = flow === 'forgotPassword' ? 'forgot-password' : 'signup';
+      const data = await resendOTP(email, name, purpose);
+
+      alert(data.message || "OTP has been resent to your email.");
+      setTimer(120);
+      setIsResendActive(false);
+      setCode('');
+    } catch (error) {
+      console.log("Resend OTP error:", error);
+      alert(error.message || "Could not resend OTP. Please try again.");
+    } finally {
+      setResending(false);
+    }
   };
 
   const formatTime = (seconds) => {
@@ -40,15 +55,6 @@ const VerifyOTP = ({ navigation, route }) => {
     const secs = seconds % 60;
     return `${mins < 10 ? '0' : ''}${mins} : ${secs < 10 ? '0' : ''}${secs}`;
   };
-
-  const checkOtp = () => {
-    if(code.length !== 6){
-      alert("Please enter a valid 6-digit OTP.");
-      return false;
-    }
-    alert(`OTP entered: ${code}`);
-    return true;
-  }
 
   const handleVerifyOTP = async () => {
     if(code.length !== 6){
@@ -131,13 +137,19 @@ const VerifyOTP = ({ navigation, route }) => {
 
         <TouchableOpacity 
           onPress={handleResendOTP}
-          disabled={!isResendActive}
+          disabled={!isResendActive || resending}
           className={`flex-row items-center justify-center w-full py-2.5 rounded-xl border ${isResendActive ? 'border-[#1a5ea1] bg-white' : 'border-gray-200 bg-gray-50'}`}
         >
-          <Ionicons name="time-outline" size={18} color={isResendActive ? "#1a5ea1" : "#9ca3af"} style={{ marginRight: 6 }} />
-          <Text className={`font-semibold text-sm ${isResendActive ? 'text-[#1a5ea1]' : 'text-gray-400'}`}>
-            Resend OTP
-          </Text>
+          {resending ? (
+            <ActivityIndicator size="small" color="#1a5ea1" />
+          ) : (
+            <>
+              <Ionicons name="time-outline" size={18} color={isResendActive ? "#1a5ea1" : "#9ca3af"} style={{ marginRight: 6 }} />
+              <Text className={`font-semibold text-sm ${isResendActive ? 'text-[#1a5ea1]' : 'text-gray-400'}`}>
+                Resend OTP
+              </Text>
+            </>
+          )}
         </TouchableOpacity>
       </View>
 
