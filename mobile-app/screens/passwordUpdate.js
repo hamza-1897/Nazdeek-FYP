@@ -17,7 +17,10 @@ const PasswordUpdated = ({ navigation }) => {
 
       <TouchableOpacity 
         className="bg-[#1a5ea1] w-full py-4 rounded-2xl flex-row justify-center items-center"
-        onPress={() => navigation.replace('Login')}
+        onPress={() =>  navigation.reset({
+  index: 0,
+  routes: [{ name: 'Login' }],
+})}
       >
         <Text className="text-white text-lg font-bold mr-2">Back to Login</Text>
         <Ionicons name="arrow-forward" size={20} color="white" />

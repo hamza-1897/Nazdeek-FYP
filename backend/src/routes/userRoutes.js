@@ -37,4 +37,7 @@ router.get('/getSupportDetails',getPublicSettings)
 const {updateFcmToken} = require('../controllers/mutual/user-authController');
 router.post('/update-fcmToken',updateFcmToken)
 
+const {getCities} = require('../controllers/mutual/cityController');
+router.get('/cities',getCities)
+
 module.exports = router;
