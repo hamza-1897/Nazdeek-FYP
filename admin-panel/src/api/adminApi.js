@@ -258,3 +258,53 @@ export const deleteCategory = async (categoryId) => {
         throw error;
     }
 };
+
+
+// city APIs
+export const getAllCities = async () => {
+    try {
+        const response = await API.get('/admin/getAllCities');
+        console.log("Get All Cities API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching all cities:", error);
+        throw error;
+    }
+};
+ 
+export const addCity = async (formData) => {
+    try {
+        const response = await API.post('/admin/addCity', formData);
+        console.log("Add City API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error adding city:", error);
+        throw error;
+    }
+};
+ 
+export const editCity = async (cityId, formData) => {
+    try {
+        const response = await API.put(`/admin/editCity/${cityId}`, formData);
+        console.log("Edit City API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error editing city:", error);
+        throw error;
+    }
+};
+ 
+export const deleteCity = async (cityId) => {
+    try {
+        const response = await API.delete(`/admin/deleteCity/${cityId}`);
+        console.log("Delete City API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error deleting city:", error);
+        throw error;
+    }
+};
