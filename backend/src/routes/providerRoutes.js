@@ -53,4 +53,7 @@ router.get('/getAllCategory',getCategories)
 const {getPremiumPlans} = require('../controllers/mutual/supportController')
 router.get('/getPremiumPlans',getPremiumPlans);
 
+ 
+const {getCities} = require('../controllers/mutual/cityController')
+router.get('/getAllCities', getCities)
 module.exports = router;

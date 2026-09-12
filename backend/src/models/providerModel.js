@@ -56,6 +56,11 @@ const providerSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+    city: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'City',
+    default: null,
+  },
    selfieWithCnic: {
     type: String,
     default: null,

@@ -17,13 +17,6 @@ export const PromoBanner = ({ onPressBanner }) => {
           Verified Plumbers, Electricians & Technicians
         </Text>
 
-        <TouchableOpacity
-          onPress={onPressBanner}
-          activeOpacity={0.9}
-          className="mt-4 bg-white px-5 py-2.5 rounded-xl self-start"
-        >
-          <Text className="text-[#1a5ea1] font-bold text-xs">Explore More</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );

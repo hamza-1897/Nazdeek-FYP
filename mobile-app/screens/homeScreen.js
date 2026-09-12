@@ -129,8 +129,8 @@ const HomeScreen = ({ navigation }) => {
 
                 <PremiumProvidersSection
                   providers={providers}
-                  onSelectProvider={(id) =>
-                    navigation.navigate('ProviderProfile', { id })
+                  onSelectProvider={(_id) =>
+                    navigation.navigate('ProviderProfile', { providerId: _id })
                   }
                 />
               </View>

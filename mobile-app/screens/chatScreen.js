@@ -35,6 +35,14 @@ const ChatScreen = ({ route, navigation }) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const flatListRef = useRef(null);
 
+  const isProvider = receiverModel === 'Provider';
+
+  const handleProfilePress = () => {
+    if (isProvider && receiverId) {
+      navigation.navigate('ProviderProfile', { providerId: receiverId });
+    }
+  };
+
   useEffect(() => {
     const showSub = Keyboard.addListener(
       Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
@@ -161,7 +169,6 @@ const ChatScreen = ({ route, navigation }) => {
     }
   };
 
-  
   const uploadMedia = async ({ uri, mimeType, fileName, messageType, duration }) => {
     const tempId = Date.now().toString();
 
@@ -237,6 +244,8 @@ const ChatScreen = ({ route, navigation }) => {
         receiverName={receiverName}
         receiverImage={receiverImage}
         onBack={() => navigation.goBack()}
+        onPressProfile={handleProfilePress}
+        isProvider={isProvider}
       />
 
       <View style={{ flex: 1, paddingBottom: keyboardHeight, backgroundColor: '#f8fafc' }}>

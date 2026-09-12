@@ -47,4 +47,10 @@ router.post('/addCategory', addCategory);
 router.put('/editCategory/:categoryId', editCategory);
 router.delete('/deleteCategory/:categoryId', deleteCategory);
 
+//city
+const { getAllCities, addCity, editCity, deleteCity } = require('../controllers/admin/cityController');
+router.get('/getAllCities', getAllCities);
+router.post('/addCity', addCity);
+router.put('/editCity/:cityId', editCity);
+router.delete('/deleteCity/:cityId', deleteCity);
 module.exports = router;

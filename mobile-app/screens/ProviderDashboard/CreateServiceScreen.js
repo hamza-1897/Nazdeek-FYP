@@ -15,7 +15,6 @@ const CreateServiceScreen = ({ navigation }) => {
   const [images, setImages] = useState([]); // Up to 3 image URIs
   const [loading, setLoading] = useState(false);
 
-  // Pick multiple images (Max 3) - Simple selection without cropping
   const pickImages = async () => {
     if (images.length >= 3) {
       Alert.alert("Limit Reached", "You can only select up to 3 images.");
@@ -43,7 +42,6 @@ const CreateServiceScreen = ({ navigation }) => {
     }
   };
 
-  // Remove single image from array
   const removeImage = (indexToRemove) => {
     setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
@@ -100,10 +98,9 @@ const CreateServiceScreen = ({ navigation }) => {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 mt-6 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      {/* Header */}
       <View className="px-6 py-4 flex-row items-center justify-between border-b border-gray-100">
         <TouchableOpacity onPress={() => navigation.goBack()} className="p-1">
           <Ionicons name="chevron-back" size={24} color="#111827" />
@@ -114,7 +111,6 @@ const CreateServiceScreen = ({ navigation }) => {
 
       <ScrollView className="flex-1 px-6 mt-4" showsVerticalScrollIndicator={false}>
         
-        {/* Images Picker Section */}
         <View className="mb-6">
           <View className="flex-row justify-between items-center mb-2">
             <Text className="text-gray-700 font-semibold">Service Images ({images.length}/3)</Text>
@@ -153,7 +149,6 @@ const CreateServiceScreen = ({ navigation }) => {
           </ScrollView>
         </View>
 
-        {/* Title */}
         <View className="mb-5">
           <Text className="text-gray-700 font-semibold mb-1">Service Title</Text>
           <TextInput 
@@ -165,7 +160,6 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Pricing Type */}
         <View className="mb-5">
           <Text className="text-gray-700 font-semibold mb-2">Pricing Type</Text>
           <View className="flex-row gap-3">
@@ -210,7 +204,6 @@ const CreateServiceScreen = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Price */}
         <View className="mb-5">
           <Text className="text-gray-700 font-semibold mb-1">
             {priceType === 'hourly' ? 'Hourly Rate (Rs)' : 'Base Price (Rs)'}
@@ -225,7 +218,6 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Description */}
         <View className="mb-8">
           <Text className="text-gray-700 font-semibold mb-1">Description</Text>
           <TextInput 
@@ -240,7 +232,6 @@ const CreateServiceScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Submit Button */}
         <TouchableOpacity 
           disabled={loading}
           className={`bg-[#1a5ea1] py-4 rounded-xl items-center mb-10 shadow-sm ${loading ? 'opacity-70' : 'active:opacity-90'}`}

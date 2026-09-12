@@ -13,6 +13,17 @@ export const getDashboard = async () => {
     }
 }
 
+export const getAvailableFilters = async () => {
+    try {
+        const response = await api.get('/customer/available-filters');
+        console.log("Get Available Filters API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching available filters:", error);
+        throw error;
+    }
+};
 
 export const deleteAccount = async ()=>{
     try{

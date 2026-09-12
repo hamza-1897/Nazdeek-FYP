@@ -2,11 +2,18 @@ const serviceModel = require('../../models/serviceModel');
 const providerModel = require('../../models/providerModel');
 const reviewModel = require('../../models/reviewModel');
 const userModel = require('../../models/usersModel')
+const categoryModel = require('../../models/categoryModel');
+const cityModel = require('../../models/cityModel');
+
 
 const getAllServices = async (req, res) => {
   try {
     const services = await serviceModel.find().select('_id serviceName price  priceType serviceImages providerId')
-    .populate('providerId', 'businessName address')
+    .populate({
+      path: 'providerId',
+      select: 'businessName address city',
+      populate: { path: 'city', select: 'name' }
+    })
     .populate('categoryId', 'name');
     res.status(200).json({ 
       success: true, 
@@ -19,6 +26,34 @@ const getAllServices = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+
+
+const getAvailableFilters = async (req, res) => {
+  try {
+    const approvedProviders = await providerModel
+      .find({ verificationStatus: 'approved' })
+      .select('categoryId city')
+      .lean();
+ 
+    const categoryIds = [...new Set(
+      approvedProviders.map(p => p.categoryId?.toString()).filter(Boolean)
+    )];
+    const cityIds = [...new Set(
+      approvedProviders.map(p => p.city?.toString()).filter(Boolean)
+    )];
+ 
+    const [categories, cities] = await Promise.all([
+      categoryModel.find({ _id: { $in: categoryIds }, isActive: true }).select('name'),
+      cityModel.find({ _id: { $in: cityIds }, isActive: true }).select('name'),
+    ]);
+ 
+    res.status(200).json({ success: true, categories, cities });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server Error", error: error.message });
+  }
+};
+ 
 
 const getServiceById = async (req, res) => {
   try {
@@ -113,5 +148,6 @@ const getProviderbyId = async (req, res) => {
 module.exports = {
   getAllServices,
   getServiceById,
+  getAvailableFilters,
   getProviderbyId
 };

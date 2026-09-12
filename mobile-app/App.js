@@ -28,8 +28,8 @@ export default function App() {
 });
 
     return () => {
-      if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
+     if (responseListener.current && typeof responseListener.current.remove === 'function') {
+        responseListener.current.remove();
       }
     };
   }, []);

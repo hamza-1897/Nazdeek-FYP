@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import {getAllCategories , registerProviderApi} from '../../api/ProviderApi'
+import {getAllCategories ,getAllCities, registerProviderApi} from '../../api/ProviderApi'
 import { AuthContext } from '../../context/AuthContext';
 
 
@@ -33,7 +33,11 @@ const [loadingCategories, setLoadingCategories] = useState(true);
   const [cnicBack, setCnicBack] = useState(null);
   const [selfieWithCnic, setSelfieWithCnic] = useState(null);
   const [workImages, setWorkImages] = useState([]);
-
+  const [cities, setCities] = useState([]);
+const [selectedCity, setSelectedCity] = useState(null);
+const [loadingCities, setLoadingCities] = useState(true);
+ 
+ 
   const { userInfo } = useContext(AuthContext); 
 
   const fetchCategories = async () => {
@@ -52,9 +56,26 @@ const [loadingCategories, setLoadingCategories] = useState(true);
     setLoadingCategories(false);
   }
 };
+const fetchCities = async () => {
+  try {
+    setLoadingCities(true);
+    const res = await getAllCities();
+    const data = res?.data ? res.data : res;
+ 
+    if (data?.success) {
+      setCities(data.cities);
+    }
+  } catch (error) {
+    console.log('Cities Fetch Error:', error);
+    Alert.alert('Error', 'Unable to load available cities.');
+  } finally {
+    setLoadingCities(false);
+  }
+};
 
 useEffect(() => {
   fetchCategories();
+  fetchCities();
 }, []);
 
 
@@ -139,6 +160,11 @@ const pickWorkImages = async () => {
       Alert.alert('Validation Error', 'Please select a service category.');
       return;
     }
+      if (!selectedCity) {
+      Alert.alert('Validation Error', 'Please select your city.');
+      return;
+    }
+ 
     if (!profileImage) {
       Alert.alert('Validation Error', 'Please select a profile picture.');
       return;
@@ -176,6 +202,7 @@ try {
     formData.append('businessName', businessName);
     formData.append('cnicNumber', cnicNumber);
     formData.append('categoryId', selectedCategory._id);
+     formData.append('city', selectedCity._id);
     formData.append('description', bio);
     formData.append('experience', experience);
     formData.append('address', address); 
@@ -326,6 +353,48 @@ try {
       })}
     </ScrollView>
   )}
+</View>
+
+  
+<View className="mb-4">
+  <Text className="text-sm font-bold text-gray-800 mb-2">Select Your City</Text>
+ 
+  {loadingCities ? (
+    <View className="py-3 items-center flex-row">
+      <ActivityIndicator size="small" color="#1a5ea1" />
+      <Text className="ml-2 text-xs text-gray-500">Loading cities...</Text>
+    </View>
+  ) : cities.length === 0 ? (
+    <Text className="text-xs text-red-500">No cities available. Contact support.</Text>
+  ) : (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row">
+      {cities.map((c) => {
+        const isSelected = selectedCity?._id === c._id;
+        return (
+          <TouchableOpacity
+            key={c._id}
+            onPress={() => setSelectedCity(c)}
+            className={`px-4 py-2 rounded-full mr-2 border ${
+              isSelected
+                ? 'bg-[#1a5ea1] border-[#1a5ea1]'
+                : 'bg-gray-100 border-gray-300'
+            }`}
+          >
+            <Text
+              className={`text-sm font-medium ${
+                isSelected ? 'text-white' : 'text-gray-700'
+              }`}
+            >
+              {c.name}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </ScrollView>
+  )}
+  <Text className="text-[11px] text-gray-400 mt-1.5">
+    We're currently only accepting providers from these cities. More cities will open up soon.
+  </Text>
 </View>
 
         <View className="mb-6">
