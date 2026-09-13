@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard,MapPin, Users, Grid, Settings, ClipboardList } from 'lucide-react';
+import { LayoutDashboard,MapPin, Users, Grid, Shield,Settings, ClipboardList } from 'lucide-react';
 import { useAdmin } from '../../context/AuthContext'; 
 
 const Sidebar = () => {
@@ -15,6 +15,10 @@ const Sidebar = () => {
     { path: '/admin/reports', name: 'Reports', icon: ClipboardList },
     { path: '/admin/cities', name: 'Cities', icon: MapPin },
     { path: '/admin/pendingProviders', name: 'Pending Payments' , icon:  ClipboardList },
+     ...(admin?.role === 'superadmin'
+      ? [{ path: '/admin/manage-admins', name: 'Manage Admins', icon: Shield }]
+      : []),
+  
     { path: '/admin/settings', name: 'Settings', icon: Settings },
   ];
 

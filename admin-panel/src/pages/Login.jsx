@@ -19,12 +19,12 @@ function Login() {
       return;
     }
 
-    try {
+        try {
       setLoading(true);
       const data = await adminLogin(email, password);
-      const { accessToken, name , email: adminEmail, _id } = data;
+      const { accessToken, name , email: adminEmail, _id, role } = data;
       
-      loginAdmin(accessToken, { name, email: adminEmail, _id });
+      loginAdmin(accessToken, { name, email: adminEmail, _id, role });
       navigate('/admin'); 
 
     } catch (error) {
@@ -37,10 +37,8 @@ function Login() {
 
   return (
     <div className="min-h-screen bg-[#F0F2F5] flex items-center justify-center p-4 font-sans">
-      {/* Container width and padding reduced for compact desktop & mobile fit */}
       <div className="bg-white flex flex-col md:flex-row rounded-3xl shadow-xl overflow-hidden w-full max-w-3xl border border-gray-100">
         
-        {/* Left Side: Logo & Brand */}
         <div className="flex-1 bg-[#0D4D47] flex flex-col items-center justify-center p-8 text-center">
           <div className="bg-white p-5 rounded-full mb-4 shadow-md">
             <img 
@@ -54,7 +52,6 @@ function Login() {
           </h1>
         </div>
 
-        {/* Right Side: Form */}
         <div className="flex-1 p-8 flex flex-col justify-center bg-white">
           <div className="w-full">
             <h2 className="text-2xl font-bold text-[#0D4D47]">Admin Panel</h2>

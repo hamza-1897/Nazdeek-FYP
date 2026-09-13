@@ -74,12 +74,15 @@ const ChatScreen = ({ route, navigation }) => {
       socket.connect();
     }
 
+
+    const roomPayload = { chatId, userId: currentUserId };
+
     const onConnect = () => {
-      socket.emit('join_room', chatId);
+      socket.emit('join_room', roomPayload);
     };
 
     if (socket.connected) {
-      socket.emit('join_room', chatId);
+      socket.emit('join_room', roomPayload);
     } else {
       socket.on('connect', onConnect);
     }
@@ -93,14 +96,37 @@ const ChatScreen = ({ route, navigation }) => {
           const exists = prevMessages.some((msg) => msg._id === newMessage._id);
           return exists ? prevMessages : [...prevMessages, newMessage];
         });
+
+      
+        const receiverIdStr =
+          newMessage.receiverId?._id?.toString() || newMessage.receiverId?.toString();
+        if (receiverIdStr === currentUserId?.toString()) {
+          markAsRead(chatId, currentUserId);
+        }
       }
     };
 
+    const handleMessagesRead = (data) => {
+      if (data?.chatId !== chatId) return;
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) => {
+          const senderIdStr = msg.senderId?._id?.toString() || msg.senderId?.toString();
+          return senderIdStr === currentUserId?.toString()
+            ? { ...msg, isRead: true }
+            : msg;
+        })
+      );
+    };
+
     socket.on('receive_message', handleReceiveMessage);
+    socket.on('messages_read', handleMessagesRead);
 
     return () => {
+    
+      socket.emit('leave_room', roomPayload);
       socket.off('connect', onConnect);
       socket.off('receive_message', handleReceiveMessage);
+      socket.off('messages_read', handleMessagesRead);
     };
   }, [chatId]);
 

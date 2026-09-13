@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const { checkRole } = require('../middleware/authMiddleware');
 
 
 
@@ -53,4 +53,9 @@ router.get('/getAllCities', getAllCities);
 router.post('/addCity', addCity);
 router.put('/editCity/:cityId', editCity);
 router.delete('/deleteCity/:cityId', deleteCity);
+
+const { addNewAdmin, getAllAdmins } = require('../controllers/admin/admin-managementController');
+router.post('/add-admin', checkRole(['superadmin']), addNewAdmin);
+router.get('/get-all-admins', checkRole(['superadmin']), getAllAdmins);
+
 module.exports = router;

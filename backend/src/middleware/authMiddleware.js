@@ -4,7 +4,6 @@ const { generateAccessToken, generateRefreshToken } = require('../lib/generateTo
 
 const JWT_SECRET = config.JWT_SECRET || process.env.JWT_SECRET;
 
-// Access Token Verification Middleware
 const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   
@@ -15,12 +14,10 @@ const authMiddleware = async (req, res, next) => {
   const token = authHeader.split(" ")[1];
   
   try {
-    // Exact same secret key se verify karein
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = { userId: decoded.userId, role: decoded.role };
     next();
   } catch (error) {
-    // Token Expired par isExpired: true, Signature Mismatch par isExpired: false
     const isTokenExpired = error.name === 'TokenExpiredError';
     return res.status(401).json({ 
       message: isTokenExpired ? "jwt expired" : "Invalid token", 
@@ -29,7 +26,6 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-// Role Checking Middleware
 const checkRole = (roles) => {
   return (req, res, next) => {
     if (req.user && roles.includes(req.user.role)) {

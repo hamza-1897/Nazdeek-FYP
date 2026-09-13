@@ -308,3 +308,25 @@ export const deleteCity = async (cityId) => {
         throw error;
     }
 };
+
+export const addAdmin = async (adminData) => {
+    try {
+        const response = await API.post('/admin/add-admin', adminData);
+        console.log("Add Admin API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error adding new admin:", error);
+        throw error;
+    }
+};
+
+export const getAllAdmins = async () => {
+    try {
+        const response = await API.get('/admin/get-all-admins');
+        console.log("Get All Admins API response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching admins:", error);
+        throw error;
+    }
+};

@@ -16,7 +16,8 @@ import Settings from './pages/Settings';
 import Categories from './pages/Categories';
 import Cities from './pages/Cities';
 import ProviderDetail from './pages/ProviderDetail';
-import PendingPaymentsList from './pages/PendingPaymentsList'
+import PendingPaymentsList from './pages/PendingPaymentsList';
+import ManageAdmins from './pages/ManageAdmins';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
               <Route path="settings" element={<Settings />} />
               <Route path="providerDetail/:id" element={<ProviderDetail />} />
               <Route path='pendingProviders' element={<PendingPaymentsList/>}/>
+              <Route path="manage-admins" element={<ManageAdmins />} />
             </Route>
           </Route>
 

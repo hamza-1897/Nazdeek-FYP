@@ -3,6 +3,7 @@ const messageModel = require('../../models/messageModel');
 const sendPushNotification = require('../../lib/sendPushNotification');
 const userModel = require('../../models/usersModel');
 const providerModel = require('../../models/providerModel');
+const { getIO, isUserInChatRoom } = require('../../config/socket'); // 👈 blue-tick / push-suppression
 
 const accessChat = async (req, res) => {
   try {
@@ -13,21 +14,21 @@ const accessChat = async (req, res) => {
     }
 
     let chat = await chatModel.findOne({ customerId: userId, providerId })
-    .populate('customerId', 'name profileImage ')
-    .populate('providerId', 'name profileImage ');
- 
-  if (chat) {
-    if (chat.deletedFor && chat.deletedFor.length > 0) {
-      chat = await chatModel.findByIdAndUpdate(
-        chat._id,
-        { $pull: { deletedFor: userId } },
-        { new: true }
-      )
-        .populate('customerId', 'name profileImage ')
-        .populate('providerId', 'name profileImage ');
+      .populate('customerId', 'name profileImage ')
+      .populate('providerId', 'name profileImage ');
+
+    if (chat) {
+      if (chat.deletedFor && chat.deletedFor.length > 0) {
+        chat = await chatModel.findByIdAndUpdate(
+          chat._id,
+          { $pull: { deletedFor: userId } },
+          { new: true }
+        )
+          .populate('customerId', 'name profileImage ')
+          .populate('providerId', 'name profileImage ');
+      }
+      return res.status(200).json(chat);
     }
-    return res.status(200).json(chat);
-  }
 
     const newChat = await chatModel.create({
       customerId: userId,
@@ -47,8 +48,8 @@ const accessChat = async (req, res) => {
 
 const fetchChats = async (req, res) => {
   try {
-    const { id, role } = req.params; 
- 
+    const { id, role } = req.params;
+
     const chats = await chatModel.find({
       $or: [{ customerId: id }, { providerId: id }],
       deletedFor: { $ne: id }
@@ -57,8 +58,8 @@ const fetchChats = async (req, res) => {
       .populate('providerId', 'businessName providerImage')
       .populate('lastMessage')
       .sort({ updatedAt: -1 });
- 
-   return res.status(200).json(chats);
+
+    return res.status(200).json(chats);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -69,12 +70,12 @@ const getMessages = async (req, res) => {
   try {
     const { chatId } = req.params;
     const { userId } = req.query;
- 
+
     const filter = { chatId };
     if (userId) {
       filter.deletedFor = { $ne: userId };
     }
- 
+
     const messages = await messageModel.find(filter)
       .populate({
         path: 'senderId',
@@ -82,7 +83,7 @@ const getMessages = async (req, res) => {
         select: 'name profileImage',
       })
       .sort({ createdAt: 1 });
- 
+
     res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -120,7 +121,7 @@ const sendMessage = async (req, res) => {
       text
     });
 
-      await chatModel.findByIdAndUpdate(
+    await chatModel.findByIdAndUpdate(
       chatId,
       {
         $set: { lastMessage: message._id },
@@ -128,11 +129,13 @@ const sendMessage = async (req, res) => {
       },
       { returnDocument: 'after' }
     );
- 
 
     const targetFcmToken = receiverModel === 'Provider' ? receiver?.userId?.fcmToken : receiver?.fcmToken;
 
-    if (targetFcmToken) {
+  
+    const receiverIsViewingThisChat = isUserInChatRoom(chatId, receiverId);
+
+    if (targetFcmToken && !receiverIsViewingThisChat) {
       const senderName = sender?.businessName || sender?.name || 'User';
       const senderImage = sender?.profileImage || sender?.providerImage || '';
 
@@ -206,13 +209,18 @@ const sendMediaMessage = async (req, res) => {
 
     await chatModel.findByIdAndUpdate(
       chatId,
-      { $set: { lastMessage: message._id } },
+      {
+        $set: { lastMessage: message._id },
+        $pull: { deletedFor: receiverId }
+      },
       { returnDocument: 'after' }
     );
 
     const targetFcmToken = receiverModel === 'Provider' ? receiver?.userId?.fcmToken : receiver?.fcmToken;
 
-    if (targetFcmToken) {
+    const receiverIsViewingThisChat = isUserInChatRoom(chatId, receiverId);
+
+    if (targetFcmToken && !receiverIsViewingThisChat) {
       const senderName = sender?.businessName || sender?.name || 'User';
       const senderImage = sender?.profileImage || sender?.providerImage || '';
 
@@ -242,12 +250,17 @@ const sendMediaMessage = async (req, res) => {
 const markChatAsRead = async (req, res) => {
   try {
     const { chatId } = req.params;
-    const { userId } = req.body; 
+    const { userId } = req.body;
 
     await messageModel.updateMany(
       { chatId, receiverId: userId, isRead: false },
       { $set: { isRead: true } }
     );
+
+    const io = getIO();
+    if (io) {
+      io.to(chatId).emit('messages_read', { chatId, readBy: userId });
+    }
 
     res.status(200).json({ message: 'Messages marked as read successfully' });
   } catch (error) {
@@ -260,21 +273,21 @@ const deleteMessageForMe = async (req, res) => {
   try {
     const { messageId } = req.params;
     const { userId } = req.body;
- 
+
     if (!userId) {
       return res.status(400).json({ message: 'userId is required' });
     }
- 
+
     const message = await messageModel.findByIdAndUpdate(
       messageId,
       { $addToSet: { deletedFor: userId } },
       { new: true }
     );
- 
+
     if (!message) {
       return res.status(404).json({ message: 'Message not found' });
     }
- 
+
     res.status(200).json({ message: 'Message deleted for you', data: message });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -286,26 +299,26 @@ const deleteChatForMe = async (req, res) => {
   try {
     const { chatId } = req.params;
     const { userId } = req.body;
- 
+
     if (!userId) {
       return res.status(400).json({ message: 'userId is required' });
     }
- 
+
     const chat = await chatModel.findByIdAndUpdate(
       chatId,
       { $addToSet: { deletedFor: userId } },
       { new: true }
     );
- 
+
     if (!chat) {
       return res.status(404).json({ message: 'Chat not found' });
     }
- 
+
     await messageModel.updateMany(
       { chatId },
       { $addToSet: { deletedFor: userId } }
     );
- 
+
     res.status(200).json({ message: 'Chat deleted for you', data: chat });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -320,5 +333,5 @@ module.exports = {
   sendMediaMessage,
   deleteMessageForMe,
   deleteChatForMe,
-markChatAsRead
+  markChatAsRead
 };

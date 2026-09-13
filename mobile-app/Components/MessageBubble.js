@@ -100,11 +100,11 @@ const MessageBubble = ({ item, currentUserId, onLongPress }) => {
           {timeFormatted}
         </Text>
  
-        {isMyMessage && (
+                {isMyMessage && (
           <Ionicons
             name="checkmark-done"
             size={14}
-            color="#93c5fd" 
+            color={item.isRead ? '#4FC3F7' : '#cbd5e1'}
             style={{ marginLeft: 3 }}
           />
         )}
