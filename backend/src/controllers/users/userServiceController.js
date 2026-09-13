@@ -8,26 +8,48 @@ const cityModel = require('../../models/cityModel');
 
 const getAllServices = async (req, res) => {
   try {
-    const services = await serviceModel.find().select('_id serviceName price  priceType serviceImages providerId')
-    .populate({
-      path: 'providerId',
-      select: 'businessName address city',
-      populate: { path: 'city', select: 'name' }
-    })
-    .populate('categoryId', 'name');
+    const services = await serviceModel
+      .find()
+      .select('_id serviceName description price priceType serviceImages providerId categoryId createdAt')
+      .populate({
+        path: 'providerId',
+        select: 'businessName address city isPremium subscriptionDetails providerImage experience verificationStatus',
+        populate: { path: 'city', select: 'name' }
+      })
+      .populate('categoryId', 'name');
+
+    const sortedServices = services.sort((a, b) => {
+      
+      const isAPremium = 
+        Boolean(a.providerId?.isPremium) || 
+        a.providerId?.subscriptionDetails?.status === 'active';
+
+      const isBPremium = 
+        Boolean(b.providerId?.isPremium) || 
+        b.providerId?.subscriptionDetails?.status === 'active';
+
+      if (isAPremium && !isBPremium) return -1; 
+      if (!isAPremium && isBPremium) return 1;  
+      
+      return 0; 
+    });
+
     res.status(200).json({ 
       success: true, 
       message: "All services retrieved successfully.",
-      data: services 
+      count: sortedServices.length,
+      data: sortedServices 
+    });
+
+  } catch (error) {
+    console.error("Get All Services Error:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Server Error", 
+      error: error.message 
     });
   }
-    catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error", error: error.message });
-  }
 };
-
-
 const getAvailableFilters = async (req, res) => {
   try {
     const approvedProviders = await providerModel

@@ -75,7 +75,7 @@ const Reports = () => {
   return (
     <div className="p-6 bg-slate-50 min-h-screen">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-[#0f3d2e]">Provider Reports</h2>
+        <h2 className="text-2xl font-bold text-black">Provider Reports</h2>
       </div>
       
       <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-center justify-between mb-6">

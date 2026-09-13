@@ -13,7 +13,7 @@ export default function CategoryHeader({ onOpenAddModal }) {
 
       <button
         onClick={onOpenAddModal}
-        className="bg-[#1a5ea1] hover:bg-[#154c82] cursor-pointer text-white font-semibold text-xs px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95"
+        className="bg-[#0a3a35] hover:bg-[#0a3a35] cursor-pointer text-white font-semibold text-xs px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95"
       >
         <Plus size={16} />
         Add New Category
