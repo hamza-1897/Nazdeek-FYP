@@ -65,7 +65,6 @@ const ProviderProfileScreen = ({ navigation, route }) => {
     <SafeAreaView className="flex-1 bg-slate-50">
       <StatusBar barStyle="light-content" backgroundColor="#1a5ea1" />
 
-      {/* Header */}
       <View className="relative bg-[#1a5ea1] pt-3 pb-12 px-5 rounded-b-[32px]">
         <View className="flex-row justify-between items-center">
           <TouchableOpacity
@@ -89,7 +88,6 @@ const ProviderProfileScreen = ({ navigation, route }) => {
         <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
           <ProviderProfHeader provider={provider} stats={stats} />
 
-          {/* Offered Services */}
           <View className="mx-5 mt-6">
             <SectionHeader
               title="Offered Services"
@@ -111,7 +109,6 @@ const ProviderProfileScreen = ({ navigation, route }) => {
             )}
           </View>
 
-          {/* About Business */}
           <View className="mx-5 mt-4">
             <SectionHeader title="About Business" icon="information-circle-outline" />
             <View className="bg-white p-4 rounded-2xl border border-slate-200/80">
@@ -121,7 +118,6 @@ const ProviderProfileScreen = ({ navigation, route }) => {
             </View>
           </View>
 
-          {/* Work Portfolio */}
           <View className="mx-5 mt-6">
             <SectionHeader
               title="Recent Work Portfolio"
@@ -150,7 +146,6 @@ const ProviderProfileScreen = ({ navigation, route }) => {
             )}
           </View>
 
-          {/* Customer Reviews */}
           <View className="mx-5 mt-4 mb-8">
             <SectionHeader
               title="Customer Reviews"
@@ -186,7 +181,6 @@ const ProviderProfileScreen = ({ navigation, route }) => {
         </ScrollView>
       )}
 
-      {/* Full Screen Image Preview Modal */}
       <Modal
         visible={isModalVisible}
         transparent={true}
