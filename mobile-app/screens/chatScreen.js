@@ -173,7 +173,7 @@ const ChatScreen = ({ route, navigation }) => {
   const handleDeleteMessage = (messageId) => {
     Alert.alert(
       'Delete Message',
-      'Delete this message for you? The other person will still be able to see it.',
+      'Delete this message for you? ',
       [
         { text: 'Cancel', style: 'cancel' },
         {

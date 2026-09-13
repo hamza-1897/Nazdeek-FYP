@@ -86,7 +86,7 @@ const InboxScreen = ({ navigation, route }) => {
 
     Alert.alert(
       'Delete Chat',
-      `Delete your conversation with ${recipientName}? It will only be removed from your inbox — they will still see it on their side.`,
+      `Delete your conversation with ${recipientName}? `,
       [
         { text: 'Cancel', style: 'cancel' },
         {
