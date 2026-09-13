@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, StatusBar, Alert, Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker'; 
@@ -20,10 +20,19 @@ const EditProfileProvider = ({ navigation }) => {
   const [regFee, setRegFee] = useState(providerInfo?.registrationFee || '');
   const [profileImage, setProfileImage] = useState(providerInfo?.providerImage || '');
 
+  // Work Portfolio States
+  const [workImages, setWorkImages] = useState(providerInfo?.workImages || []);
+
+  useEffect(() => {
+    if (providerInfo?.workImages) {
+      setWorkImages(providerInfo.workImages);
+    }
+  }, [providerInfo]);
+
   const rawSub = providerInfo?.subscriptionDetails;
 
   const subscriptionDetails = {
-   title: rawSub?.planTitle || rawSub?.title || 'No Active Plan',
+    title: rawSub?.planTitle || rawSub?.title || 'No Active Plan',
     amount: rawSub?.amount && rawSub.amount > 0 ? rawSub.amount : (rawSub?.price || 0),
     status: rawSub?.status || 'none',
     activatedAt: rawSub?.activatedAt || null,
@@ -32,6 +41,7 @@ const EditProfileProvider = ({ navigation }) => {
 
   const [isEditable, setIsEditable] = useState(false);
 
+  // Pick Profile Avatar Image
   const pickImage = async () => {
     if (!isEditable) return; 
     
@@ -53,6 +63,35 @@ const EditProfileProvider = ({ navigation }) => {
     }
   };
 
+  // Pick Portfolio Images (Multiple)
+  const pickPortfolioImage = async () => {
+    if (!isEditable) return;
+
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission Denied", "App ko gallery access karne ki permission chahiye!");
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'images',
+      allowsMultipleSelection: true,
+      selectionLimit: 10,
+      quality: 0.8,
+    });
+
+    if (!result.canceled) {
+      const selectedUris = result.assets.map(asset => asset.uri);
+      setWorkImages(prev => [...prev, ...selectedUris]);
+    }
+  };
+
+  // Remove individual Portfolio Image
+  const handleRemoveWorkImage = (indexToRemove) => {
+    if (!isEditable) return;
+    setWorkImages(prev => prev.filter((_, index) => index !== indexToRemove));
+  };
+
   const handleUpdateOrEdit = async () => {
     if (!isEditable) {
       setIsEditable(true);
@@ -62,28 +101,17 @@ const EditProfileProvider = ({ navigation }) => {
     try {
       const formData = new FormData();
 
-      if (name) {
-        formData.append('name', String(name).trim());
-      }
-
-      if (contact) {
-        formData.append('phone', String(contact).trim());
-      }
-
-      if (address) {
-        formData.append('address', String(address).trim());
-      }
-
-      if (description) {
-        formData.append('description', String(description).trim());
-      }
-
+      if (name) formData.append('name', String(name).trim());
+      if (contact) formData.append('phone', String(contact).trim());
+      if (address) formData.append('address', String(address).trim());
+      if (description) formData.append('description', String(description).trim());
       if (experience !== undefined && experience !== null) {
         formData.append('experience', String(experience).trim());
       }
 
+      // Single Profile Image
       if (profileImage && typeof profileImage === 'string') {
-        if (profileImage.startsWith('file://')) {
+        if (profileImage.startsWith('file://') || profileImage.startsWith('content://')) {
           const filename = profileImage.split('/').pop() || 'profile.jpg';
           const match = /\.(\w+)$/.exec(filename);
           const type = match ? `image/${match[1]}` : 'image/jpeg';
@@ -96,19 +124,45 @@ const EditProfileProvider = ({ navigation }) => {
         }
       }
 
-      const response = await updateProvider(formData);
+      // Existing Portfolio Network URLs (JSON format)
+      const existingUrls = workImages.filter(img => typeof img === 'string' && !img.startsWith('file://') && !img.startsWith('content://'));
+      formData.append('existingWorkImages', JSON.stringify(existingUrls));
 
-      if (response?.success) {
-        Alert.alert("Success", "Profile updated successfully!");
-        updateProviderInfo(response?.providerInfo);
-        updateUserInfo({
-          phone: response.userPhone
+      // Newly Picked Local Portfolio Files
+      const newLocalImages = workImages.filter(img => typeof img === 'string' && (img.startsWith('file://') || img.startsWith('content://')));
+      
+      newLocalImages.forEach((imgUri, index) => {
+        const filename = imgUri.split('/').pop() || `work_${index}.jpg`;
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : 'image/jpeg';
+
+        formData.append('workImages', {
+          uri: imgUri,
+          name: filename,
+          type: type,
         });
-        setIsEditable(false);
-      }
+      });
+
+     const response = await updateProvider(formData);
+
+if (response?.success) {
+  Alert.alert("Success", "Profile updated successfully!");
+
+  if (typeof updateProviderInfo === 'function') {
+    updateProviderInfo(response?.providerInfo);
+  }
+
+  if (typeof updateUserInfo === 'function') {
+    updateUserInfo({
+      phone: response?.userPhone
+    });
+  }
+
+  setIsEditable(false);
+}
 
     } catch (error) {
-      console.log(" Update Profile Error:", error);
+      console.log("Update Profile Error:", error);
 
       Alert.alert(
         "Error",
@@ -273,6 +327,47 @@ const EditProfileProvider = ({ navigation }) => {
                 placeholderTextColor="#9ca3af"
               />
             </View>
+          </View>
+
+          {/* Work Portfolio Gallery Section */}
+          <View className="mt-4">
+            <View className="flex-row justify-between items-center mb-2">
+              <Text className="text-base font-bold text-gray-900">Work Portfolio / Photos</Text>
+              {isEditable && (
+                <TouchableOpacity 
+                  onPress={pickPortfolioImage}
+                  className="bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200 flex-row items-center gap-1"
+                >
+                  <Feather name="plus-circle" size={16} color="#1a5ea1" />
+                  <Text className="text-[#1a5ea1] text-xs font-semibold">Add Photos</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {workImages && workImages.length > 0 ? (
+              <View className="flex-row flex-wrap justify-between">
+                {workImages.map((imgUri, index) => (
+                  <View key={index} className="w-[48%] h-32 rounded-xl mb-3 relative overflow-hidden bg-gray-100 border border-gray-200">
+                    <Image source={{ uri: imgUri }} className="w-full h-full" resizeMode="cover" />
+                    {isEditable && (
+                      <TouchableOpacity 
+                        onPress={() => handleRemoveWorkImage(index)}
+                        className="absolute top-2 right-2 bg-red-600/90 p-1.5 rounded-full"
+                      >
+                        <Feather name="trash-2" size={14} color="white" />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <View className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-6 items-center">
+                <Feather name="image" size={32} color="#9ca3af" />
+                <Text className="text-gray-400 text-sm mt-2 text-center">
+                  No portfolio images added yet.
+                </Text>
+              </View>
+            )}
           </View>
 
           <Text className="text-base font-bold text-gray-900 mt-6">Verification & Identification</Text>

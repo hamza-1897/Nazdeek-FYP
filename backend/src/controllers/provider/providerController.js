@@ -195,7 +195,7 @@ const registerProvider = async (req, res) => {
 };
 
 
- const updateProviderProfile = async (req, res) => {
+const updateProviderProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
     const { 
@@ -203,7 +203,8 @@ const registerProvider = async (req, res) => {
       phone, 
       address, 
       description, 
-      experience 
+      experience,
+      existingWorkImages 
     } = req.body;
 
     const user = await userModel.findById(userId);
@@ -217,14 +218,31 @@ const registerProvider = async (req, res) => {
     }
 
     if (phone !== undefined) user.phone = phone;
-
     if (name !== undefined) provider.businessName = name;
     if (address !== undefined) provider.address = address;
     if (description !== undefined) provider.description = description;
     if (experience !== undefined) provider.experience = experience;
-     if (req.file) {
-      provider.providerImage = req.file.path;
+
+    if (req.files && req.files.providerImage && req.files.providerImage[0]) {
+      provider.providerImage = req.files.providerImage[0].path;
     }
+
+    let updatedWorkImages = [];
+
+    if (existingWorkImages) {
+      try {
+        updatedWorkImages = JSON.parse(existingWorkImages);
+      } catch (e) {
+        updatedWorkImages = Array.isArray(existingWorkImages) ? existingWorkImages : [];
+      }
+    }
+
+    if (req.files && req.files.workImages && req.files.workImages.length > 0) {
+      const newWorkImageUrls = req.files.workImages.map(file => file.path);
+      updatedWorkImages = [...updatedWorkImages, ...newWorkImageUrls];
+    }
+
+    provider.workImages = updatedWorkImages;
 
     await user.save();
     await provider.save();

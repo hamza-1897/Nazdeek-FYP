@@ -7,6 +7,7 @@ import {
   ScrollView,
   StatusBar,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,6 +23,10 @@ const ProviderProfileScreen = ({ navigation, route }) => {
 
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Full-screen Image Modal States
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     if (providerId) {
@@ -41,6 +46,16 @@ const ProviderProfileScreen = ({ navigation, route }) => {
     }
   };
 
+  const openImageModal = (imgUrl) => {
+    setSelectedImage(imgUrl);
+    setIsModalVisible(true);
+  };
+
+  const closeImageModal = () => {
+    setSelectedImage(null);
+    setIsModalVisible(false);
+  };
+
   const provider = profileData?.provider || profileData;
   const services = profileData?.services || [];
   const reviews = profileData?.reviews || [];
@@ -50,6 +65,7 @@ const ProviderProfileScreen = ({ navigation, route }) => {
     <SafeAreaView className="flex-1 bg-slate-50">
       <StatusBar barStyle="light-content" backgroundColor="#1a5ea1" />
 
+      {/* Header */}
       <View className="relative bg-[#1a5ea1] pt-3 pb-12 px-5 rounded-b-[32px]">
         <View className="flex-row justify-between items-center">
           <TouchableOpacity
@@ -73,6 +89,7 @@ const ProviderProfileScreen = ({ navigation, route }) => {
         <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
           <ProviderProfHeader provider={provider} stats={stats} />
 
+          {/* Offered Services */}
           <View className="mx-5 mt-6">
             <SectionHeader
               title="Offered Services"
@@ -94,6 +111,7 @@ const ProviderProfileScreen = ({ navigation, route }) => {
             )}
           </View>
 
+          {/* About Business */}
           <View className="mx-5 mt-4">
             <SectionHeader title="About Business" icon="information-circle-outline" />
             <View className="bg-white p-4 rounded-2xl border border-slate-200/80">
@@ -103,6 +121,7 @@ const ProviderProfileScreen = ({ navigation, route }) => {
             </View>
           </View>
 
+          {/* Work Portfolio */}
           <View className="mx-5 mt-6">
             <SectionHeader
               title="Recent Work Portfolio"
@@ -112,8 +131,10 @@ const ProviderProfileScreen = ({ navigation, route }) => {
             {provider?.workImages && provider.workImages.length > 0 ? (
               <View className="flex-row flex-wrap justify-between">
                 {provider.workImages.map((imgUrl, index) => (
-                  <View
+                  <TouchableOpacity
                     key={index}
+                    activeOpacity={0.8}
+                    onPress={() => openImageModal(imgUrl)}
                     className="w-[48%] h-32 mb-3 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80"
                   >
                     <Image
@@ -121,7 +142,7 @@ const ProviderProfileScreen = ({ navigation, route }) => {
                       className="w-full h-full"
                       resizeMode="cover"
                     />
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             ) : (
@@ -129,6 +150,7 @@ const ProviderProfileScreen = ({ navigation, route }) => {
             )}
           </View>
 
+          {/* Customer Reviews */}
           <View className="mx-5 mt-4 mb-8">
             <SectionHeader
               title="Customer Reviews"
@@ -163,6 +185,31 @@ const ProviderProfileScreen = ({ navigation, route }) => {
           </View>
         </ScrollView>
       )}
+
+      {/* Full Screen Image Preview Modal */}
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={closeImageModal}
+      >
+        <View className="flex-1 bg-black/90 justify-center items-center px-4">
+          <TouchableOpacity
+            onPress={closeImageModal}
+            className="absolute top-12 right-6 z-10 w-10 h-10 bg-white/20 rounded-full items-center justify-center"
+          >
+            <Ionicons name="close" size={24} color="white" />
+          </TouchableOpacity>
+
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage }}
+              className="w-full h-[70%]"
+              resizeMode="contain"
+            />
+          )}
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
