@@ -16,56 +16,7 @@ import {getAllProviders} from '../../api/customerApi';
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 40) / 2;
 
-const DUMMY_PROVIDERS = [
-  {
-    _id: '1',
-    name: 'Ali Raza',
-    category: 'Electrician',
-    rating: 4.5,
-    isPremium: false,
-    image: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
-  },
-  {
-    _id: '2',
-    name: 'Usman Khan',
-    category: 'Plumber',
-    rating: 4.9,
-    isPremium: true,
-    image: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=200',
-  },
-  {
-    _id: '3',
-    name: 'Hamza Malik',
-    category: 'AC Specialist',
-    rating: 4.3,
-    isPremium: false,
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200',
-  },
-  {
-    _id: '4',
-    name: 'Bilal Ahmed',
-    category: 'Carpenter',
-    rating: 4.8,
-    isPremium: true,
-    image: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200',
-  },
-  {
-    _id: '5',
-    name: 'Zainab Bibi',
-    category: 'Home Cleaner',
-    rating: 4.2,
-    isPremium: false,
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200',
-  },
-  {
-    _id: '6',
-    name: 'Shahid Iqbal',
-    category: 'Painter',
-    rating: 4.9,
-    isPremium: true,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200',
-  },
-];
+const MIN_CARDS_TO_SHOW = 3;
 
 const ViewPremiumProviders = () => {
   const navigation = useNavigation();

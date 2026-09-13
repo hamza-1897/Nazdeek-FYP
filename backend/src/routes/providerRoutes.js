@@ -20,7 +20,10 @@ router.post(
   registerProvider
 );
 
-router.post('/update-profile', upload.single('providerImage'),updateProviderProfile);
+router.post('/update-profile', upload.fields([
+    { name: 'providerImage', maxCount: 1 },
+    { name: 'workImages', maxCount: 10 },
+  ]),updateProviderProfile);
 router.delete('/delete-account',deleteAccount)
 // payment routes
 router.get('/payment',getPaymentDetails) ;
@@ -53,4 +56,7 @@ router.get('/getAllCategory',getCategories)
 const {getPremiumPlans} = require('../controllers/mutual/supportController')
 router.get('/getPremiumPlans',getPremiumPlans);
 
+ 
+const {getCities} = require('../controllers/mutual/cityController')
+router.get('/getAllCities', getCities)
 module.exports = router;

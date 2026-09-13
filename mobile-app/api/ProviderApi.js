@@ -187,3 +187,14 @@ export const getPremiumPlans = async ()=>{
     throw error;
   }
 }
+
+export const getAllCities = async ()=>{
+    try{
+    const response = await api.get('/provider/getAllCities');
+    console.log('get city Api response', response.data);
+    return response.data;
+}  catch (error) {
+        console.error("Error fetching cities:", error);
+        throw error;
+    }
+}

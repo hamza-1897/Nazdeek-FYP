@@ -29,7 +29,7 @@ const adminRoutes = require('../routes/adminRoutes');
 const chatRoutes = require('../routes/chatRoutes');
 const notificationRoutes = require('../routes/notificationRoutes');
 const { authMiddleware, checkRole } = require('../middleware/authMiddleware');
-const initSocket = require('../config/socket');
+const { initSocket } = require('../config/socket');
 
 connectDB();
 const server = http.createServer(app);
@@ -49,8 +49,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/admin-auth', adminAuthRoutes);
-app.use('/api/admin', authMiddleware, checkRole(['admin']), adminRoutes);
-//app.use('/api/admin',  adminRoutes);
+app.use('/api/admin', authMiddleware, checkRole(['admin', 'superadmin']), adminRoutes);
 app.use('/api/user-auth', userAuthRoutes);
 app.use('/api/customer',authMiddleware, userRoutes);
 app.use('/api/provider',authMiddleware, providerRoutes);   

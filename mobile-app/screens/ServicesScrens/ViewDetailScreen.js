@@ -8,7 +8,7 @@ import {
   ScrollView,
   StatusBar,
   Alert,
-  Dimensions,
+  Modal,
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,8 +16,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getServiceById } from '../../api/customerApi';
 import { accessChat } from '../../api/chatApi';
 import { AuthContext } from '../../context/AuthContext';
-
-const { width } = Dimensions.get('window');
 
 const ViewDetailScreen = ({ route, navigation }) => {
   const { serviceId } = route.params;
@@ -27,7 +25,10 @@ const ViewDetailScreen = ({ route, navigation }) => {
   const [serviceData, setServiceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('About');
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  // Full-screen Image Modal States (Same as Provider Profile)
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -46,6 +47,16 @@ const ViewDetailScreen = ({ route, navigation }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const openImageModal = (imgUrl) => {
+    setSelectedImage(imgUrl);
+    setIsModalVisible(true);
+  };
+
+  const closeImageModal = () => {
+    setSelectedImage(null);
+    setIsModalVisible(false);
   };
 
   const currentUserId = userInfo?.id;
@@ -78,15 +89,6 @@ const ViewDetailScreen = ({ route, navigation }) => {
   };
 
   const TABS = ['About', 'Reviews'];
-
-  const handleScroll = (event) => {
-    const slide = Math.round(
-      event.nativeEvent.contentOffset.x / event.nativeEvent.layoutMeasurement.width
-    );
-    if (slide !== activeImageIndex) {
-      setActiveImageIndex(slide);
-    }
-  };
 
   if (loading) {
     return (
@@ -127,61 +129,22 @@ const ViewDetailScreen = ({ route, navigation }) => {
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
 
+      {/* Header bar with Back button */}
+      <View className="px-5 py-3 flex-row items-center border-b border-slate-100">
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          className="w-10 h-10 rounded-full bg-slate-100 items-center justify-center"
+        >
+          <Ionicons name="arrow-back" size={20} color="#0f172a" />
+        </TouchableOpacity>
+        <Text className="text-slate-900 font-bold text-lg ml-4">Service Details</Text>
+      </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: insets.bottom + 100 }}
         className="flex-1"
       >
-        <View className="relative w-full h-64 bg-slate-900 overflow-hidden">
-          <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={handleScroll}
-            scrollEventThrottle={16}
-          >
-            {images.map((imgUri, index) => (
-              <View key={index} style={{ width: width, height: 256 }}>
-                <Image
-                  source={{ uri: imgUri }}
-                  className="w-full h-full"
-                  resizeMode="cover"
-                />
-              </View>
-            ))}
-          </ScrollView>
-
-          <View className="absolute top-3 left-4 right-4 flex-row justify-between items-center z-20">
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              className="bg-white/90 w-10 h-10 rounded-full items-center justify-center border border-white/40 shadow-sm active:scale-95"
-            >
-              <Ionicons name="arrow-back" size={20} color="#0f172a" />
-            </TouchableOpacity>
-
-            {images.length > 1 && (
-              <View className="bg-slate-900/60 px-3 py-1 rounded-full border border-white/20">
-                <Text className="text-white text-xs font-semibold">
-                  {activeImageIndex + 1} / {images.length}
-                </Text>
-              </View>
-            )}
-          </View>
-
-          {images.length > 1 && (
-            <View className="absolute bottom-4 left-0 right-0 flex-row justify-center items-center space-x-1.5 z-10">
-              {images.map((_, index) => (
-                <View
-                  key={index}
-                  className={`h-1.5 rounded-full transition-all ${
-                    activeImageIndex === index ? 'w-6 bg-[#1a5ea1]' : 'w-1.5 bg-white/70'
-                  }`}
-                />
-              ))}
-            </View>
-          )}
-        </View>
-
         <View className="px-5 pt-5">
           <View className="flex-row justify-between items-center mb-3">
             <View className="bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-100">
@@ -205,6 +168,34 @@ const ViewDetailScreen = ({ route, navigation }) => {
             {serviceData?.serviceName}
           </Text>
 
+          {/* Service Images Grid Section */}
+          <View className="mb-6">
+            <View className="flex-row items-center justify-between mb-3">
+              <Text className="text-slate-900 font-bold text-base">Service Photos</Text>
+              <Text className="text-slate-400 font-medium text-xs">
+                {images.length} {images.length === 1 ? 'photo' : 'photos'}
+              </Text>
+            </View>
+
+            <View className="flex-row flex-wrap justify-between">
+              {images.map((imgUrl, index) => (
+                <TouchableOpacity
+                  key={index}
+                  activeOpacity={0.8}
+                  onPress={() => openImageModal(imgUrl)}
+                  className="w-[48%] h-32 mb-3 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80"
+                >
+                  <Image
+                    source={{ uri: imgUrl }}
+                    className="w-full h-full"
+                    resizeMode="cover"
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* Navigation Tabs */}
           <View className="flex-row border-b border-slate-100 mb-5">
             {TABS.map((tab) => (
               <TouchableOpacity
@@ -226,6 +217,7 @@ const ViewDetailScreen = ({ route, navigation }) => {
             ))}
           </View>
 
+          {/* About Tab Content */}
           {activeTab === 'About' && (
             <View>
               <Text className="text-slate-900 font-bold text-base mb-2">Description</Text>
@@ -296,6 +288,7 @@ const ViewDetailScreen = ({ route, navigation }) => {
             </View>
           )}
 
+          {/* Reviews Tab Content */}
           {activeTab === 'Reviews' && (
             <View className="space-y-3">
               {reviewsList.length > 0 ? (
@@ -362,6 +355,7 @@ const ViewDetailScreen = ({ route, navigation }) => {
         </View>
       </ScrollView>
 
+      {/* Bottom Sticky Action Bar */}
       <View
         style={{ paddingBottom: Math.max(insets.bottom, 16) }}
         className="absolute bottom-0 left-0 right-0 bg-white px-5 pt-3.5 border-t border-slate-100 flex-row justify-between items-center shadow-lg"
@@ -382,6 +376,31 @@ const ViewDetailScreen = ({ route, navigation }) => {
           <Text className="text-white text-sm font-bold">Book Appointment</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Full-Screen Image View Modal */}
+      <Modal
+        visible={isModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={closeImageModal}
+      >
+        <View className="flex-1 bg-black/90 justify-center items-center px-4">
+          <TouchableOpacity
+            onPress={closeImageModal}
+            className="absolute top-12 right-6 z-10 w-10 h-10 bg-white/20 rounded-full items-center justify-center"
+          >
+            <Ionicons name="close" size={24} color="white" />
+          </TouchableOpacity>
+
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage }}
+              className="w-full h-[70%]"
+              resizeMode="contain"
+            />
+          )}
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

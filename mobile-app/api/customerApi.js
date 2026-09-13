@@ -13,7 +13,29 @@ export const getDashboard = async () => {
     }
 }
 
+export const getAvailableFilters = async () => {
+    try {
+        const response = await api.get('/customer/available-filters');
+        console.log("Get Available Filters API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching available filters:", error);
+        throw error;
+    }
+};
 
+export const getCities = async () => {
+    try {
+        const response = await api.get('/customer/cities');
+        console.log("Get Cities API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error fetching cities:", error);
+        throw error;
+    }
+};
 export const deleteAccount = async ()=>{
     try{
         const response = await api.delete('/customer/delete-account');

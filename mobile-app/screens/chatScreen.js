@@ -16,7 +16,7 @@ import { socket } from '../services/socket';
 import ChatHeader from '../Components/ChatHeader';
 import MessageBubble from '../Components/MessageBubble';
 import MessageInput from '../Components/MessageInput';
-import { getAllMessages, sendMessage, sendMediaMessage, markRead } from '../api/chatApi';
+import { getAllMessages, sendMessage, sendMediaMessage, markRead, deleteMessageForMe } from '../api/chatApi';
 
 const ChatScreen = ({ route, navigation }) => {
   const {
@@ -34,6 +34,14 @@ const ChatScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const flatListRef = useRef(null);
+
+  const isProvider = receiverModel === 'Provider';
+
+  const handleProfilePress = () => {
+    if (isProvider && receiverId) {
+      navigation.navigate('ProviderProfile', { providerId: receiverId });
+    }
+  };
 
   useEffect(() => {
     const showSub = Keyboard.addListener(
@@ -66,12 +74,15 @@ const ChatScreen = ({ route, navigation }) => {
       socket.connect();
     }
 
+
+    const roomPayload = { chatId, userId: currentUserId };
+
     const onConnect = () => {
-      socket.emit('join_room', chatId);
+      socket.emit('join_room', roomPayload);
     };
 
     if (socket.connected) {
-      socket.emit('join_room', chatId);
+      socket.emit('join_room', roomPayload);
     } else {
       socket.on('connect', onConnect);
     }
@@ -85,21 +96,44 @@ const ChatScreen = ({ route, navigation }) => {
           const exists = prevMessages.some((msg) => msg._id === newMessage._id);
           return exists ? prevMessages : [...prevMessages, newMessage];
         });
+
+      
+        const receiverIdStr =
+          newMessage.receiverId?._id?.toString() || newMessage.receiverId?.toString();
+        if (receiverIdStr === currentUserId?.toString()) {
+          markAsRead(chatId, currentUserId);
+        }
       }
     };
 
+    const handleMessagesRead = (data) => {
+      if (data?.chatId !== chatId) return;
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) => {
+          const senderIdStr = msg.senderId?._id?.toString() || msg.senderId?.toString();
+          return senderIdStr === currentUserId?.toString()
+            ? { ...msg, isRead: true }
+            : msg;
+        })
+      );
+    };
+
     socket.on('receive_message', handleReceiveMessage);
+    socket.on('messages_read', handleMessagesRead);
 
     return () => {
+    
+      socket.emit('leave_room', roomPayload);
       socket.off('connect', onConnect);
       socket.off('receive_message', handleReceiveMessage);
+      socket.off('messages_read', handleMessagesRead);
     };
   }, [chatId]);
 
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      const response = await getAllMessages(chatId);
+       const response = await getAllMessages(chatId, currentUserId);
       setMessages(response || []);
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -161,7 +195,32 @@ const ChatScreen = ({ route, navigation }) => {
     }
   };
 
-  
+
+  const handleDeleteMessage = (messageId) => {
+    Alert.alert(
+      'Delete Message',
+      'Delete this message for you? ',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete for me',
+          style: 'destructive',
+          onPress: async () => {
+            setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
+            try {
+              await deleteMessageForMe(messageId, currentUserId);
+            } catch (error) {
+              console.error('Delete message error:', error);
+              Alert.alert('Error', 'Could not delete the message. Please try again.');
+              fetchMessages();
+            }
+          },
+        },
+      ]
+    );
+  };
+ 
+
   const uploadMedia = async ({ uri, mimeType, fileName, messageType, duration }) => {
     const tempId = Date.now().toString();
 
@@ -237,6 +296,8 @@ const ChatScreen = ({ route, navigation }) => {
         receiverName={receiverName}
         receiverImage={receiverImage}
         onBack={() => navigation.goBack()}
+        onPressProfile={handleProfilePress}
+        isProvider={isProvider}
       />
 
       <View style={{ flex: 1, paddingBottom: keyboardHeight, backgroundColor: '#f8fafc' }}>
@@ -249,9 +310,14 @@ const ChatScreen = ({ route, navigation }) => {
             ref={flatListRef}
             data={messages}
             keyExtractor={(item, index) => item._id || `msg-${index}`}
-            renderItem={({ item }) => (
-              <MessageBubble item={item} currentUserId={currentUserId} />
-            )}
+             renderItem={({ item }) => (
+    <MessageBubble
+      item={item}
+      currentUserId={currentUserId}
+      onLongPress={() => handleDeleteMessage(item._id)}
+    />
+  )}
+ 
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={{
               paddingHorizontal: 16,

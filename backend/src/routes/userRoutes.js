@@ -11,11 +11,11 @@ router.delete('/delete-account', deleteAccount);
 const {getMe} = require('../controllers/mutual/user-authController')
 router.get('/getMe',getMe)
 // service routes
-const { getAllServices, getServiceById, getProviderbyId } = require('../controllers/users/userServiceController');
+const { getAllServices, getServiceById, getAvailableFilters, getProviderbyId } = require('../controllers/users/userServiceController');
 router.get('/services', getAllServices);
 router.get('/services/:id', getServiceById);  
 router.get('/provider/:providerId',getProviderbyId)  
-
+router.get('/available-filters', getAvailableFilters);
 // booking routes
 const { createBooking, getBookingsbyUserId, cancelBooking, rebook } = require('../controllers/users/serviceBookController');
 router.post('/book-service', createBooking);
@@ -36,5 +36,8 @@ router.get('/getSupportDetails',getPublicSettings)
 
 const {updateFcmToken} = require('../controllers/mutual/user-authController');
 router.post('/update-fcmToken',updateFcmToken)
+
+const {getCities} = require('../controllers/mutual/cityController');
+router.get('/cities',getCities)
 
 module.exports = router;

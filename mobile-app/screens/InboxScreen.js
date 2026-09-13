@@ -7,11 +7,12 @@ import {
   ActivityIndicator,
   RefreshControl,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { fetchChats } from '../api/chatApi';
+import { fetchChats, deleteChatForMe } from '../api/chatApi';
 import ChatItem from '../Components/ChatItem';
 import { AuthContext } from '../context/AuthContext';
 import { ProviderTabs } from '../Cards/ProviderTabs';
@@ -79,6 +80,35 @@ const InboxScreen = ({ navigation, route }) => {
     });
   };
 
+  
+  const handleChatLongPress = (chat, recipient) => {
+    const recipientName = recipient?.name || recipient?.businessName || 'this conversation';
+
+    Alert.alert(
+      'Delete Chat',
+      `Delete your conversation with ${recipientName}? `,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete for me',
+          style: 'destructive',
+          onPress: async () => {
+            const previousChats = chats;
+            setChats((prev) => prev.filter((c) => c._id !== chat._id));
+
+            try {
+              await deleteChatForMe(chat._id, currentUserId);
+            } catch (error) {
+              console.error('Delete chat error:', error);
+              Alert.alert('Error', 'Could not delete the chat. Please try again.');
+              setChats(previousChats);
+            }
+          },
+        },
+      ]
+    );
+  };
+
  const filteredChats = chats.filter((chat) => {
   const isCustomer = chat.customerId?._id === currentUserId;
   const recipient = isCustomer ? chat.providerId : chat.customerId;
@@ -131,6 +161,7 @@ const InboxScreen = ({ navigation, route }) => {
               chat={item}
               currentUserId={currentUserId}
               onPress={handleChatPress}
+              onLongPress={handleChatLongPress}
             />
           )}
           contentContainerStyle={{ paddingBottom: 20 }}

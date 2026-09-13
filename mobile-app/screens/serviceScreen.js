@@ -12,79 +12,110 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import ServiceCard from '../Cards/ServiceCard';
-import { CategoryPills } from '../Components/CategoryPills';
-import { getAllServices } from '../api/customerApi';
+import CustomDropdown from '../Components/CustomDropdown';
+import { getAllServices, getCities, getAvailableFilters } from '../api/customerApi';
 
 const ServicesScreen = ({ navigation }) => {
   const [services, setServices] = useState([]);
+  const [categories, setCategories] = useState([{ id: 'all', name: 'All' }]);
+  const [cities, setCities] = useState([{ id: 'all', name: 'All' }]);
+  
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCity, setSelectedCity] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
-      fetchServices();
+      loadInitialData();
     }, [])
   );
 
-  const fetchServices = async () => {
+  // Simple clean fetcher
+  const loadInitialData = async () => {
     setLoading(true);
     try {
-      const response = await getAllServices();
-      const data = response?.data?.data || response?.data || [];
-      setServices(data);
+      // Load Services
+      const servicesRes = await getAllServices();
+      const list = servicesRes?.data?.data || servicesRes?.data || servicesRes || [];
+      setServices(Array.isArray(list) ? list : []);
+
+      // Load Categories
+      const filtersRes = await getAvailableFilters();
+      const catData = filtersRes?.data?.categories || filtersRes?.categories || [];
+      if (Array.isArray(catData)) {
+        setCategories([
+          { id: 'all', name: 'All' },
+          ...catData.map((c) => ({ id: c._id || c.id, name: c.name || '' })),
+        ]);
+      }
+
+      // Load Cities directly from DB API
+      const citiesRes = await getCities();
+      const cityList = citiesRes?.cities || citiesRes?.data?.cities || citiesRes?.data || [];
+      if (Array.isArray(cityList)) {
+        setCities([
+          { id: 'all', name: 'All' },
+          ...cityList.map((c) => ({
+            id: c._id || c.id,
+            name: typeof c === 'string' ? c : c.name || '',
+          })),
+        ]);
+      }
     } catch (error) {
-      console.error('Error fetching services:', error);
+      console.error('Error loading screen data:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const categories = [
-    { id: 'all', name: 'All', icon: 'apps-outline', type: 'ion' },
-    { id: 'plumber', name: 'Plumber', icon: 'pipe-leak', type: 'mc' },
-    { id: 'electrician', name: 'Electrician', icon: 'flash-outline', type: 'ion' },
-    { id: 'technician', name: 'Technician', icon: 'tools', type: 'mc' },
-  ];
-
+  // Clean & Safe Filtering Logic
   const filteredServices = useMemo(() => {
     return services.filter((item) => {
-      const itemCategoryName =
-        item?.categoryId?.name ||
-        item?.category?.name ||
-        item?.category ||
-        '';
+      // Safe Category Name Extraction
+      const categoryName =
+        (typeof item?.categoryId === 'object'
+          ? item?.categoryId?.name
+          : item?.categoryName) || '';
 
-      const selected = selectedCategory.toLowerCase();
-      const currentCat = itemCategoryName.toLowerCase();
+      // Safe City Name Extraction
+      const cityName =
+        (typeof item?.providerId?.city === 'object'
+          ? item?.providerId?.city?.name
+          : item?.providerId?.city) || '';
 
-      const matchesCategory =
-        selectedCategory === 'All' ||
-        currentCat === selected ||
-        currentCat.includes(selected) ||
-        selected.includes(currentCat);
-
+      const catStr = String(categoryName).toLowerCase();
+      const cityStr = String(cityName).toLowerCase();
       const query = searchQuery.toLowerCase().trim();
+
+      // Filter Checks
+      const matchesCategory =
+        selectedCategory === 'All' || catStr === selectedCategory.toLowerCase();
+
+      const matchesCity =
+        selectedCity === 'All' || cityStr === selectedCity.toLowerCase();
+
       const matchesSearch =
         !query ||
-        item?.serviceName?.toLowerCase().includes(query) ||
-        item?.description?.toLowerCase().includes(query) ||
-        currentCat.includes(query);
+        String(item?.serviceName || '').toLowerCase().includes(query) ||
+        catStr.includes(query);
 
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesCity && matchesSearch;
     });
-  }, [services, selectedCategory, searchQuery]);
+  }, [services, selectedCategory, selectedCity, searchQuery]);
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50">
       <StatusBar barStyle="dark-content" backgroundColor="#f8fafc" />
 
+      {/* Header */}
       <View className="px-5 pt-3 pb-2 flex-row justify-center items-center border-b border-slate-100 bg-white shadow-xs">
         <Text className="text-slate-900 text-lg font-black tracking-wide text-center">
           Popular Services
         </Text>
       </View>
 
+      {/* Search Bar */}
       <View className="px-5 pt-4 pb-2">
         <View className="bg-white flex-row items-center px-4 h-12 rounded-2xl border border-slate-200/80 shadow-xs">
           <Ionicons name="search-outline" size={18} color="#94a3b8" />
@@ -103,14 +134,26 @@ const ServicesScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <View className="my-1">
-        <CategoryPills
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onSelectCategory={(catName) => setSelectedCategory(catName)}
+      {/* Dropdowns Row */}
+      <View className="px-4 flex-row justify-between my-2">
+        <CustomDropdown
+          label="Categories"
+          selectedValue={selectedCategory}
+          items={categories}
+          onSelect={(catName) => setSelectedCategory(catName)}
+          iconName="apps-outline"
+        />
+
+        <CustomDropdown
+          label="Cities"
+          selectedValue={selectedCity}
+          items={cities}
+          onSelect={(cityName) => setSelectedCity(cityName)}
+          iconName="location-outline"
         />
       </View>
 
+      {/* Content List / Loader */}
       {loading ? (
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color="#1a5ea1" />
@@ -131,7 +174,7 @@ const ServicesScreen = ({ navigation }) => {
               />
             </View>
           )}
-          keyExtractor={(item, index) => item._id || item.id || index.toString()}
+          keyExtractor={(item, index) => item._id || index.toString()}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 110, paddingTop: 6 }}
           ListEmptyComponent={() => (
@@ -143,7 +186,7 @@ const ServicesScreen = ({ navigation }) => {
                 No Services Found
               </Text>
               <Text className="text-slate-400 text-xs font-medium text-center mt-1">
-                Try searching with another keyword or change the category filter.
+                Try searching with another keyword, or change the category/city filter.
               </Text>
             </View>
           )}

@@ -5,6 +5,8 @@ const serviceModel = require('../../models/serviceModel');
 const bookingModel = require('../../models/bookingModel');
 const reviewModel = require('../../models/reviewModel');
 const notificationModel = require('../../models/notificationModel');
+const categoryModel = require('../../models/categoryModel');
+const cityModel = require('../../models/cityModel');
 const { syncSubscriptionStatus } = require('../../lib/SubscriptionUtils');
 const mongoose = require('mongoose');
 
@@ -101,6 +103,7 @@ const registerProvider = async (req, res) => {
       cnicNumber, 
       address, 
       categoryId, 
+      city,
       experience 
     } = req.body;
 
@@ -123,10 +126,10 @@ const registerProvider = async (req, res) => {
       : null;
     let existingProvider = await providerModel.findOne({ userId });
 
-    if (!businessName || !cnicNumber || !categoryId || (!providerImage && !existingProvider?.providerImage)) {
+    if (!businessName || !cnicNumber || !categoryId || !city || (!providerImage && !existingProvider?.providerImage)) {
       return res.status(400).json({ 
         success: false, 
-        message: "Required fields or profile image missing." 
+        message: "Required fields, city, or profile image missing." 
       });
     }
 
@@ -136,6 +139,7 @@ const registerProvider = async (req, res) => {
       existingProvider.cnicNumber = cnicNumber;
       existingProvider.address = address || existingProvider.address;
       existingProvider.categoryId = categoryId;
+      existingProvider.city = city || existingProvider.city;
       existingProvider.experience = Number(experience) || existingProvider.experience;
       
       if (providerImage) existingProvider.providerImage = providerImage;
@@ -165,6 +169,7 @@ const registerProvider = async (req, res) => {
       workImages, 
       address,
       categoryId,
+        city,
       experience: Number(experience) || 0,
       verificationStatus: 'pending',
       accountRejectionReason: null,
@@ -190,7 +195,7 @@ const registerProvider = async (req, res) => {
 };
 
 
- const updateProviderProfile = async (req, res) => {
+const updateProviderProfile = async (req, res) => {
   try {
     const userId = req.user.userId;
     const { 
@@ -198,7 +203,8 @@ const registerProvider = async (req, res) => {
       phone, 
       address, 
       description, 
-      experience 
+      experience,
+      existingWorkImages 
     } = req.body;
 
     const user = await userModel.findById(userId);
@@ -212,14 +218,31 @@ const registerProvider = async (req, res) => {
     }
 
     if (phone !== undefined) user.phone = phone;
-
     if (name !== undefined) provider.businessName = name;
     if (address !== undefined) provider.address = address;
     if (description !== undefined) provider.description = description;
     if (experience !== undefined) provider.experience = experience;
-     if (req.file) {
-      provider.providerImage = req.file.path;
+
+    if (req.files && req.files.providerImage && req.files.providerImage[0]) {
+      provider.providerImage = req.files.providerImage[0].path;
     }
+
+    let updatedWorkImages = [];
+
+    if (existingWorkImages) {
+      try {
+        updatedWorkImages = JSON.parse(existingWorkImages);
+      } catch (e) {
+        updatedWorkImages = Array.isArray(existingWorkImages) ? existingWorkImages : [];
+      }
+    }
+
+    if (req.files && req.files.workImages && req.files.workImages.length > 0) {
+      const newWorkImageUrls = req.files.workImages.map(file => file.path);
+      updatedWorkImages = [...updatedWorkImages, ...newWorkImageUrls];
+    }
+
+    provider.workImages = updatedWorkImages;
 
     await user.save();
     await provider.save();

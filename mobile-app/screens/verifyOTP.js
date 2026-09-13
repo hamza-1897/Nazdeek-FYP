@@ -74,7 +74,10 @@ const VerifyOTP = ({ navigation, route }) => {
           role
         );
         alert(data.message);
-        navigation.replace('Login');
+        navigation.reset({
+  index: 0,
+  routes: [{ name: 'Login' }],
+});
       }
       else if(flow === 'forgotPassword'){
         const data = await verifyForgotOTP(email, otp);

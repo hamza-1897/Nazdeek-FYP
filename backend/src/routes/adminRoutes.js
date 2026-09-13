@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const { checkRole } = require('../middleware/authMiddleware');
 
 
 
@@ -46,5 +46,16 @@ router.get('/getAllCategories', getAllCategories);
 router.post('/addCategory', addCategory);
 router.put('/editCategory/:categoryId', editCategory);
 router.delete('/deleteCategory/:categoryId', deleteCategory);
+
+//city
+const { getAllCities, addCity, editCity, deleteCity } = require('../controllers/admin/cityController');
+router.get('/getAllCities', getAllCities);
+router.post('/addCity', addCity);
+router.put('/editCity/:cityId', editCity);
+router.delete('/deleteCity/:cityId', deleteCity);
+
+const { addNewAdmin, getAllAdmins } = require('../controllers/admin/admin-managementController');
+router.post('/add-admin', checkRole(['superadmin']), addNewAdmin);
+router.get('/get-all-admins', checkRole(['superadmin']), getAllAdmins);
 
 module.exports = router;
