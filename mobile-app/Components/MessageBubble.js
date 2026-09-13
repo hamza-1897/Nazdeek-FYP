@@ -6,8 +6,8 @@ import VoiceMessagePlayer from './VoiceMessagePlayer';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-const MessageBubble = ({ item, currentUserId }) => {
-  const [previewVisible, setPreviewVisible] = useState(false);
+const MessageBubble = ({ item, currentUserId, onLongPress }) => {
+    const [previewVisible, setPreviewVisible] = useState(false);
 
   const senderIdStr = item.senderId?._id?.toString() || item.senderId?.toString();
   const currentUserIdStr = currentUserId?.toString();
@@ -80,9 +80,13 @@ const MessageBubble = ({ item, currentUserId }) => {
   };
 
   return (
-    <View className={`${bubbleBase} ${bubblePadding}`}>
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onLongPress={onLongPress}
+      className={`${bubbleBase} ${bubblePadding}`}
+    >
       {renderContent()}
-
+ 
       <View
         className={`flex-row items-center justify-end mt-1 space-x-1 ${
           messageType === 'image' ? 'px-1.5 pb-0.5' : ''
@@ -95,7 +99,7 @@ const MessageBubble = ({ item, currentUserId }) => {
         >
           {timeFormatted}
         </Text>
-
+ 
         {isMyMessage && (
           <Ionicons
             name="checkmark-done"
@@ -105,8 +109,9 @@ const MessageBubble = ({ item, currentUserId }) => {
           />
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
-
+ 
 export default MessageBubble;
+ 

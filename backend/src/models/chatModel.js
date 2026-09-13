@@ -5,6 +5,10 @@ const chatSchema = new mongoose.Schema(
     customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
     providerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Provider' },
     lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: 'Message' }, 
+    deletedFor: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+    },
   },
   { timestamps: true }
 );

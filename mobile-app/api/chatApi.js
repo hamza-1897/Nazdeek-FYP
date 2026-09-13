@@ -1,9 +1,11 @@
 import api from './axiosInstance';
 
 
-export const getAllMessages = async (chatId) => {
+export const getAllMessages = async (chatId, userId) => {
     try {
-        const response = await api.get(`/chat/messages/${chatId}`);
+        const response = await api.get(`/chat/messages/${chatId}`, {
+            params: { userId },
+        });
         console.log("Get All Messages API response:", response.data);
         return response.data;
     }
@@ -77,3 +79,31 @@ try {
         throw error;
 }
 }
+
+export const deleteMessageForMe = async (messageId, userId) => {
+    try {
+        const response = await api.delete(`/chat/message/${messageId}`, {
+            data: { userId },
+        });
+        console.log("Delete Message API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error deleting message:", error);
+        throw error;
+    }
+};
+
+export const deleteChatForMe = async (chatId, userId) => {
+    try {
+        const response = await api.delete(`/chat/${chatId}`, {
+            data: { userId },
+        });
+        console.log("Delete Chat API response:", response.data);
+        return response.data;
+    }
+    catch (error) {
+        console.error("Error deleting chat:", error);
+        throw error;
+    }
+};

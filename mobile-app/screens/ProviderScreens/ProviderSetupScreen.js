@@ -38,7 +38,7 @@ const [selectedCity, setSelectedCity] = useState(null);
 const [loadingCities, setLoadingCities] = useState(true);
  
  
-  const { userInfo } = useContext(AuthContext); 
+  const { userInfo,logout } = useContext(AuthContext); 
 
   const fetchCategories = async () => {
   try {
@@ -78,6 +78,10 @@ useEffect(() => {
   fetchCities();
 }, []);
 
+ const handlelogout = async ()=>{
+    await logout();
+    navigation.replace('Login')
+  }
 
 const pickSingleImage = async (type) => {
   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -509,7 +513,7 @@ try {
 
         <TouchableOpacity
           onPress={handleSubmit}
-          className="bg-[#1a5ea1] p-4 rounded-lg items-center mb-10"
+          className="bg-[#1a5ea1] p-4 rounded-lg items-center mb-4"
         >
           {submitting ? (
             <ActivityIndicator color="white" />
@@ -517,6 +521,16 @@ try {
             <Text className="text-white text-lg font-bold">Submit for Approval</Text>
           )}
         </TouchableOpacity>
+
+        <TouchableOpacity
+                  onPress={handlelogout}
+        
+                  className="border border-gray-300 p-4 rounded-xl mb-6 items-center"
+                >
+                  <Text className="text-gray-700 font-semibold text-base">
+                    Logout & Exit
+                  </Text>
+                </TouchableOpacity>
 
       </ScrollView>
     </SafeAreaView>

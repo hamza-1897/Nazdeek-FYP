@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import dayjs from 'dayjs';
 
-const ChatItem = ({ chat, currentUserId, onPress }) => {
+const ChatItem = ({ chat, currentUserId, onPress, onLongPress }) => {
   const isCustomer = chat.customerId?._id === currentUserId;
   const recipient = isCustomer ? chat.providerId : chat.customerId;
 
@@ -37,6 +37,7 @@ const ChatItem = ({ chat, currentUserId, onPress }) => {
   return (
     <TouchableOpacity
       onPress={() => onPress(chat, recipient)}
+      onLongPress={() => onLongPress && onLongPress(chat, recipient)}
       activeOpacity={0.7}
       className={`flex-row items-center px-4 py-3.5 border-b border-slate-100 ${
         isUnread ? 'bg-blue-50/40' : 'bg-white'

@@ -13,12 +13,21 @@ const accessChat = async (req, res) => {
     }
 
     let chat = await chatModel.findOne({ customerId: userId, providerId })
-      .populate('customerId', 'name profileImage ')
-      .populate('providerId', 'name profileImage ');
-
-    if (chat) {
-      return res.status(200).json(chat);
+    .populate('customerId', 'name profileImage ')
+    .populate('providerId', 'name profileImage ');
+ 
+  if (chat) {
+    if (chat.deletedFor && chat.deletedFor.length > 0) {
+      chat = await chatModel.findByIdAndUpdate(
+        chat._id,
+        { $pull: { deletedFor: userId } },
+        { new: true }
+      )
+        .populate('customerId', 'name profileImage ')
+        .populate('providerId', 'name profileImage ');
     }
+    return res.status(200).json(chat);
+  }
 
     const newChat = await chatModel.create({
       customerId: userId,
@@ -39,39 +48,46 @@ const accessChat = async (req, res) => {
 const fetchChats = async (req, res) => {
   try {
     const { id, role } = req.params; 
-
+ 
     const chats = await chatModel.find({
-      $or: [{ customerId: id }, { providerId: id }]
+      $or: [{ customerId: id }, { providerId: id }],
+      deletedFor: { $ne: id }
     })
       .populate('customerId', 'name profileImage')
       .populate('providerId', 'businessName providerImage')
       .populate('lastMessage')
       .sort({ updatedAt: -1 });
-
+ 
    return res.status(200).json(chats);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
+
 const getMessages = async (req, res) => {
   try {
     const { chatId } = req.params;
-
-    const messages = await messageModel.find({ chatId })
+    const { userId } = req.query;
+ 
+    const filter = { chatId };
+    if (userId) {
+      filter.deletedFor = { $ne: userId };
+    }
+ 
+    const messages = await messageModel.find(filter)
       .populate({
         path: 'senderId',
         refPath: 'senderModel',
         select: 'name profileImage',
       })
       .sort({ createdAt: 1 });
-
+ 
     res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 const sendMessage = async (req, res) => {
   try {
@@ -104,11 +120,15 @@ const sendMessage = async (req, res) => {
       text
     });
 
-    await chatModel.findByIdAndUpdate(
+      await chatModel.findByIdAndUpdate(
       chatId,
-      { $set: { lastMessage: message._id } },
+      {
+        $set: { lastMessage: message._id },
+        $pull: { deletedFor: receiverId }
+      },
       { returnDocument: 'after' }
     );
+ 
 
     const targetFcmToken = receiverModel === 'Provider' ? receiver?.userId?.fcmToken : receiver?.fcmToken;
 
@@ -235,11 +255,70 @@ const markChatAsRead = async (req, res) => {
   }
 };
 
+
+const deleteMessageForMe = async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    const { userId } = req.body;
+ 
+    if (!userId) {
+      return res.status(400).json({ message: 'userId is required' });
+    }
+ 
+    const message = await messageModel.findByIdAndUpdate(
+      messageId,
+      { $addToSet: { deletedFor: userId } },
+      { new: true }
+    );
+ 
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
+ 
+    res.status(200).json({ message: 'Message deleted for you', data: message });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+const deleteChatForMe = async (req, res) => {
+  try {
+    const { chatId } = req.params;
+    const { userId } = req.body;
+ 
+    if (!userId) {
+      return res.status(400).json({ message: 'userId is required' });
+    }
+ 
+    const chat = await chatModel.findByIdAndUpdate(
+      chatId,
+      { $addToSet: { deletedFor: userId } },
+      { new: true }
+    );
+ 
+    if (!chat) {
+      return res.status(404).json({ message: 'Chat not found' });
+    }
+ 
+    await messageModel.updateMany(
+      { chatId },
+      { $addToSet: { deletedFor: userId } }
+    );
+ 
+    res.status(200).json({ message: 'Chat deleted for you', data: chat });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   accessChat,
   fetchChats,
   getMessages,
   sendMessage,
   sendMediaMessage,
+  deleteMessageForMe,
+  deleteChatForMe,
 markChatAsRead
 };

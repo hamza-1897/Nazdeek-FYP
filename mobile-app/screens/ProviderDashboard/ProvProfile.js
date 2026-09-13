@@ -84,7 +84,7 @@ const ProvProfile = ({ navigation }) => {
             <View className="w-9 h-9 bg-blue-50 rounded-lg items-center justify-center mr-4">
               <Feather name="user" size={18} color="#1a5ea1" />
             </View>
-            <Text className="flex-1 text-base font-medium text-gray-800">Edit profile</Text>
+            <Text className="flex-1 text-base font-medium text-gray-800">My profile</Text>
             <Ionicons name="chevron-forward" size={18} color="gray" />
           </TouchableOpacity>
 

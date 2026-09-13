@@ -16,7 +16,7 @@ import { socket } from '../services/socket';
 import ChatHeader from '../Components/ChatHeader';
 import MessageBubble from '../Components/MessageBubble';
 import MessageInput from '../Components/MessageInput';
-import { getAllMessages, sendMessage, sendMediaMessage, markRead } from '../api/chatApi';
+import { getAllMessages, sendMessage, sendMediaMessage, markRead, deleteMessageForMe } from '../api/chatApi';
 
 const ChatScreen = ({ route, navigation }) => {
   const {
@@ -107,7 +107,7 @@ const ChatScreen = ({ route, navigation }) => {
   const fetchMessages = async () => {
     try {
       setLoading(true);
-      const response = await getAllMessages(chatId);
+       const response = await getAllMessages(chatId, currentUserId);
       setMessages(response || []);
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -168,6 +168,32 @@ const ChatScreen = ({ route, navigation }) => {
       );
     }
   };
+
+
+  const handleDeleteMessage = (messageId) => {
+    Alert.alert(
+      'Delete Message',
+      'Delete this message for you? The other person will still be able to see it.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete for me',
+          style: 'destructive',
+          onPress: async () => {
+            setMessages((prev) => prev.filter((msg) => msg._id !== messageId));
+            try {
+              await deleteMessageForMe(messageId, currentUserId);
+            } catch (error) {
+              console.error('Delete message error:', error);
+              Alert.alert('Error', 'Could not delete the message. Please try again.');
+              fetchMessages();
+            }
+          },
+        },
+      ]
+    );
+  };
+ 
 
   const uploadMedia = async ({ uri, mimeType, fileName, messageType, duration }) => {
     const tempId = Date.now().toString();
@@ -258,9 +284,14 @@ const ChatScreen = ({ route, navigation }) => {
             ref={flatListRef}
             data={messages}
             keyExtractor={(item, index) => item._id || `msg-${index}`}
-            renderItem={({ item }) => (
-              <MessageBubble item={item} currentUserId={currentUserId} />
-            )}
+             renderItem={({ item }) => (
+    <MessageBubble
+      item={item}
+      currentUserId={currentUserId}
+      onLongPress={() => handleDeleteMessage(item._id)}
+    />
+  )}
+ 
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={{
               paddingHorizontal: 16,
