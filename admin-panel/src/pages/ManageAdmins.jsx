@@ -81,7 +81,7 @@ export default function ManageAdmins() {
       </div>
 
       <div className="bg-white rounded-2xl shadow p-6">
-        <h2 className="text-lg font-bold text-[#0D4D47] flex items-center gap-2 mb-4">
+        <h2 className="text-lg font-bold text-[#0a3a35] flex items-center gap-2 mb-4">
           <UserPlus className="w-5 h-5" /> Add New Admin
         </h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-4">

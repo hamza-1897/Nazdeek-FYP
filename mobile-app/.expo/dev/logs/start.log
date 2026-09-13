@@ -2986,3 +2986,7 @@
 {"_e":"metro:client_log","_t":1789297144938,"level":"log","data":["Customer FCM Token generated/updated successfully:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
 {"_e":"metro:client_log","_t":1789297145229,"level":"log","data":["Get Available Filters API response:","{\"categories\": [{\"_id\": \"6a66589d106d620360e4a7c3\", \"name\": \"Electrician\"}, {\"_id\": \"6a7401ca6990dac0a30afe3f\", \"name\": \"Technician\"}], \"cities\": [], \"success\": true}"]}
 {"_e":"metro:client_log","_t":1789297145456,"level":"log","data":["Get Cities API response:","{\"cities\": [{\"_id\": \"6aa59f2b6d19b27be7a4a956\", \"name\": \"Mandi Bahaudin\"}], \"success\": true}"]}
+{"_e":"metro:client_log","_t":1789297179299,"level":"log","data":["Expo Push Token:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}
+{"_e":"metro:client_log","_t":1789297179350,"level":"log","data":["New token detected, updating backend..."]}
+{"_e":"metro:client_log","_t":1789297180877,"level":"log","data":["update Fcm Token API response:","{\"message\": \"FCM token already up to date\", \"success\": true}"]}
+{"_e":"metro:client_log","_t":1789297180926,"level":"log","data":["Customer FCM Token generated/updated successfully:","ExponentPushToken[JIJ6OZIBIYBBSgftVjgOiQ]"]}

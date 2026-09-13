@@ -31,16 +31,13 @@ const ServicesScreen = ({ navigation }) => {
     }, [])
   );
 
-  // Simple clean fetcher
   const loadInitialData = async () => {
     setLoading(true);
     try {
-      // Load Services
       const servicesRes = await getAllServices();
       const list = servicesRes?.data?.data || servicesRes?.data || servicesRes || [];
       setServices(Array.isArray(list) ? list : []);
 
-      // Load Categories
       const filtersRes = await getAvailableFilters();
       const catData = filtersRes?.data?.categories || filtersRes?.categories || [];
       if (Array.isArray(catData)) {
@@ -50,7 +47,6 @@ const ServicesScreen = ({ navigation }) => {
         ]);
       }
 
-      // Load Cities directly from DB API
       const citiesRes = await getCities();
       const cityList = citiesRes?.cities || citiesRes?.data?.cities || citiesRes?.data || [];
       if (Array.isArray(cityList)) {
@@ -69,16 +65,13 @@ const ServicesScreen = ({ navigation }) => {
     }
   };
 
-  // Clean & Safe Filtering Logic
   const filteredServices = useMemo(() => {
     return services.filter((item) => {
-      // Safe Category Name Extraction
       const categoryName =
         (typeof item?.categoryId === 'object'
           ? item?.categoryId?.name
           : item?.categoryName) || '';
 
-      // Safe City Name Extraction
       const cityName =
         (typeof item?.providerId?.city === 'object'
           ? item?.providerId?.city?.name
@@ -88,7 +81,6 @@ const ServicesScreen = ({ navigation }) => {
       const cityStr = String(cityName).toLowerCase();
       const query = searchQuery.toLowerCase().trim();
 
-      // Filter Checks
       const matchesCategory =
         selectedCategory === 'All' || catStr === selectedCategory.toLowerCase();
 
@@ -108,14 +100,12 @@ const ServicesScreen = ({ navigation }) => {
     <SafeAreaView className="flex-1 bg-slate-50">
       <StatusBar barStyle="dark-content" backgroundColor="#f8fafc" />
 
-      {/* Header */}
       <View className="px-5 pt-3 pb-2 flex-row justify-center items-center border-b border-slate-100 bg-white shadow-xs">
         <Text className="text-slate-900 text-lg font-black tracking-wide text-center">
           Popular Services
         </Text>
       </View>
 
-      {/* Search Bar */}
       <View className="px-5 pt-4 pb-2">
         <View className="bg-white flex-row items-center px-4 h-12 rounded-2xl border border-slate-200/80 shadow-xs">
           <Ionicons name="search-outline" size={18} color="#94a3b8" />
@@ -134,7 +124,6 @@ const ServicesScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Dropdowns Row */}
       <View className="px-4 flex-row justify-between my-2">
         <CustomDropdown
           label="Categories"
@@ -153,7 +142,6 @@ const ServicesScreen = ({ navigation }) => {
         />
       </View>
 
-      {/* Content List / Loader */}
       {loading ? (
         <View className="flex-1 justify-center items-center">
           <ActivityIndicator size="large" color="#1a5ea1" />
