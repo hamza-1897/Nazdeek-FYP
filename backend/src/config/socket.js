@@ -35,8 +35,8 @@ const initSocket = (server) => {
     cors: {
       origin: '*',
     },
-     pingInterval: 10000,  
-    pingTimeout: 5000, 
+    pingInterval: 25000,
+    pingTimeout: 20000,
   });
 
   io.on('connection', (socket) => {

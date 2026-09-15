@@ -2,7 +2,9 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-const API_BASE_URL = 'https://nazdeek-fyp.onrender.com/api'; 
+//const API_BASE_URL = 'https://nazdeek-fyp.onrender.com/api'; 
+const API_BASE_URL = 'http://10.205.244.200:3000/api';
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
@@ -35,7 +37,12 @@ api.interceptors.response.use(
 
       try {
         const storedRefreshToken = await SecureStore.getItemAsync('refreshToken');
-        if (!storedRefreshToken) throw new Error('No refresh token');
+        if (!storedRefreshToken) {
+          return Promise.reject({
+            isLoggedOut: true,
+            message: 'Session expired or logged out.',
+          });
+        }
 
         const refreshResponse = await axios.post(`${API_BASE_URL}/user-auth/refresh-token`, {
           refreshToken: storedRefreshToken,

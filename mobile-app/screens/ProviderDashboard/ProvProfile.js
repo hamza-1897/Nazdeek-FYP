@@ -55,6 +55,33 @@ const ProvProfile = ({ navigation }) => {
     );
   };
 
+ const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              if (logout) {
+                await logout();
+              }
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }], 
+              });
+            } catch (error) {
+              console.log("Logout Error: ", error);
+            }
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="#e6f0fa" />
@@ -138,10 +165,7 @@ const ProvProfile = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => {
-              logout();
-              navigation.replace('Login');
-            }}
+            onPress={handleLogout}
             className="flex-row items-center bg-white p-4 rounded-xl border border-gray-100"
           >
             <View className="w-9 h-9 bg-slate-100 rounded-lg items-center justify-center mr-4">

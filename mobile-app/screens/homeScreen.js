@@ -18,7 +18,7 @@ import PremiumProvidersSection from '../Components/PremiumProvidersSection';
 import ServiceCardItem from '../Components/ServiceCardItem';
 
 const HomeScreen = ({ navigation }) => {
-  const { userInfo } = useContext(AuthContext);
+  const { userInfo,setUnReadMessagesCount } = useContext(AuthContext);
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
 
@@ -26,12 +26,16 @@ const HomeScreen = ({ navigation }) => {
   const [services, setServices] = useState([]);
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
   const [loading, setLoading] = useState(true);
+  const hasLoadedOnce = React.useRef(false);
 
-  const fetchDashboardData = async () => {
+   const fetchDashboardData = async () => {
     try {
-      setLoading(true);
+     
+      if (!hasLoadedOnce.current) {
+        setLoading(true);
+      }
       const response = await getDashboard();
-
+      setUnReadMessagesCount(response.unReadMessagesCount || 0);
       if (response && response.success) {
       const formattedProviders = (response.providers || [])
           .map((p) => ({
@@ -63,26 +67,29 @@ const HomeScreen = ({ navigation }) => {
         setServices(formattedServices);
         setHasUnreadNotifications(response.hasUnreadNotifications || false);
       }
-    } catch (error) {
+     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
       setLoading(false);
+      hasLoadedOnce.current = true;
     }
   };
 
-  useEffect(() => {
-   registerForPushNotificationsAsync(userInfo?.fcmToken)
+ useEffect(() => {
+  registerForPushNotificationsAsync()
     .then((token) => {
       if (token) {
-        console.log("Customer FCM Token generated/updated successfully:", token);
+        console.log("Customer FCM Token checked/updated successfully:", token);
       }
     })
     .catch((err) => console.error("Error registering notification:", err));
-    if (isFocused) {
-      fetchDashboardData();
-    }
-  }, [userInfo?.fcmToken, isFocused]);
+}, []); 
 
+useEffect(() => {
+  if (isFocused) {
+    fetchDashboardData();
+  }
+}, [isFocused]);
   return (
     <View style={{ flex: 1, backgroundColor: '#1a5ea1' }}>
       <StatusBar barStyle="light-content" backgroundColor="#1a5ea1" translucent={false} />

@@ -24,6 +24,7 @@ const ServicesScreen = ({ navigation }) => {
   const [selectedCity, setSelectedCity] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
+     const hasLoadedOnce = React.useRef(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -32,7 +33,7 @@ const ServicesScreen = ({ navigation }) => {
   );
 
   const loadInitialData = async () => {
-    setLoading(true);
+       if (!hasLoadedOnce.current) setLoading(true);
     try {
       const servicesRes = await getAllServices();
       const list = servicesRes?.data?.data || servicesRes?.data || servicesRes || [];
@@ -62,6 +63,7 @@ const ServicesScreen = ({ navigation }) => {
       console.error('Error loading screen data:', error);
     } finally {
       setLoading(false);
+         hasLoadedOnce.current = true;
     }
   };
 

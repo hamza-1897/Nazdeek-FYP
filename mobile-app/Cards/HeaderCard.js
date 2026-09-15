@@ -25,7 +25,7 @@ const HeaderCard = ({ userName,hasUnread }) => {
           <View className="bg-[#1a5ea1] p-4 rounded-b-[40px] shadow-2xl">
 
       
-      <View className="flex-row justify-between items-center mb-8">
+      <View className="flex-row justify-between items-center rounded-b-[400px] mb-4">
         <View>
 
           <Text className="text-blue-100 text-lg font-medium">{getGreeting()}</Text>

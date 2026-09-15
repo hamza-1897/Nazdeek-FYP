@@ -33,6 +33,7 @@ const ChatScreen = ({ route, navigation }) => {
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(true);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+   const hasLoadedOnce = React.useRef(false);
   const flatListRef = useRef(null);
 
   const isProvider = receiverModel === 'Provider';
@@ -67,25 +68,21 @@ const ChatScreen = ({ route, navigation }) => {
     };
   }, []);
 
-  useEffect(() => {
+ useEffect(() => {
     if (!chatId) return;
 
     if (!socket.connected) {
       socket.connect();
     }
 
-
     const roomPayload = { chatId, userId: currentUserId };
 
-    const onConnect = () => {
+    const joinRoom = () => {
       socket.emit('join_room', roomPayload);
     };
 
-    if (socket.connected) {
-      socket.emit('join_room', roomPayload);
-    } else {
-      socket.on('connect', onConnect);
-    }
+    joinRoom();
+    socket.on('connect', joinRoom);
 
     fetchMessages();
     markAsRead(chatId, currentUserId);
@@ -124,7 +121,7 @@ const ChatScreen = ({ route, navigation }) => {
     return () => {
     
       socket.emit('leave_room', roomPayload);
-      socket.off('connect', onConnect);
+       socket.off('connect', joinRoom);
       socket.off('receive_message', handleReceiveMessage);
       socket.off('messages_read', handleMessagesRead);
     };
@@ -132,13 +129,14 @@ const ChatScreen = ({ route, navigation }) => {
 
   const fetchMessages = async () => {
     try {
-      setLoading(true);
+      if (!hasLoadedOnce.current) setLoading(true);
        const response = await getAllMessages(chatId, currentUserId);
       setMessages(response || []);
     } catch (error) {
       console.error('Error fetching messages:', error);
     } finally {
       setLoading(false);
+      hasLoadedOnce.current = true;
     }
   };
 
@@ -180,7 +178,7 @@ const ChatScreen = ({ route, navigation }) => {
       const response = await sendMessage(messageData);
       const savedMessage = response?.data || response?.message || response || messageData;
 
-      socket.emit('send_message', savedMessage);
+      
 
       if (savedMessage._id) {
         setMessages((prev) =>
@@ -259,7 +257,6 @@ const ChatScreen = ({ route, navigation }) => {
 
       const savedMessage = await sendMediaMessage(formData);
 
-      socket.emit('send_message', savedMessage);
 
       setMessages((prev) =>
         prev.map((msg) => (msg._id === tempId ? savedMessage : msg))

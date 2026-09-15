@@ -7,6 +7,7 @@ const reviewModel = require('../../models/reviewModel');
 const notificationModel = require('../../models/notificationModel');
 const categoryModel = require('../../models/categoryModel');
 const cityModel = require('../../models/cityModel');
+const messageModel = require('../../models/messageModel');
 const { syncSubscriptionStatus } = require('../../lib/SubscriptionUtils');
 const mongoose = require('mongoose');
 
@@ -29,7 +30,8 @@ const getProviderDashboardStats = async (req, res) => {
       totalReviewsCount,
       ratingData,
       ongoingBookings,
-      unreadNotificationsCount
+      unreadNotificationsCount,
+      unreadMessagesCount
     ] = await Promise.all([
       serviceModel.countDocuments({ providerId }),
 
@@ -61,6 +63,10 @@ const getProviderDashboardStats = async (req, res) => {
       notificationModel.countDocuments({
         recipientId: { $in: [providerId] },
         isRead: false
+      }),
+      messageModel.countDocuments({
+        receiverId: { $in: [providerId] },
+        isRead: false
       })
     ]);
 
@@ -72,6 +78,10 @@ const getProviderDashboardStats = async (req, res) => {
         notifications: {
           hasUnread: unreadNotificationsCount > 0,
           unreadCount: unreadNotificationsCount
+        },
+        messages: {
+          hasUnread: unreadMessagesCount > 0,
+          unreadCount: unreadMessagesCount
         },
         stats: {
           totalServices,

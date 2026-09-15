@@ -2,7 +2,7 @@
   "expo": {
     "name": "Nazdeek",
     "slug": "mobile-app",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,7 +15,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "gradleVersion": "8.13",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {

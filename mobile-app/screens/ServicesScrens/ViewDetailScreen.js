@@ -26,19 +26,23 @@ const ViewDetailScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('About');
 
-  // Full-screen Image Modal States (Same as Provider Profile)
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  
+  const hasLoadedOnce = React.useRef(false);
 
   useFocusEffect(
     useCallback(() => {
+      if (!hasLoadedOnce.current) {
+        setLoading(true);
+      }
       fetchServiceDetails();
     }, [serviceId])
   );
 
   const fetchServiceDetails = async () => {
-    setLoading(true);
-    try {
+   if (!hasLoadedOnce.current) setLoading(true);
+       try {
       const res = await getServiceById(serviceId);
       const data = res?.data?.data || res?.data;
       setServiceData(data);
@@ -46,6 +50,7 @@ const ViewDetailScreen = ({ route, navigation }) => {
       console.error('Error fetching service details:', error);
     } finally {
       setLoading(false);
+      hasLoadedOnce.current = true; 
     }
   };
 
