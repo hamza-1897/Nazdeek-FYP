@@ -23,6 +23,7 @@ const ProviderProfileScreen = ({ navigation, route }) => {
 
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+     const hasLoadedOnce = React.useRef(false);
 
   // Full-screen Image Modal States
   const [selectedImage, setSelectedImage] = useState(null);
@@ -36,13 +37,14 @@ const ProviderProfileScreen = ({ navigation, route }) => {
 
   const fetchProvider = async (id) => {
     try {
-      setLoading(true);
+         if (!hasLoadedOnce.current) setLoading(true);
       const response = await getProviderById(id);
       setProfileData(response?.data || response);
     } catch (error) {
       console.error('Error fetching provider:', error);
     } finally {
       setLoading(false);
+         hasLoadedOnce.current = true; 
     }
   };
 

@@ -3,6 +3,7 @@ const notificationModel = require('../../models/notificationModel');
 const providerModel = require('../../models/providerModel');
 const categoryModel = require('../../models/categoryModel');
 const serviceModel = require('../../models/serviceModel');
+const messageModel = require('../../models/messageModel');
 
 // Get User Profile
 const getUserProfile = async (req,res) => {
@@ -30,6 +31,10 @@ const getCustomerDashboard = async (req, res) => {
       isRead: false
     });
     const hasUnreadNotifications = Boolean(unreadNotifications);
+    const unReadMessagesCount = await messageModel.countDocuments({
+      receiverId: userId,
+      isRead: false
+    });
 
     const rawProviders = await providerModel.find({ verificationStatus: 'approved' })
       .select('businessName providerImage isPremium categoryId createdAt')
@@ -72,7 +77,8 @@ const getCustomerDashboard = async (req, res) => {
       success: true,
       hasUnreadNotifications,
       providers: formattedProviders,
-      services: sortedServices
+      services: sortedServices, 
+      unReadMessagesCount
     });
 
   } catch (error) {

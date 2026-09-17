@@ -4,19 +4,24 @@ import { Octicons, Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '../context/AuthContext';
 import ProviderHeader from '../Components/ProviderHeader';
 import ProviderStatsCard from '../Cards/ProviderStatsCard';
+ import { useIsFocused } from '@react-navigation/native';
 import SubscriptionBanner from '../Components/SubscriptionBanner';
 import { getProviderDashboardStats } from '../api/ProviderApi';
 import {registerForPushNotificationsAsync} from '../services/notificationService'
 
 const ProviderDashboard = ({ navigation }) => {
-  const { providerInfo , userInfo } = useContext(AuthContext);
+  const { providerInfo , setUnReadMessagesCount, userInfo } = useContext(AuthContext);
   const providerId = providerInfo?._id;
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [token,setToken] = useState('');
+ 
+   const isFocused = useIsFocused();
+   const hasLoadedOnce = React.useRef(false);
   const [dashboardData, setDashboardData] = useState({
     notifications: { hasUnread: false, unreadCount: 0 },
+    messages: { hasUnread: false, unreadCount: 0 },
     stats: {
       totalServices: 0,
       activeBookings: 0,
@@ -28,23 +33,30 @@ const ProviderDashboard = ({ navigation }) => {
 
   const fetchDashboard = async () => {
     try {
+         if (!hasLoadedOnce.current) setLoading(true);
       if (!providerId) return;
       const response = await getProviderDashboardStats(providerId);
       
       if (response?.data?.success || response?.data) {
         const resData = response.data.data || response.data;
         setDashboardData(resData);
+        if (resData?.messages?.unreadCount !== undefined) {
+          setUnReadMessagesCount(resData.messages.unreadCount);
+        }
       }
     } catch (error) {
       console.error('Error fetching dashboard stats in UI:', error);
     } finally {
       setLoading(false);
       setRefreshing(false);
+         hasLoadedOnce.current = true;
     }
   };
 
   useEffect(() => {
-    fetchDashboard();
+    if(isFocused) {
+      fetchDashboard();
+    }
       registerForPushNotificationsAsync(userInfo?.fcmToken).then(generatedToken => {
       if (generatedToken) {
         setToken(generatedToken);
@@ -52,7 +64,7 @@ const ProviderDashboard = ({ navigation }) => {
         setToken('Permission denied.');
       }
     });
-  }, [providerId]);
+  }, [providerId,isFocused]);
 
   const onRefresh = () => {
     setRefreshing(true);

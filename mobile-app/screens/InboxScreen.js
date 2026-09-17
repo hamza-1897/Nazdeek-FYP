@@ -18,7 +18,7 @@ import { AuthContext } from '../context/AuthContext';
 import { ProviderTabs } from '../Cards/ProviderTabs';
 
 const InboxScreen = ({ navigation, route }) => {
-  const { userInfo, providerInfo } = useContext(AuthContext);
+  const { userInfo,setUnReadMessagesCount, providerInfo } = useContext(AuthContext);
 
   const currentUserId =
     userInfo?.role === 'customer'
@@ -30,12 +30,13 @@ const InboxScreen = ({ navigation, route }) => {
       ? 'User'
       : 'Provider';
 
-  const [chats, setChats] = useState([]);
+    const [chats, setChats] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const hasLoadedOnce = React.useRef(false);
 
-  const loadChats = async () => {
+   const loadChats = async () => {
     if (!currentUserId) {
       console.warn('InboxScreen: currentUserId is missing or undefined!');
       setLoading(false);
@@ -44,22 +45,24 @@ const InboxScreen = ({ navigation, route }) => {
     }
 
     try {
-      console.log('Fetching chats for userId:', currentUserId);
       const data = await fetchChats(currentUserId);
-      console.log('Chats fetched successfully:', data?.length || 0);
       setChats(data || []);
     } catch (error) {
       console.error('Error fetching inbox chats:', error?.message || error);
     } finally {
       setLoading(false);
       setRefreshing(false);
+      hasLoadedOnce.current = true;
     }
   };
 
-  useFocusEffect(
+   useFocusEffect(
     useCallback(() => {
-      setLoading(true);
+      if (!hasLoadedOnce.current) {
+        setLoading(true);
+      }
       loadChats();
+      setUnReadMessagesCount(0);
     }, [currentUserId])
   );
 

@@ -129,6 +129,10 @@ const sendMessage = async (req, res) => {
       },
       { returnDocument: 'after' }
     );
+       const io = getIO();
+    if (io) {
+      io.to(chatId.toString()).emit('receive_message', message);
+    }
 
     const targetFcmToken = receiverModel === 'Provider' ? receiver?.userId?.fcmToken : receiver?.fcmToken;
 
@@ -215,6 +219,10 @@ const sendMediaMessage = async (req, res) => {
       },
       { returnDocument: 'after' }
     );
+       const io = getIO();
+    if (io) {
+      io.to(chatId.toString()).emit('receive_message', message);
+    }
 
     const targetFcmToken = receiverModel === 'Provider' ? receiver?.userId?.fcmToken : receiver?.fcmToken;
 

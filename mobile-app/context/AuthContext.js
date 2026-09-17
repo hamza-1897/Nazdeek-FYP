@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [userInfo, setUserInfo] = useState(null);
   const [providerInfo, setProviderInfo] = useState(null);
+const [unReadMessagesCount, setUnReadMessagesCount] = useState(0);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -52,7 +53,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Taza User aur Provider State ko Sync & Persist karne ke liye:
   const updateUserState = async (updatedData) => {
     try {
       setUserInfo(updatedData);
@@ -87,7 +87,10 @@ export const AuthProvider = ({ children }) => {
     await SecureStore.deleteItemAsync('userToken').catch(() => {});
     await SecureStore.deleteItemAsync('refreshToken').catch(() => {});
     await SecureStore.deleteItemAsync('userData').catch(() => {});
+    await SecureStore.deleteItemAsync('pushToken').catch(() => {});
   };
+
+ 
 
   return (
     <AuthContext.Provider
@@ -99,9 +102,11 @@ export const AuthProvider = ({ children }) => {
         setUserInfo,
         login,
         logout,
-        updateUserState, // Export added here
+        updateUserState, 
         updateProviderInfo,
         updateProviderDetails,
+        unReadMessagesCount,
+        setUnReadMessagesCount,
         isLoading,
       }}
     >

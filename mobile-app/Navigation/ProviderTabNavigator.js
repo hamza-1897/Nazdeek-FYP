@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-
+import { AuthContext } from '../context/AuthContext';
 import ProviderDashboard from '../screens/ProviderDashboard';
 import MyServicesProvider from '../screens/ProviderDashboard/MyServicesProvider';
 import InboxScreen from '../screens/InboxScreen';
@@ -11,6 +11,8 @@ import ProvProfile from '../screens/ProviderDashboard/ProvProfile';
 const Tab = createBottomTabNavigator();
 
 export default function ProviderTabNavigator() {
+  const { unReadMessagesCount } = useContext(AuthContext);
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -56,7 +58,27 @@ export default function ProviderTabNavigator() {
     >
       <Tab.Screen name="Home" component={ProviderDashboard} />
       <Tab.Screen name="Services" component={MyServicesProvider} />
-      <Tab.Screen name="Chat" component={InboxScreen} />
+      
+      <Tab.Screen 
+        name="Chat" 
+        component={InboxScreen} 
+        options={{
+          tabBarBadge: unReadMessagesCount > 0 
+            ? (unReadMessagesCount > 5 ? '5+' : unReadMessagesCount) 
+            : undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: '#ef4444',
+            color: '#ffffff',
+            fontSize: 10,
+            fontWeight: 'bold',
+            minWidth: 18,
+            height: 18,
+            borderRadius: 9,
+            lineHeight: 18,
+          },
+        }}
+      />
+      
       <Tab.Screen name="Bookings" component={ProvidersBooking} />
       <Tab.Screen name="Profile" component={ProvProfile} />
     </Tab.Navigator>

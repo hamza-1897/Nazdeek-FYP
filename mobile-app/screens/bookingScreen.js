@@ -12,10 +12,11 @@ const BookingScreen = ({ navigation, route }) => {
   const [activeTab, setActiveTab] = useState('Upcoming');
   const [bookingsData, setMyBookingsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const hasLoadedOnce = React.useRef(false);
 
   const fetchBookings = async () => {
     try {
-      setIsLoading(true);
+        if (!hasLoadedOnce.current) setLoading(true);
       if (userInfo && userInfo.id) {
         const data = await getBookingsByUserId(userInfo.id);
         setMyBookingsData(data);
@@ -25,6 +26,7 @@ const BookingScreen = ({ navigation, route }) => {
       console.log("Error fetching bookings:", error);
     } finally {
       setIsLoading(false);
+         hasLoadedOnce.current = true;
     }
   };
 

@@ -1,7 +1,7 @@
-import React from 'react';
+import React ,{useContext}from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-
+import { AuthContext } from '../context/AuthContext';
 import HomeScreen from '../screens/homeScreen';
 import ServicesScreen from '../screens/serviceScreen';
 import InboxScreen from '../screens/InboxScreen';
@@ -11,6 +11,7 @@ import ProfileScreen from '../screens/profileScreen';
 const Tab = createBottomTabNavigator();
 
 const AppTabs = () => {
+  const { unReadMessagesCount } = useContext(AuthContext);
   return (
     <Tab.Navigator
     initialRouteName="Home"
@@ -41,7 +42,22 @@ const AppTabs = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Services" component={ServicesScreen} />
-      <Tab.Screen name="Chat" component={InboxScreen} />
+      <Tab.Screen name="Chat" component={InboxScreen} 
+        options={{
+          tabBarBadge: unReadMessagesCount > 0 ? (unReadMessagesCount > 5 ? '5+' : unReadMessagesCount) : undefined,
+           tabBarBadgeStyle: {
+            backgroundColor: '#ef4444',
+            color: '#ffffff',
+            fontSize: 10,
+            fontWeight: 'bold',
+            minWidth: 18,
+            height: 18,
+            borderRadius: 9,
+            lineHeight: 18,
+          },
+        }}
+
+      />
       <Tab.Screen name="Bookings" component={BookingsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

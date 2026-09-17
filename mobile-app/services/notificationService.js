@@ -1,6 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
 import { updateFcmToken } from '../api/authApi';
 
 Notifications.setNotificationHandler({
@@ -12,10 +13,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
-/**
- * @param {string} currentSavedToken 
- */
-export const registerForPushNotificationsAsync = async (currentSavedToken = null) => {
+export const registerForPushNotificationsAsync = async () => {
   let token = null;
 
   if (Platform.OS === 'android') {
@@ -44,11 +42,19 @@ export const registerForPushNotificationsAsync = async (currentSavedToken = null
     token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log('Expo Push Token:', token);
 
-    if (currentSavedToken && currentSavedToken === token) {
+    const savedToken = await SecureStore.getItemAsync('pushToken');
+
+    if (savedToken && savedToken === token) {
       console.log('FCM Token unchanged. Skipping backend update.');
-    } else {
-      console.log('New token detected, updating backend...');
-      await updateFcmToken(token); 
+      return token;
+    }
+
+    console.log('New token detected, updating backend...');
+    try {
+      await updateFcmToken(token);
+      await SecureStore.setItemAsync('pushToken', token); 
+    } catch (err) {
+      console.log('Push token update error:', err?.message || err);
     }
 
   } else {
