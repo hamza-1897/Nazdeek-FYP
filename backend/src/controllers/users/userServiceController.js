@@ -16,40 +16,68 @@ const getAllServices = async (req, res) => {
         select: 'businessName address city isPremium subscriptionDetails providerImage experience verificationStatus',
         populate: { path: 'city', select: 'name' }
       })
-      .populate('categoryId', 'name');
+      .populate('categoryId', 'name')
+      .sort({ createdAt: 1 }); 
 
-    const sortedServices = services.sort((a, b) => {
-      
-      const isAPremium = 
-        Boolean(a.providerId?.isPremium) || 
-        a.providerId?.subscriptionDetails?.status === 'active';
+    const now = new Date();
+    const providerServiceCountMap = new Map();
+    const filteredServices = [];
 
-      const isBPremium = 
-        Boolean(b.providerId?.isPremium) || 
-        b.providerId?.subscriptionDetails?.status === 'active';
+    for (const service of services) {
+      const provider = service.providerId;
 
-      if (isAPremium && !isBPremium) return -1; 
-      if (!isAPremium && isBPremium) return 1;  
-      
-      return 0; 
+      if (!provider) continue;
+
+      const providerIdStr = provider._id.toString();
+
+      const subEndDate = provider?.subscriptionDetails?.endDate
+        ? new Date(provider.subscriptionDetails.endDate)
+        : null;
+
+      const isSubscriptionActive =
+        Boolean(provider?.isPremium) &&
+        provider?.subscriptionDetails?.status === 'active' &&
+        subEndDate &&
+        subEndDate > now;
+
+      if (isSubscriptionActive) {
+        filteredServices.push({ service, isPremium: true });
+      } else {
+        const currentCount = providerServiceCountMap.get(providerIdStr) || 0;
+
+        if (currentCount === 0) {
+          filteredServices.push({ service, isPremium: false });
+          providerServiceCountMap.set(providerIdStr, 1);
+        }
+      }
+    }
+
+    filteredServices.sort((a, b) => {
+      if (a.isPremium && !b.isPremium) return -1;
+      if (!a.isPremium && b.isPremium) return 1;
+      return 0;
     });
 
-    res.status(200).json({ 
-      success: true, 
+    const finalServices = filteredServices.map((item) => item.service);
+
+    res.status(200).json({
+      success: true,
       message: "All services retrieved successfully.",
-      count: sortedServices.length,
-      data: sortedServices 
+      count: finalServices.length,
+      data: finalServices
     });
 
   } catch (error) {
     console.error("Get All Services Error:", error);
-    res.status(500).json({ 
-      success: false, 
-      message: "Server Error", 
-      error: error.message 
+    res.status(500).json({
+      success: false,
+      message: "Server Error",
+      error: error.message
     });
   }
 };
+
+
 const getAvailableFilters = async (req, res) => {
   try {
     const approvedProviders = await providerModel

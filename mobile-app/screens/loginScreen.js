@@ -64,7 +64,7 @@ const LoginScreen = ({ navigation }) => {
           const registrationFee = data.providerInfo?.registrationFee || 'unpaid';
           const isRegistrationFree = data.isRegistrationFree ?? false;
 
-          handleProviderRouting(navigation, verificationStatus, registrationFee, isRegistrationFree);
+          handleProviderRouting(navigation, verificationStatus, registrationFee, isRegistrationFree,data.providerInfo?.accountRejectionReason);
         } else {
           navigation.replace('AppTabs');
         }
