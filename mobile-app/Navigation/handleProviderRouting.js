@@ -2,7 +2,8 @@ export const handleProviderRouting = (
   navigation,
   verificationStatus,
   registrationFeeStatus,
-  isRegistrationFree
+  isRegistrationFree,
+  accountRejectionReason
 ) => {
   // Helper to completely clear stack history and navigate
   const resetTo = (routeName, params = {}) => {
@@ -21,7 +22,7 @@ export const handleProviderRouting = (
   }
 
   if (verificationStatus === 'rejected') {
-    return resetTo('AccountRejectedScreen');
+    return resetTo('AccountRejectedScreen', { accountRejectionReason });
   }
 
   if (verificationStatus === 'approved') {

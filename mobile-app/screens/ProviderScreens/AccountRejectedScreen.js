@@ -6,10 +6,11 @@ import {AuthContext} from '../../context/AuthContext'
 
 const AccountRejectedScreen = ({ route, navigation }) => {
   const providerData = route?.params?.providerData;
+  const rejectionReason = route?.params?.accountRejectionReason ||  'Your submitted documents or details did not meet our verification criteria.';
+
+
     const {logout} = useContext(AuthContext)
-  const rejectionReason = 
-    providerData?.accountRejectionReason || 
-    providerData?.providerInfo?.accountRejectionReason || 
+   
     'Your submitted documents or details did not meet our verification criteria.';
 
   return (

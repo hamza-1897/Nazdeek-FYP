@@ -178,7 +178,7 @@ const ChatScreen = ({ route, navigation }) => {
       const response = await sendMessage(messageData);
       const savedMessage = response?.data || response?.message || response || messageData;
 
-      
+    socket.emit('send_message', savedMessage);      
 
       if (savedMessage._id) {
         setMessages((prev) =>
@@ -256,7 +256,7 @@ const ChatScreen = ({ route, navigation }) => {
       }
 
       const savedMessage = await sendMediaMessage(formData);
-
+      socket.emit('send_message', savedMessage);
 
       setMessages((prev) =>
         prev.map((msg) => (msg._id === tempId ? savedMessage : msg))
