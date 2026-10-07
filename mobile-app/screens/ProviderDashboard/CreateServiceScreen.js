@@ -51,6 +51,10 @@ const CreateServiceScreen = ({ navigation }) => {
       Alert.alert("Missing Information", "Please complete all fields and upload at least one image.");
       return;
     }
+    if (isNaN(price) || Number(price) <= 0) {
+      Alert.alert("Invalid Price", "Please enter a valid positive number for the price.");
+      return;
+    }
 
     const providerId = providerInfo?._id;
     const categoryId = providerInfo?.categoryId?._id || providerInfo?.categoryId;

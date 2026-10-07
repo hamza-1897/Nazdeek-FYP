@@ -82,7 +82,6 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
 
   return (
     <div className="space-y-6">
-      {/* Profile Overview Box */}
       <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
         <div className="flex items-center gap-4 mb-6 pb-4 border-b border-gray-100">
           <a href={profileImg} target="_blank" rel="noopener noreferrer" className="shrink-0">
@@ -260,9 +259,7 @@ const VerificationTab = ({ provider, onApprove, onBlock }) => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <div className="bg-white p-6 rounded-2xl max-w-md w-full shadow-xl space-y-4">
             <h3 className="text-lg font-bold text-gray-800">Reject Application</h3>
-            <p className="text-xs text-gray-500">
-              State the reason for rejection so the provider can rectify and re-upload documents.
-            </p>
+          
             <textarea
               rows={4}
               value={rejectionReason}

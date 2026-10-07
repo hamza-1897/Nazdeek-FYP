@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import {getAllCategories ,getAllCities, registerProviderApi} from '../../api/ProviderApi'
 import { AuthContext } from '../../context/AuthContext';
+import { validateAddress,validateAlphaNumeric,validateCNIC,validateExperience } from '../../services/validations';
 
 
 
@@ -156,10 +157,13 @@ const pickWorkImages = async () => {
       Alert.alert('Validation Error', 'Please enter Business/Service Name.');
       return;
     }
-    if (!cnicNumber.trim() || cnicNumber.length < 13) {
-      Alert.alert('Validation Error', 'Please enter a valid 13-digit CNIC number.');
+
+    const cnicError = validateCNIC(cnicNumber)
+    if (cnicError) {
+      Alert.alert('Error', cnicError);
       return;
     }
+
     if (!selectedCategory) {
       Alert.alert('Validation Error', 'Please select a service category.');
       return;
@@ -173,20 +177,28 @@ const pickWorkImages = async () => {
       Alert.alert('Validation Error', 'Please select a profile picture.');
       return;
     }
-    if (!address) {
-      Alert.alert('Validation Error', 'Please Enter your address.');
+
+    const addressError = validateAddress(address)
+        if (addressError) {
+          Alert.alert('Error', addressError);
+          return;
+        }
+
+    const expError = validateExperience(experience)
+    if (expError) {
+      Alert.alert('Error', expError);
       return;
     }
-    if (!experience.trim()) {
-  Alert.alert('Validation Error', 'Please enter your years of experience.');
-  return;
-}
     if (!cnicFront || !cnicBack) {
       Alert.alert('Validation Error', 'Please upload both CNIC Front and Back images.');
       return;
     }
     if (!selfieWithCnic) {
       Alert.alert('Validation Error', 'Please take a selfie holding your CNIC. This helps us confirm the account belongs to you.');
+      return;
+    }
+    if(!workImages || workImages.length < 2){
+      Alert.alert('Validation Error', 'Please upload at least 2 work portfolio image.');
       return;
     }
 
@@ -290,39 +302,42 @@ try {
         </View>
 
         <View className="mb-4">
-          <Text className="text-sm font-bold text-gray-800 mb-1">Business Name</Text>
+          <Text className="text-sm font-bold text-gray-800 mb-1">Business Name*</Text>
           <TextInput
             className="border border-gray-300 rounded-lg p-3 text-base bg-gray-50 text-gray-900"
             placeholder="e.g. Ali Electric Work"
             value={businessName}
+            placeholderTextColor="#9ca3af"
             onChangeText={setBusinessName}
           />
         </View>
 
          <View className="mb-4">
-          <Text className="text-sm font-bold text-gray-800 mb-1">Business Address</Text>
+          <Text className="text-sm font-bold text-gray-800 mb-1">Business Address*</Text>
           <TextInput
             className="border border-gray-300 rounded-lg p-3 text-base bg-gray-50 text-gray-900"
             placeholder="Enter your Address "
             value={address}
+            placeholderTextColor="#9ca3af"
             onChangeText={setAddress}
           />
         </View>
 
         <View className="mb-4">
-          <Text className="text-sm font-bold text-gray-800 mb-1">CNIC Number</Text>
+          <Text className="text-sm font-bold text-gray-800 mb-1">CNIC Number*</Text>
           <TextInput
             className="border border-gray-300 rounded-lg p-3 text-base bg-gray-50 text-gray-900"
             placeholder="3740512345671"
             keyboardType="number-pad"
             maxLength={13}
             value={cnicNumber}
+             placeholderTextColor="#9ca3af"
             onChangeText={setCnicNumber}
           />
         </View>
 
 <View className="mb-4">
-  <Text className="text-sm font-bold text-gray-800 mb-2">Select Category</Text>
+  <Text className="text-sm font-bold text-gray-800 mb-2">Select Category*</Text>
   
   {loadingCategories ? (
     <View className="py-3 items-center flex-row">
@@ -361,7 +376,7 @@ try {
 
   
 <View className="mb-4">
-  <Text className="text-sm font-bold text-gray-800 mb-2">Select Your City</Text>
+  <Text className="text-sm font-bold text-gray-800 mb-2">Select Your City*</Text>
  
   {loadingCities ? (
     <View className="py-3 items-center flex-row">
@@ -402,12 +417,13 @@ try {
 </View>
 
         <View className="mb-6">
-          <Text className="text-sm font-bold text-gray-800 mb-1">About Your Profile</Text>
+          <Text className="text-sm font-bold text-gray-800 mb-1">About Your Profile*</Text>
           <TextInput
             className="border border-gray-300 rounded-lg p-3 text-base bg-gray-50 text-gray-900"
-            placeholder="Tell customers about your experience, timing, and specialty..."
+            placeholder="Tell customers more about your business..."
             multiline
             numberOfLines={4}
+             placeholderTextColor="#9ca3af"
             textAlignVertical="top"
             value={bio}
             onChangeText={setBio}
@@ -422,12 +438,13 @@ try {
     placeholder="e.g. 3"
     keyboardType="numeric"
     maxLength={2}
+     placeholderTextColor="#9ca3af"
     value={experience}
     onChangeText={setExperience}
   />
 </View>
 
-        <Text className="text-base font-bold text-gray-800 mb-3">Upload CNIC Images</Text>
+        <Text className="text-base font-bold text-gray-800 mb-3">Upload CNIC Images*</Text>
         <View className="flex-row justify-between mb-6">
           
           <TouchableOpacity
@@ -459,7 +476,7 @@ try {
           </TouchableOpacity>
         </View>
 
-        <Text className="text-base font-bold text-gray-800 mb-1">Selfie Holding Your CNIC</Text>
+        <Text className="text-base font-bold text-gray-800 mb-1">Selfie Holding Your CNIC*</Text>
         <Text className="text-xs text-gray-500 mb-3">
           Take a live photo of yourself holding your CNIC next to your face. This confirms the account belongs to you and helps prevent fake registrations.
         </Text>
@@ -484,7 +501,7 @@ try {
 
         <View className="mb-8">
           <View className="flex-row justify-between items-center mb-3">
-            <Text className="text-base font-bold text-gray-800">Work Portfolio Images</Text>
+            <Text className="text-base font-bold text-gray-800">Work Portfolio Images*</Text>
             <Text className="text-xs text-gray-500">Max 5 photos</Text>
           </View>
 

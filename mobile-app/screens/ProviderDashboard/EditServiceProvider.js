@@ -75,6 +75,10 @@ const EditServiceProvider = ({ route, navigation }) => {
       Alert.alert("Error", "Please fill in service name, price, and description.");
       return;
     }
+    if (isNaN(priceTxt) || Number(priceTxt) <= 0) {
+      Alert.alert("Error", "Please enter a valid positive number for the price.");
+      return;
+    }
 
     const serviceId = serviceData?._id || serviceData?.id;
     if (!serviceId) {

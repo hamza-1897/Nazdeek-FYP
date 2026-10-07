@@ -40,10 +40,7 @@ const ServiceCardItem = ({ item, onPress }) => {
 
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center">
-            <Ionicons name="checkmark-circle" size={13} color="#16a34a" />
-            <Text className="text-slate-400 text-[11px] ml-1 font-medium">
-              Verified
-            </Text>
+            
           </View>
 
           <View className="items-end">

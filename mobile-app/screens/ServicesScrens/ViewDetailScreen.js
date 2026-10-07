@@ -134,7 +134,6 @@ const ViewDetailScreen = ({ route, navigation }) => {
     <SafeAreaView className="flex-1 bg-white" edges={['top', 'left', 'right']}>
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
 
-      {/* Header bar with Back button */}
       <View className="px-5 py-3 flex-row items-center border-b border-slate-100">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -173,7 +172,6 @@ const ViewDetailScreen = ({ route, navigation }) => {
             {serviceData?.serviceName}
           </Text>
 
-          {/* Service Images Grid Section */}
           <View className="mb-6">
             <View className="flex-row items-center justify-between mb-3">
               <Text className="text-slate-900 font-bold text-base">Service Photos</Text>
@@ -182,13 +180,17 @@ const ViewDetailScreen = ({ route, navigation }) => {
               </Text>
             </View>
 
-            <View className="flex-row flex-wrap justify-between">
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false} 
+              className="flex-row"
+            >
               {images.map((imgUrl, index) => (
                 <TouchableOpacity
                   key={index}
                   activeOpacity={0.8}
                   onPress={() => openImageModal(imgUrl)}
-                  className="w-[48%] h-32 mb-3 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80"
+                  className="w-44 h-32 mr-3 rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80"
                 >
                   <Image
                     source={{ uri: imgUrl }}
@@ -197,10 +199,9 @@ const ViewDetailScreen = ({ route, navigation }) => {
                   />
                 </TouchableOpacity>
               ))}
-            </View>
+            </ScrollView>
           </View>
 
-          {/* Navigation Tabs */}
           <View className="flex-row border-b border-slate-100 mb-5">
             {TABS.map((tab) => (
               <TouchableOpacity
@@ -222,7 +223,6 @@ const ViewDetailScreen = ({ route, navigation }) => {
             ))}
           </View>
 
-          {/* About Tab Content */}
           {activeTab === 'About' && (
             <View>
               <Text className="text-slate-900 font-bold text-base mb-2">Description</Text>
@@ -293,7 +293,6 @@ const ViewDetailScreen = ({ route, navigation }) => {
             </View>
           )}
 
-          {/* Reviews Tab Content */}
           {activeTab === 'Reviews' && (
             <View className="space-y-3">
               {reviewsList.length > 0 ? (
@@ -360,7 +359,6 @@ const ViewDetailScreen = ({ route, navigation }) => {
         </View>
       </ScrollView>
 
-      {/* Bottom Sticky Action Bar */}
       <View
         style={{ paddingBottom: Math.max(insets.bottom, 16) }}
         className="absolute bottom-0 left-0 right-0 bg-white px-5 pt-3.5 border-t border-slate-100 flex-row justify-between items-center shadow-lg"
@@ -382,7 +380,6 @@ const ViewDetailScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Full-Screen Image View Modal */}
       <Modal
         visible={isModalVisible}
         transparent={true}

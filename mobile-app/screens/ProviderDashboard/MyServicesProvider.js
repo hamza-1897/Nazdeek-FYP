@@ -95,7 +95,7 @@ const MyServicesProvider = ({ navigation }) => {
     
     Alert.alert(
       "Upgrade to Premium",
-      "Free plan par aap sirf 1 service list kar sakte hain. Mazeed services add karne ke liye Premium package buy karein.",
+      "For more services, please upgrade to our Premium package.",
       [
         { text: "Cancel", style: "cancel" },
         { 

@@ -4,6 +4,7 @@ import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker'; 
 import { AuthContext } from '../../context/AuthContext';
 import { updateProvider } from '../../api/ProviderApi';
+import { validateAlphaNumeric, validatePhone, validateAddress, validateExperience } from '../../services/validations';
 
 const EditProfileProvider = ({ navigation }) => {
   const { providerInfo, updateUserInfo, updateProviderInfo, userInfo } = useContext(AuthContext);
@@ -95,6 +96,28 @@ const EditProfileProvider = ({ navigation }) => {
   const handleUpdateOrEdit = async () => {
     if (!isEditable) {
       setIsEditable(true);
+      return;
+    }
+    const phoneError = validatePhone(contact);
+    if (phoneError) {
+      Alert.alert("Validation Error", phoneError);
+      return;
+    }
+
+    const addressError = validateAddress(address);
+    if (addressError) {
+      Alert.alert("Validation Error", addressError);
+      return;
+    }
+    const experienceError = validateExperience(experience);
+    if (experienceError) {
+      Alert.alert("Validation Error", experienceError);
+      return;
+    }
+
+    const sepecialError = validateAlphaNumeric(experience, "Experience");
+    if (sepecialError) {
+      Alert.alert("Validation Error", sepecialError);
       return;
     }
 
@@ -259,6 +282,7 @@ if (response?.success) {
                 value={contact}
                 onChangeText={setContact}
                 editable={isEditable}
+                maxLength={11}
                 keyboardType="phone-pad"
                 placeholder="Enter contact number"
                 placeholderTextColor="#9ca3af"

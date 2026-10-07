@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const ProviderHeader = ({ providerInfo,hasUnreadNotification, onNotificationPress, onProfilePress }) => {
+const ProviderHeader = ({ providerInfo,hasUnreadNotification, onNotificationPress }) => {
   return (
     <View className="bg-[#1a5ea1] px-6 pt-14 pb-8 rounded-b-[32px]">
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center flex-1 mr-3">
           <TouchableOpacity
-            onPress={onProfilePress}
+            
             activeOpacity={0.8}
             className="w-12 h-12 rounded-full border-2 border-white/30 overflow-hidden bg-blue-400/30 mr-3"
           >
