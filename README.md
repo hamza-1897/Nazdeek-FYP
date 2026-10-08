@@ -8,7 +8,6 @@
 
 * **Service Booking:** Users can browse and book professional services instantly.
 * **In-App Chat:** Real-time communication between users and providers for better coordination.
-* **Discount System:** Integrated discount management for promotional services.
 * **Reviews & Ratings:** A transparent feedback system to maintain service quality.
 * **Report System:** Safety first—users can report service providers for policy violations.
 
