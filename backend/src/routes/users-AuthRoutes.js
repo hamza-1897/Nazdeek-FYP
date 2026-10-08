@@ -1,10 +1,11 @@
 
 const express = require('express');
 const router = express.Router();
+const { loginLimiter } = require('../middleware/rateLimiter');
 const {registerUser,verifySignUPOTP ,userLogin ,resetPassword,forgotOTP,verifyForgotOTP,userLogout,updateRole,resendOTPController ,refreshAccessToken} = require('../controllers/mutual/user-authController');
 router.post('/register', registerUser);
 router.post('/verify-otp', verifySignUPOTP);
-router.post('/login', userLogin);
+router.post('/login', loginLimiter, userLogin);
 router.post('/logout', userLogout);
 router.post('/forgot-password', forgotOTP);
 router.post('/verify-forgot-otp', verifyForgotOTP);

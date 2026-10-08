@@ -5,8 +5,10 @@ const cookieParser = require('cookie-parser');
 const http = require('http');
 
 
+
 const app = express();
 app.use(express.json());
+app.set('trust proxy', 1); 
 app.use(cors({
     origin: [
       'https://nazdeek-admin.vercel.app', 
