@@ -99,10 +99,10 @@ const getServicesByProvider = async (req, res) => {
 const editService = async (req, res) => {
   try {
     const { serviceId } = req.params;
-    const { serviceName, description, price, priceType, serviceImages } = req.body;
+    const { serviceName, description, price, priceType, existingImages } = req.body;
 
     const files = req.files || [];
-    
+
     if (!serviceId) {
       return res.status(400).json({ success: false, message: 'Service ID is required' });
     }
@@ -112,12 +112,29 @@ const editService = async (req, res) => {
     if (description !== undefined) updateFields.description = description;
     if (price !== undefined) updateFields.price = price;
     if (priceType !== undefined) updateFields.priceType = priceType;
-    
+
+    let finalImages = [];
+
+    if (existingImages) {
+      try {
+        const parsedOld = JSON.parse(existingImages);
+        if (Array.isArray(parsedOld)) {
+          finalImages = [...parsedOld];
+        }
+      } catch (err) {
+        if (typeof existingImages === 'string' && existingImages.startsWith('http')) {
+          finalImages.push(existingImages);
+        }
+      }
+    }
 
     if (files.length > 0) {
-      updateFields.serviceImages = files.map(file => file.path);
-    } else if (serviceImages !== undefined) {
-      updateFields.serviceImages = Array.isArray(serviceImages) ? serviceImages : [serviceImages];
+      const newUploadedPaths = files.map(file => file.path);
+      finalImages = [...finalImages, ...newUploadedPaths];
+    }
+
+    if (finalImages.length > 0) {
+      updateFields.serviceImages = finalImages.slice(0, 3);
     }
 
     const updatedService = await serviceModel.findByIdAndUpdate(

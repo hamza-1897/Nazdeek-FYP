@@ -66,65 +66,59 @@ const EditServiceProvider = ({ route, navigation }) => {
     setImages((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
-  const handleSave = async () => {
-    const nameTxt = (serviceName || '').trim();
-    const priceTxt = (servicePrice || '').toString().trim();
-    const descTxt = (description || '').trim();
+const handleSave = async () => {
+  const nameTxt = (serviceName || '').trim();
+  const priceTxt = (servicePrice || '').toString().trim();
+  const descTxt = (description || '').trim();
 
-    if (!nameTxt || !priceTxt || !descTxt) {
-      Alert.alert("Error", "Please fill in service name, price, and description.");
-      return;
-    }
+  if (!nameTxt || !priceTxt || !descTxt) {
+    Alert.alert("Error", "Please fill in service name, price, and description.");
+    return;
+  }
 
-    const serviceId = serviceData?._id || serviceData?.id;
-    if (!serviceId) {
-      Alert.alert("Error", "Service ID missing!");
-      return;
-    }
+  const serviceId = serviceData?._id || serviceData?.id;
+  setLoading(true);
 
-    setLoading(true);
+  try {
+    const formData = new FormData();
+    formData.append('serviceName', nameTxt);
+    formData.append('price', priceTxt);
+    formData.append('priceType', priceType);
+    formData.append('description', descTxt);
+    if (city) formData.append('city', city.trim());
 
-    try {
-      const formData = new FormData();
-      formData.append('serviceName', nameTxt);
-      formData.append('price', priceTxt);
-      formData.append('priceType', priceType);
-      formData.append('description', descTxt);
-      if (city) formData.append('city', city.trim());
+    const oldCloudinaryUrls = images.filter(img => img.startsWith('http'));
+    formData.append('existingImages', JSON.stringify(oldCloudinaryUrls));
 
-      images.forEach((imgUri, index) => {
-        if (!imgUri.startsWith('http')) {
-          const filename = imgUri.split('/').pop();
-          const match = /\.(\w+)$/.exec(filename);
-          const type = match ? `image/${match[1]}` : `image/jpeg`;
+    const newLocalFiles = images.filter(img => !img.startsWith('http'));
+    newLocalFiles.forEach((imgUri, index) => {
+      const filename = imgUri.split('/').pop() || `service_${index}.jpg`;
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image/jpeg`;
 
-          formData.append('serviceImages', {
-            uri: imgUri,
-            name: filename || `service_${index}.jpg`,
-            type,
-          });
-        }
+      formData.append('serviceImages', {
+        uri: imgUri,
+        name: filename,
+        type: type,
       });
+    });
 
-      const res = await editService(serviceId, formData);
+    const res = await editService(serviceId, formData);
 
-      if (res?.success) {
-        Alert.alert("Success", "Service updated successfully!", [
-          {
-            text: "OK",
-            onPress: () => navigation.goBack()
-          }
-        ]);
-      } else {
-        Alert.alert("Notice", res?.message || "Failed to update service.");
-      }
-    } catch (error) {
-      console.error("Error editing service:", error);
-      Alert.alert("Error", error?.response?.data?.message || "Something went wrong while updating.");
-    } finally {
-      setLoading(false);
+    if (res?.success) {
+      Alert.alert("Success", "Service updated successfully!", [
+        { text: "OK", onPress: () => navigation.goBack() }
+      ]);
+    } else {
+      Alert.alert("Notice", res?.message || "Failed to update service.");
     }
-  };
+  } catch (error) {
+    console.error("Error editing service:", error);
+    Alert.alert("Error", error?.response?.data?.message || "Something went wrong while updating.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <View className="flex-1 bg-white">

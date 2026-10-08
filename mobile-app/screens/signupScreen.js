@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { userSignup } from '../api/authApi';
+import { validateEmail, validatePhone,validateAlphaNumeric, validatePassword } from '../services/validations';
 
 const SignupScreen = ({ navigation }) => {
   const [role, setRole] = useState('customer'); 
@@ -23,22 +24,44 @@ const SignupScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+  const getPasswordRules = (pwd = '') => {
+    return {
+      hasMinLength: pwd.length >= 8,
+      hasUpper: /[A-Z]/.test(pwd),
+      hasLower: /[a-z]/.test(pwd),
+      hasNumber: /[0-9]/.test(pwd),
+    };
+  };
+
+  const passwordRules = getPasswordRules(password);
+  const isPasswordValid = 
+    passwordRules.hasMinLength && 
+    passwordRules.hasUpper && 
+    passwordRules.hasLower && 
+    passwordRules.hasNumber;
+
   const validateForm = () => {
     if (!name.trim() || !email.trim() || !phone.trim() || !password) {
       Alert.alert('Error', 'Please fill in all input fields.');
       return false;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      Alert.alert('Error', 'Please enter a valid email address.');
+    const emailError = validateEmail(email);
+    if (emailError) {
+      Alert.alert('Error', emailError);
       return false;
     }
-
-    if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters long.');
+    const specialError = validateAlphaNumeric(phone,'Phone Number')
+    if(specialError){
+      Alert.alert('Error',specialError);
       return false;
     }
+    const phoneError = validatePhone(phone);
+    if (phoneError) {
+      Alert.alert('Error', phoneError);
+      return false;
+    }
+   
 
     return true;
   };
@@ -68,6 +91,19 @@ const SignupScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
+
+  const RuleItem = ({ isValid, label }) => (
+  <View className="flex-row items-center gap-2 my-0.5">
+    <Ionicons 
+      name={isValid ? "checkmark-circle" : "ellipse-outline"} 
+      size={16} 
+      color={isValid ? "#16a34a" : "#9ca3af"} 
+    />
+    <Text className={`text-xs ${isValid ? "text-green-700 font-semibold" : "text-gray-500"}`}>
+      {label}
+    </Text>
+  </View>
+);
 
   return (
     <KeyboardAvoidingView
@@ -164,6 +200,7 @@ const SignupScreen = ({ navigation }) => {
                 placeholder="03001234567"
                 placeholderTextColor="#9ca3af" 
                 value={phone}
+                maxLength={11}
                 onChangeText={setPhone}
                 keyboardType="phone-pad"
               />
@@ -175,7 +212,7 @@ const SignupScreen = ({ navigation }) => {
               <View className="flex-row items-center border border-gray-200 rounded-xl px-4 bg-gray-50">
                 <TextInput
                   className="flex-1 py-4 text-base text-gray-900"
-                  placeholder="Min 6 characters"
+                  placeholder="Min 8 characters"
                   placeholderTextColor="#9ca3af" 
                   value={password}
                   onChangeText={setPassword}
@@ -191,15 +228,30 @@ const SignupScreen = ({ navigation }) => {
               </View>
             </View>
 
+           <View className="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+              <Text className="text-xs font-bold text-gray-500 mb-2">
+                PASSWORD MUST CONTAIN:
+              </Text>
+
+              <RuleItem isValid={passwordRules.hasMinLength} label="At least 8 characters" />
+              <RuleItem isValid={passwordRules.hasUpper} label="One uppercase letter (A-Z)" />
+              <RuleItem isValid={passwordRules.hasLower} label="One lowercase letter (a-z)" />
+              <RuleItem isValid={passwordRules.hasNumber} label="One number (0-9)" />
+            </View>
+
             <TouchableOpacity 
-              className="bg-[#1a5ea1] py-4 rounded-xl items-center shadow-sm"
+              className={`py-4 rounded-xl items-center shadow-sm ${
+                isPasswordValid ? 'bg-[#1a5ea1]' : 'bg-gray-300'
+              }`}
               onPress={handleSignUp}
-              disabled={loading}
+              disabled={loading || !isPasswordValid}
             >
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text className="text-white font-bold text-base">Register as {role === 'provider' ? 'Provider' : 'Customer'}</Text>
+                <Text className="text-white font-bold text-base">
+                  Register as {role === 'provider' ? 'Provider' : 'Customer'}
+                </Text>
               )}
             </TouchableOpacity>
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, ArrowLeft, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { forgotOtp } from '../api/adminApi';
+import {validateEmail} from '../utils/validations';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -11,10 +12,12 @@ const ForgotPassword = () => {
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    if (!email.trim()) {
-      setError('Please enter your email address');
+    const emailError = validateEmail(email);
+    if (emailError) {
+      setError(emailError);
       return;
     }
+    
 
     setLoading(true);
     setError('');

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { addAdmin, getAllAdmins } from '../api/adminApi';
+import { addAdmin, getAllAdmins, deleteAdmin } from '../api/adminApi';
 import { useAdmin } from '../context/AuthContext';
-import { ShieldCheck, UserPlus, Loader2 } from 'lucide-react';
+import { ShieldCheck, UserPlus, Eye, EyeOff, Loader2, Trash2 } from 'lucide-react';
+import { validateEmail, validatePassword, validateNoNumbers } from '../utils/validations';
 
 export default function ManageAdmins() {
   const { admin } = useAdmin();
@@ -10,6 +11,7 @@ export default function ManageAdmins() {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -42,8 +44,12 @@ export default function ManageAdmins() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.password.trim()) {
-      alert('Please fill in all fields.');
+    const nameError = validateNoNumbers(formData.name, "Name");
+    const emailError = validateEmail(formData.email);
+    const passwordError = validatePassword(formData.password);
+
+    if (nameError || emailError || passwordError) {
+      alert(nameError || emailError || passwordError);
       return;
     }
 
@@ -61,13 +67,32 @@ export default function ManageAdmins() {
     }
   };
 
+  const handleDelete = async (adminId, adminName) => {
+    if (adminId === admin?._id) {
+      alert("You cannot delete your own account!");
+      return;
+    }
+
+    const confirmDelete = window.confirm(`Are you sure you want to delete ${adminName}?`);
+    if (!confirmDelete) return;
+
+    try {
+      await deleteAdmin(adminId);
+      alert('Admin deleted successfully!');
+      setAdmins((prev) => prev.filter((item) => item._id !== adminId));
+    } catch (error) {
+      console.error('Error deleting admin:', error);
+      alert(error.response?.data?.message || 'Failed to delete admin.');
+    }
+  };
+
   if (!isSuperAdmin) {
     return (
       <div className="bg-white rounded-2xl shadow p-8 text-center max-w-lg mx-auto mt-10">
         <ShieldCheck className="w-10 h-10 text-red-500 mx-auto mb-3" />
         <h2 className="text-xl font-bold text-gray-800">Access Restricted</h2>
         <p className="text-gray-500 mt-2 text-sm">
-          Only a Super Admin can view or add new admin accounts.
+          Only a Super Admin can view or manage admin accounts.
         </p>
       </div>
     );
@@ -77,9 +102,10 @@ export default function ManageAdmins() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-800">Manage Admins</h1>
-        <p className="text-gray-500 text-sm">Add new Admins or Super Admins to the platform.</p>
+        <p className="text-gray-500 text-sm">Add or remove Admins and Super Admins on the platform.</p>
       </div>
 
+      {/* Form Section */}
       <div className="bg-white rounded-2xl shadow p-6">
         <h2 className="text-lg font-bold text-[#0a3a35] flex items-center gap-2 mb-4">
           <UserPlus className="w-5 h-5" /> Add New Admin
@@ -109,14 +135,23 @@ export default function ManageAdmins() {
           </div>
           <div>
             <label className="block text-gray-700 font-semibold mb-1 text-xs">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full bg-gray-50 border border-gray-200 px-3.5 py-2.5 text-sm rounded-xl focus:border-[#0D4D47] outline-none"
-              placeholder="Temporary password"
-            />
+            <div className="relative">
+              <input
+                type={passwordVisible ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full bg-gray-50 border border-gray-200 px-3.5 py-2.5 text-sm rounded-xl focus:border-[#0D4D47] outline-none"
+                placeholder="Temporary password"
+              />
+              <button
+                type="button"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+              >
+                {passwordVisible ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
           <div>
             <label className="block text-gray-700 font-semibold mb-1 text-xs">Role</label>
@@ -142,6 +177,7 @@ export default function ManageAdmins() {
         </form>
       </div>
 
+      {/* Admins Table Section */}
       <div className="bg-white rounded-2xl shadow p-6">
         <h2 className="text-lg font-bold text-gray-800 mb-4">Existing Admins</h2>
         {loading ? (
@@ -157,6 +193,7 @@ export default function ManageAdmins() {
                   <th className="py-2 pr-4">Email</th>
                   <th className="py-2 pr-4">Role</th>
                   <th className="py-2 pr-4">Added On</th>
+                  <th className="py-2 pr-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -177,6 +214,17 @@ export default function ManageAdmins() {
                     </td>
                     <td className="py-2 pr-4 text-gray-500">
                       {a.createdAt ? new Date(a.createdAt).toLocaleDateString() : '-'}
+                    </td>
+                    <td className="py-2 pr-4 text-right">
+                      {a._id !== admin?._id && (
+                        <button
+                          onClick={() => handleDelete(a._id, a.name)}
+                          className="p-1.5 text-red-500 cursor-pointer hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete Admin"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

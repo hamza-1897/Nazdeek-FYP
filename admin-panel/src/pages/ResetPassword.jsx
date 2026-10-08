@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Lock, Eye, EyeOff, ArrowLeft, Check, Loader2 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { resetPassword } from '../api/adminApi';
+import { validatePassword } from '../utils/validations';
 
 const ResetPasswordScreen = () => {
   const [password, setPassword] = useState('');
@@ -17,14 +18,13 @@ const ResetPasswordScreen = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
 
-    if (!password) {
-      setError('Please enter a new password');
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
-      return;
-    }
+
+   
 
     setLoading(true);
     setError('');

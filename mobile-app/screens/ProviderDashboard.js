@@ -106,7 +106,7 @@ const ProviderDashboard = ({ navigation }) => {
         providerInfo={providerInfo}
         hasUnreadNotification={dashboardData?.notifications?.hasUnread}
         onNotificationPress={() => navigation.navigate('Notification')}
-        onProfilePress={() => navigation.navigate('ProfileScreen')}
+      
       />
 
       <ScrollView

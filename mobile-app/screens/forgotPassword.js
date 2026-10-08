@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { forgotPassword } from '../api/authApi';
+import { validateEmail } from '../services/validations';
 
 const ForgotPassword = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -10,6 +11,11 @@ const ForgotPassword = ({ navigation }) => {
     const handleForgotPassword = async () => {
       if (!email) {
         alert("Please enter your registered email.");
+        return;
+      }
+      const emailError = validateEmail(email);
+      if (emailError) {
+        alert(emailError);
         return;
       }
 
@@ -47,6 +53,7 @@ const ForgotPassword = ({ navigation }) => {
         <TextInput 
           placeholder="Enter your email" 
           className="flex-1 ml-3 text-gray-700"
+          placeholderTextColor="#9CA3AF"
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}

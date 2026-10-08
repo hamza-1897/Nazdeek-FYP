@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { updateContactDetails } from '../../api/adminApi';
+import { validateNoNumbers,validateEmail ,validateNoSpecialChars } from '../../utils/validations';
+
 
 const ContactDetailsTab = ({ initialContact, onSaveSuccess, refreshData }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -15,6 +17,28 @@ const ContactDetailsTab = ({ initialContact, onSaveSuccess, refreshData }) => {
   };
 
   const handleSave = async () => {
+
+    const emailError = validateEmail(contactData.supportEmail);
+    if (emailError) {
+      alert(emailError);
+      return;
+    }
+    if (!contactData.supportPhone.trim() || !contactData.supportWhatsapp.trim() || !contactData.supportEmail.trim() || !contactData.officeAddress.trim()) {
+      alert('All fields are required.');
+      return;
+    }
+    if(contactData.supportPhone.length < 11 || contactData.supportPhone.length > 14) {
+      alert('Support Phone must be between 11 and 14 characters.');
+      return;
+    }
+    if(contactData.supportWhatsapp.length < 11 || contactData.supportWhatsapp.length > 14) {
+      alert('WhatsApp Support must be between 11 and 14 characters.');
+      return;
+    }
+    if(contactData.officeAddress.length < 10 || contactData.officeAddress.length > 50) {
+      alert('Office Address must be between 10 and 50 characters.');
+      return;
+    }
     try {
       setIsSaving(true);
       await updateContactDetails(contactData);
@@ -57,6 +81,8 @@ const ContactDetailsTab = ({ initialContact, onSaveSuccess, refreshData }) => {
             type="text"
             disabled={!isEditing}
             value={contactData.supportPhone || ''}
+            minLength={11}
+            maxLength={14}
             onChange={(e) => handleChange('supportPhone', e.target.value)}
             className="w-full text-xs p-2 border rounded-lg mt-1 disabled:bg-gray-50"
           />
@@ -67,6 +93,8 @@ const ContactDetailsTab = ({ initialContact, onSaveSuccess, refreshData }) => {
             type="text"
             disabled={!isEditing}
             value={contactData.supportWhatsapp || ''}
+            minLength={11}
+            maxLength={14}
             onChange={(e) => handleChange('supportWhatsapp', e.target.value)}
             className="w-full text-xs p-2 border rounded-lg mt-1 disabled:bg-gray-50"
           />
@@ -76,6 +104,7 @@ const ContactDetailsTab = ({ initialContact, onSaveSuccess, refreshData }) => {
           <input
             type="email"
             disabled={!isEditing}
+
             value={contactData.supportEmail || ''}
             onChange={(e) => handleChange('supportEmail', e.target.value)}
             className="w-full text-xs p-2 border rounded-lg mt-1 disabled:bg-gray-50"
@@ -86,6 +115,8 @@ const ContactDetailsTab = ({ initialContact, onSaveSuccess, refreshData }) => {
           <input
             type="text"
             disabled={!isEditing}
+            minLength={10}
+            maxLength={50}
             value={contactData.officeAddress || ''}
             onChange={(e) => handleChange('officeAddress', e.target.value)}
             className="w-full text-xs p-2 border rounded-lg mt-1 disabled:bg-gray-50"
