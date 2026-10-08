@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { updatePricingAndFees } from '../../api/adminApi';
+import { validatePositiveNumber,validateNoSpecialChars } from '../../utils/validations';
+
+
 const PricingAndFeesTab = ({ initialFeeConfig, onSaveSuccess, refreshData }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -32,6 +35,15 @@ const PricingAndFeesTab = ({ initialFeeConfig, onSaveSuccess, refreshData }) => 
   };
 
   const handleSaveToBackend = async () => {
+
+    for (const p of ['registrationFee', 'monthlyPremiumPrice', 'quarterlyPremiumPrice', 'yearlyPremiumPrice']) {
+      const error = validatePositiveNumber(tempConfig[p], p);
+      if (error) {
+        alert(error);
+        setIsSaving(false);
+        return;
+      }
+    }
     try {
     setIsSaving(true);
     await updatePricingAndFees(tempConfig);

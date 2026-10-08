@@ -54,8 +54,9 @@ router.post('/addCity', addCity);
 router.put('/editCity/:cityId', editCity);
 router.delete('/deleteCity/:cityId', deleteCity);
 
-const { addNewAdmin, getAllAdmins } = require('../controllers/admin/admin-managementController');
+const { addNewAdmin, getAllAdmins, deleteAdmin } = require('../controllers/admin/admin-managementController');
 router.post('/add-admin', checkRole(['superadmin']), addNewAdmin);
 router.get('/get-all-admins', checkRole(['superadmin']), getAllAdmins);
+router.delete('/delete-admin/:adminId', checkRole(['superadmin']), deleteAdmin);
 
 module.exports = router;

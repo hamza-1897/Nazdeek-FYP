@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { updatePaymentAccounts } from '../../api/adminApi';
+import {validateNoNumbers, validateNoSpecialChars} from '../../utils/validations';
 
 const PaymentAccountsTab = ({ initialAccounts, onSaveSuccess, refreshData }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -46,6 +47,21 @@ const PaymentAccountsTab = ({ initialAccounts, onSaveSuccess, refreshData }) => 
   const handleSaveToBackend = async () => {
     try {
       setIsSaving(true);
+      for (const acc of tempAccounts) {
+        if (!acc.bankName.trim() || !acc.accountTitle.trim() || !acc.accountNumber.trim()) {
+          alert('All fields are required for each account.');
+          setIsSaving(false);
+          return;
+        }
+        const bankNameError = validateNoNumbers(acc.bankName, "Bank Name");
+        const accountTitleError = validateNoSpecialChars(acc.accountTitle, "Account Title");
+        const accountNumberError = validateNoSpecialChars(acc.accountNumber, "Account Number");
+        if (bankNameError || accountTitleError || accountNumberError) {
+          alert(bankNameError || accountTitleError || accountNumberError);
+          setIsSaving(false);
+          return;
+        }
+      }
       await updatePaymentAccounts(tempAccounts);
 
       setAccounts(tempAccounts);

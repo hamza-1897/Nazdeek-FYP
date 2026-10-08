@@ -52,4 +52,29 @@ const getAllAdmins = async (req, res) => {
     }
 };
 
-module.exports = { addNewAdmin, getAllAdmins };
+const deleteAdmin = async (req, res) => {
+    try {
+        const { adminId } = req.params;
+
+        if (req.admin && req.admin._id.toString() === adminId) {
+            return res.status(400).json({ message: "You cannot delete your own admin account." });
+        }
+
+        const deletedAdmin = await adminModel.findByIdAndDelete(adminId);
+
+        if (!deletedAdmin) {
+            return res.status(404).json({ message: "Admin account not found." });
+        }
+
+        res.status(200).json({
+            message: "Admin deleted successfully",
+            deletedAdminId: adminId
+        });
+    } catch (error) {
+        console.error("Error deleting admin:", error);
+        res.status(500).json({ message: "Server error while deleting admin" });
+    }
+};
+
+module.exports = { addNewAdmin, getAllAdmins, deleteAdmin };
+

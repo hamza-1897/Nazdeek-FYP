@@ -330,3 +330,13 @@ export const getAllAdmins = async () => {
         throw error;
     }
 };
+
+export const deleteAdmin = async (adminId) => {
+   try {
+       const response = await API.delete(`/admin/delete-admin/${adminId}`);
+       return response.data;
+    } catch (error) {
+        console.error("Error deleting admin:", error);
+        throw error;
+    }
+};
